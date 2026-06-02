@@ -1,0 +1,6 @@
+{
+  "name": "Local Hardware Sourcing Platform",
+  "description": "An AI-powered local hardware component sourcing platform to discover, search, and procure open-source hardware blueprints and components locally within a 40km radius.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
