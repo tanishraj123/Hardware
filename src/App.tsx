@@ -417,7 +417,8 @@ export default function App() {
           <div className="flex flex-col md:flex-row md:items-end justify-between mb-10">
             <div>
               <div className="inline-flex items-center space-x-1.5 rounded-full bg-google-yellow/10 px-3 py-1 text-xs font-semibold text-google-yellow/90">
-                <span>⚡ Product Hub Categories</span>
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="mr-0.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                <span>Product Hub Categories</span>
               </div>
               <h2 className="font-display text-2xl sm:text-3xl font-extrabold tracking-tight text-gray-900 mt-2">
                 Popular Product Categories

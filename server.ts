@@ -420,6 +420,14 @@ async function startServer() {
     res.sendFile(filePath);
   });
 
+  app.get("/profile", (req, res) => {
+    const isProd = process.env.NODE_ENV === "production";
+    const filePath = isProd 
+      ? path.join(process.cwd(), "dist/profile.html")
+      : path.join(process.cwd(), "profile.html");
+    res.sendFile(filePath);
+  });
+
   app.get("/", (req, res) => {
     const isProd = process.env.NODE_ENV === "production";
     const filePath = isProd 

@@ -690,8 +690,8 @@
 
         <div class="phone-input-row">
           <!-- Country code button selector -->
-          <button id="country-select-btn" class="country-selector">
-            <span id="selected-flag">🇮🇳</span> <span id="selected-dial-code">+91</span>
+          <button id="country-select-btn" class="country-selector" style="display: inline-flex; align-items: center; gap: 6px; padding: 0 12px; height: 100%;">
+            <span id="selected-flag" style="display: inline-flex; align-items: center; justify-content: center; width: 16px; height: 16px;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: currentColor;"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg></span> <span id="selected-dial-code">+91</span>
           </button>
           
           <!-- Numeric only phone number input field -->
@@ -713,8 +713,8 @@
           <!-- Will inject location saved status dynamically -->
         </div>
 
-        <button id="detect-location-btn" class="btn btn-primary" style="width: 100%; border-radius: 999px; height: 44px;">
-          📍 Detect My Location
+        <button id="detect-location-btn" class="btn btn-primary" style="width: 100%; border-radius: 999px; height: 44px; display: inline-flex; align-items: center; justify-content: center; gap: 8px;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon-inline" style="display: inline-block; vertical-align: text-bottom;"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>Detect My Location
         </button>
         <p style="font-size: 11px; color: #5f6368; text-align: center; margin-top: 8px; margin-bottom: 0;">We use your location only to calculate supplier distances</p>
       </div>
@@ -1080,7 +1080,7 @@
               <span class="success-text" style="padding: 2px 8px; border-radius: 4px; font-size: 11px;">Location Saved</span>
             </div>
             <div style="font-size: 14px; color: #5f6368; display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
-              <span>📍 ${text}</span>
+              <span style="display: inline-flex; align-items: center; gap: 6px;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: inherit;"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>${text}</span>
               <a href="#" id="update-location-link" style="color: #4285F4; text-decoration: none; font-size: 13px; font-weight: 600; cursor: pointer;">Update Location</a>
             </div>
           </div>
@@ -1108,7 +1108,7 @@
       if (!currentUser) return;
 
       const btn = document.getElementById('detect-location-btn');
-      const originalText = btn ? btn.textContent : '📍 Detect My Location';
+      const originalHTML = btn ? btn.innerHTML : '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon-inline" style="display: inline-block; vertical-align: text-bottom;"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>Detect My Location';
       if (btn) {
         btn.textContent = 'Detecting...';
         btn.disabled = true;
@@ -1117,7 +1117,7 @@
       if (!navigator.geolocation) {
         showToast('Geolocation is not supported by your browser.', 'error');
         if (btn) {
-          btn.textContent = originalText;
+          btn.innerHTML = originalHTML;
           btn.disabled = false;
         }
         return;
@@ -1183,7 +1183,7 @@
             showToast('Failed to retrieve location details or save profile.', 'error');
           } finally {
             if (btn) {
-              btn.textContent = originalText;
+              btn.innerHTML = originalHTML;
               btn.disabled = false;
             }
           }
@@ -1192,7 +1192,7 @@
           console.error('Geo error:', error);
           showToast('Could not detect location. Please allow location access.', 'error');
           if (btn) {
-            btn.textContent = originalText;
+            btn.innerHTML = originalHTML;
             btn.disabled = false;
           }
         },
@@ -1298,8 +1298,8 @@
         const item = document.createElement('div');
         item.className = 'country-item';
         item.innerHTML = `
-          <div class="country-left-info">
-            <span class="country-flag-symbol">${country.flag}</span>
+          <div class="country-left-info" style="display: flex; align-items: center; gap: 8px;">
+            <span class="country-flag-symbol" style="display: inline-flex; align-items: center; justify-content: center; width: 16px; height: 16px; color: #5f6368;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: currentColor;"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg></span>
             <span>${country.name}</span>
           </div>
           <span class="country-dial-code">${country.code}</span>
@@ -1360,7 +1360,9 @@
       
       const flagSpan = document.getElementById('selected-flag');
       const dialSpan = document.getElementById('selected-dial-code');
-      if (flagSpan) flagSpan.textContent = flag;
+      if (flagSpan) {
+        flagSpan.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: currentColor;"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg>`;
+      }
       if (dialSpan) dialSpan.textContent = dialCode;
     }
 
@@ -1558,7 +1560,7 @@
               selectCountry(matchedCountry.flag, matchedCountry.code);
             } else {
               // Custom code not matched fallback
-              selectCountry('🏳️', profile.phone_country_code.startsWith('+') ? profile.phone_country_code : '+' + profile.phone_country_code);
+              selectCountry('', profile.phone_country_code.startsWith('+') ? profile.phone_country_code : '+' + profile.phone_country_code);
             }
           }
           

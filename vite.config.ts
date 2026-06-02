@@ -18,6 +18,7 @@ export default defineConfig(() => {
           info: path.resolve(__dirname, 'info.html'),
           signin: path.resolve(__dirname, 'signin.html'),
           register: path.resolve(__dirname, 'register-user.html'),
+          profile: path.resolve(__dirname, 'profile.html'),
         },
       },
     },

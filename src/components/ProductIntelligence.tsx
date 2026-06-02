@@ -192,7 +192,7 @@ export default function ProductIntelligence({
           <div className="flex justify-center md:justify-start">
             <span className="inline-flex items-center text-xs font-medium text-gray-600 leading-normal">
               <span className="text-[#4285F4] mr-2 font-bold text-sm">✦</span>
-              AI analyzed 48 raw materials • 12 local sources found • Click 📍 to open supplier in Google Maps
+              AI analyzed 48 raw materials • 12 local sources found • Click <span className="inline-block align-text-bottom mx-0.5" style={{ color: 'inherit' }}><svg className="inline" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></span> to open supplier in Google Maps
             </span>
           </div>
 
@@ -275,7 +275,10 @@ export default function ProductIntelligence({
                         }}
                         className="cursor-pointer text-xs font-semibold text-gray-700 bg-white hover:bg-gray-50 px-3.5 py-2 rounded-xl border border-gray-200 transition flex items-center gap-1.5 shadow-2xs"
                       >
-                        <span>🌐 Supplier Website</span>
+                        <span className="flex items-center gap-1.5">
+                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                          Supplier Website
+                        </span>
                       </a>
                       
                       <a 
@@ -284,7 +287,10 @@ export default function ProductIntelligence({
                         rel="noopener noreferrer"
                         className="cursor-pointer text-xs font-semibold text-white bg-[#4285F4] hover:bg-blue-600 px-3.5 py-2 rounded-xl shadow-2xs hover:shadow-xs transition flex items-center gap-1.5"
                       >
-                        <span>📍 Open in Google Maps</span>
+                        <span className="flex items-center gap-1.5">
+                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                          Open in Google Maps
+                        </span>
                       </a>
                     </div>
 
