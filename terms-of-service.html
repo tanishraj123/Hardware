@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Terms of Service — Semiconk</title>
+  
+  <!-- Inter Font -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    /* Modern Custom Stylesheet (Google Inspired Clean UI) */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      background-color: #f8f9fa; /* Sleek light-grey backdrop */
+      color: #1a1a1a;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* Headings styling */
+    h1, h2, h3, h4 {
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      color: #1a1a1a;
+    }
+
+    /* Header & Navbar */
+    header {
+      background-color: #FFFFFF;
+      border-bottom: 1px solid #f1f3f4;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+
+    .nav-wrapper {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 0;
+    }
+
+    .logo {
+      font-size: 22px;
+      font-weight: 800;
+      color: #1a1a1a;
+      letter-spacing: -0.5px;
+    }
+
+    .nav-links {
+      display: none;
+      align-items: center;
+      gap: 32px;
+    }
+
+    @media (min-width: 768px) {
+      .nav-links {
+        display: flex;
+      }
+    }
+
+    .nav-link {
+      font-size: 14px;
+      font-weight: 500;
+      color: #5f6368;
+      transition: color 0.15s ease;
+    }
+
+    .nav-link:hover {
+      color: #4285F4;
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    /* Standardized Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: 600;
+      padding: 10px 20px;
+      border-radius: 8px;
+      transition: all 0.2s ease;
+      cursor: pointer;
+      border: none;
+      text-align: center;
+    }
+
+    .btn-outline {
+      background-color: transparent;
+      border: 1px solid #dadce0;
+      color: #3c4043;
+    }
+
+    .btn-outline:hover {
+      background-color: #f8f9fa;
+      border-color: #bdc1c6;
+    }
+
+    .btn-primary {
+      background-color: #4285F4;
+      color: #FFFFFF;
+    }
+
+    .btn-primary:hover {
+      background-color: #2b72eb;
+      box-shadow: 0 2px 6px rgba(66, 133, 244, 0.2);
+    }
+
+    /* Main Legal Content Form Block */
+    main {
+      flex: 1;
+      padding: 40px 0;
+    }
+
+    .legal-card {
+      background-color: #FFFFFF;
+      border: 1px solid #dadce0;
+      border-radius: 12px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 24px;
+    }
+
+    @media (min-width: 768px) {
+      .legal-card {
+        padding: 40px;
+      }
+    }
+
+    .legal-title {
+      font-size: 28px;
+      font-weight: 800;
+      color: #1a1a1a;
+      margin-bottom: 8px;
+      text-align: left;
+    }
+
+    .legal-subtitle {
+      font-size: 13px;
+      color: #5f6368;
+      margin-bottom: 32px;
+      border-bottom: 1px solid #f1f3f4;
+      padding-bottom: 16px;
+      text-align: left;
+    }
+
+    .legal-section {
+      margin-bottom: 28px;
+      text-align: left;
+    }
+
+    .legal-section h2 {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 12px;
+      color: #1a1a1a;
+    }
+
+    .legal-section p {
+      font-size: 14.5px;
+      color: #3c4043;
+      margin-bottom: 12px;
+      line-height: 1.6;
+    }
+
+    .legal-section ul {
+      margin-left: 20px;
+      margin-bottom: 16px;
+      font-size: 14.5px;
+      color: #3c4043;
+    }
+
+    .legal-section li {
+      margin-bottom: 6px;
+    }
+
+    .legal-link {
+      color: #4285F4;
+      font-weight: 600;
+    }
+
+    .legal-link:hover {
+      text-decoration: underline;
+    }
+
+    /* Footer Column Styles */
+    footer {
+      background-color: #f8f9fa; /* light grey background */
+      border-top: 1px solid #e1e3e5;
+      padding: 60px 0 0;
+      position: relative;
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 40px;
+      margin-bottom: 40px;
+    }
+
+    @media (min-width: 576px) {
+      .footer-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (min-width: 992px) {
+      .footer-grid {
+        grid-template-columns: repeat(4, 1fr);
+      }
+    }
+
+    .footer-col {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .footer-title {
+      font-size: 12px;
+      font-weight: 700;
+      color: #5f6368;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .footer-links {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .footer-link {
+      font-size: 13px;
+      color: #3c4043;
+      transition: color 0.15s ease;
+    }
+
+    .footer-link:hover {
+      color: #4285F4;
+    }
+
+    .footer-description {
+      font-size: 13px;
+      color: #5f6368;
+      line-height: 1.6;
+    }
+
+    .footer-bottom {
+      background-color: #FFFFFF;
+      border-top: 1px solid #e8eaed;
+      padding: 24px;
+      margin-top: 40px;
+      width: 100vw;
+      margin-left: calc(-50vw + 50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      box-sizing: border-box;
+    }
+
+    @media (min-width: 768px) {
+      .footer-bottom {
+        flex-direction: row;
+      }
+    }
+
+    @media (min-width: 1200px) {
+      .footer-bottom {
+        padding-left: calc((100vw - 1152px) / 2);
+        padding-right: calc((100vw - 1152px) / 2);
+      }
+    }
+
+    .copyright {
+      font-size: 12px;
+      color: #5f6368;
+    }
+
+    .footer-legal-links {
+      display: flex;
+      gap: 20px;
+    }
+
+    .footer-legal-link {
+      font-size: 12px;
+      color: #3c4043;
+      transition: color 0.15s ease;
+    }
+
+    .footer-legal-link:hover {
+      color: #4285F4;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <header>
+    <div class="container nav-wrapper">
+      <a href="index.html" class="logo">Semiconk</a>
+      <nav class="nav-links">
+        <a href="index.html#categories" class="nav-link">Categories</a>
+        <a href="index.html#blueprints" class="nav-link">Blueprints</a>
+        <a href="index.html#suppliers" class="nav-link">Suppliers</a>
+        <a href="info.html" class="nav-link">BOM Matcher</a>
+        <a href="index.html#ask-ai" class="nav-link">Ask AI</a>
+      </nav>
+      <div class="nav-actions">
+        <a href="signin.html" class="btn btn-outline" style="border-radius: 100px;">Sign In</a>
+        <a href="register-user.html" class="btn btn-primary" style="border-radius: 100px;">Get Started</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Legal Document Wrapper -->
+  <main>
+    <div class="container">
+      <article class="legal-card">
+        <h1 class="legal-title">Terms of Service</h1>
+        <p class="legal-subtitle">Effective Date: June 2, 2026 | Last Updated: June 2, 2026</p>
+
+        <section class="legal-section">
+          <h2>1. Agreement to Terms</h2>
+          <p>By using Semiconk, you agree to these Terms of Service. If you do not agree, do not use the platform.</p>
+        </section>
+
+        <section class="legal-section">
+          <h2>2. User Accounts</h2>
+          <p>You are responsible for maintaining the confidentiality of your account. You agree to provide accurate information. You are liable for all activities under your account.</p>
+        </section>
+
+        <section class="legal-section">
+          <h2>3. User Conduct</h2>
+          <p>Users agree NOT to:</p>
+          <ul>
+            <li>Post false or misleading information.</li>
+            <li>Engage in fraud or illegal activities.</li>
+            <li>Harass or abuse other users.</li>
+            <li>Infringe on intellectual property rights.</li>
+            <li>Attempt to damage or disrupt the platform.</li>
+          </ul>
+        </section>
+
+        <section class="legal-section">
+          <h2>4. Supplier Responsibilities</h2>
+          <ul>
+            <li>Suppliers agree to provide accurate product/service information.</li>
+            <li>Suppliers are responsible for their own compliance with local laws.</li>
+            <li>Semiconk does not verify supplier credentials (users should conduct due diligence).</li>
+            <li>Suppliers retain ownership of their business information.</li>
+          </ul>
+        </section>
+
+        <section class="legal-section">
+          <h2>5. Buyer Responsibilities</h2>
+          <ul>
+            <li>Buyers are responsible for verifying supplier details.</li>
+            <li>Buyers must comply with local procurement laws.</li>
+            <li>Semiconk acts as a platform only, not as a party to supplier-buyer transactions.</li>
+          </ul>
+        </section>
+
+        <section class="legal-section">
+          <h2>6. Intellectual Property</h2>
+          <p>All content on Semiconk (logos, design, text) is owned by Semiconk Inc. Users retain rights to their own content.</p>
+        </section>
+
+        <section class="legal-section">
+          <h2>7. Limitation of Liability</h2>
+          <p>Semiconk provides the platform "as-is" without warranties. We are not liable for indirect, incidental, or consequential damages arising from your use of the platform.</p>
+        </section>
+
+        <section class="legal-section">
+          <h2>8. Dispute Resolution</h2>
+          <p>Disputes shall be resolved through arbitration or mediation. Users agree to resolve disputes fairly and in good faith.</p>
+        </section>
+
+        <section class="legal-section">
+          <h2>9. Termination</h2>
+          <p>Semiconk reserves the right to suspend or terminate accounts that violate these terms.</p>
+        </section>
+
+        <section class="legal-section">
+          <h2>10. Governing Law</h2>
+          <p>These terms are governed by applicable laws. Specific jurisdictional laws apply where users operate.</p>
+        </section>
+      </article>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container footer-grid">
+      <div class="footer-col">
+        <h4 class="footer-title">Popular Categories</h4>
+        <div class="footer-links">
+          <a href="index.html#categories" class="footer-link">Microcontrollers</a>
+          <a href="index.html#categories" class="footer-link">Sensors & Dev Kits</a>
+          <a href="index.html#categories" class="footer-link">Batteries & Power</a>
+          <a href="index.html#categories" class="footer-link">Smartwatch Castings</a>
+          <a href="index.html#categories" class="footer-link">PCB Fabrication</a>
+        </div>
+      </div>
+
+      <div class="footer-col">
+        <h4 class="footer-title">Top Searches</h4>
+        <div class="footer-links">
+          <a href="info.html?q=iPhone+15" class="footer-link">iPhone 15 BOM</a>
+          <a href="info.html?q=Smartwatch" class="footer-link">Smartwatch Sinks</a>
+          <a href="info.html?q=Shampoo" class="footer-link">Chemical Formula Mixtures</a>
+          <a href="info.html?q=Solar+Panel" class="footer-link">Grid Inverter Stations</a>
+        </div>
+      </div>
+
+      <div class="footer-col">
+        <h4 class="footer-title">About Us</h4>
+        <p class="footer-description">
+          Semiconk is committed to local, decentralized product prototyping. We empower makers to find local inventory within 40km.
+        </p>
+      </div>
+    </div>
+
+    <div class="container footer-bottom">
+      <div class="copyright">© 2026 Semiconk Inc. All rights reserved.</div>
+      <div class="footer-legal-links">
+        <a href="privacy-policy.html" class="footer-legal-link">Privacy Policy</a>
+        <a href="terms-of-service.html" class="footer-legal-link">Terms of Service</a>
+        <a href="supplier-standards.html" class="footer-legal-link">Supplier Standards</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Supabase Auth Script -->
+  <script>
+    const { createClient } = supabase;
+    const sb = createClient(
+      'https://cbaseyojrpcufndmybkb.supabase.co',
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNiYXNleW9qcnBjdWZuZG15YmtiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAzMjU0NzUsImV4cCI6MjA5NTkwMTQ3NX0.f5zuumrdyltFFyJs4tcqkI68yUMhTFLZM35UDPc3c8'
+    );
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      try {
+        const { data: { user } } = await sb.auth.getUser();
+        if (user) {
+          const navActions = document.querySelector('.nav-actions');
+          if (navActions) {
+            const email = user.email || '';
+            const initial = email ? email.charAt(0).toUpperCase() : '?';
+            navActions.innerHTML = `
+              <div class="user-profile-menu-container" style="position: relative;">
+                <button id="account-btn" class="btn" style="border: 1px solid #dadce0; background-color: #ffffff; color: #3c4043; border-radius: 100px; display: inline-flex; align-items: center; gap: 8px; padding: 4px 12px 4px 16px; cursor: pointer; transition: all 0.2s ease; height: 40px; box-shadow: 0 1px 2px rgba(0,0,0,0.05); text-decoration: none;">
+                  <span style="font-size: 14px; font-weight: 600;">My Account</span>
+                  <div style="background-color: #4285F4; color: #ffffff; border-radius: 50%; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 700; text-transform: uppercase;">${initial}</div>
+                </button>
+                <div id="account-dropdown" style="display: none; position: absolute; right: 0; top: calc(100% + 8px); background-color: #ffffff; border: 1px solid #dadce0; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); width: 220px; z-index: 1000; overflow: hidden; padding: 6px 0; text-align: left;">
+                  <div style="padding: 10px 16px; border-bottom: 1px solid #f1f3f4; margin-bottom: 4px;">
+                    <div style="font-size: 11px; font-weight: 500; color: #70757a; text-transform: uppercase; letter-spacing: 0.5px;">Signed in as</div>
+                    <div style="font-size: 13px; font-weight: 600; color: #202124; text-overflow: ellipsis; overflow: hidden; white-space: nowrap;" title="${email}">${email}</div>
+                  </div>
+                  <a href="profile.html" class="dropdown-item" style="display: block; padding: 10px 16px; font-size: 14px; color: #3c4043; transition: background-color 0.15s ease; text-decoration: none; font-weight: 500;">Profile</a>
+                  <a href="location.html" class="dropdown-item" style="display: block; padding: 10px 16px; font-size: 14px; color: #3c4043; transition: background-color 0.15s ease; text-decoration: none; font-weight: 500;">My Location</a>
+                  <a href="register-company.html" class="dropdown-item" style="display: block; padding: 10px 16px; font-size: 14px; color: #3c4043; transition: background-color 0.15s ease; text-decoration: none; font-weight: 500;">Register Company</a>
+                  <a href="#" id="signout-link" class="dropdown-item" style="display: block; padding: 10px 16px; font-size: 14px; color: #d93025; transition: background-color 0.15s ease; text-decoration: none; font-weight: 600;">Sign Out</a>
+                </div>
+              </div>
+            `;
+
+            const styleNode = document.createElement('style');
+            styleNode.textContent = `
+              .dropdown-item:hover {
+                background-color: #f8f9fa !important;
+              }
+            `;
+            document.head.appendChild(styleNode);
+
+            const accountBtn = document.getElementById('account-btn');
+            const dropdown = document.getElementById('account-dropdown');
+            const signOutLink = document.getElementById('signout-link');
+
+            if (accountBtn && dropdown) {
+              accountBtn.addEventListener('click', (e) => {
+                const isOpen = dropdown.style.display === 'block';
+                dropdown.style.display = isOpen ? 'none' : 'block';
+              });
+            }
+
+            if (signOutLink) {
+              signOutLink.addEventListener('click', async (e) => {
+                e.preventDefault();
+                await sb.auth.signOut();
+                window.location.href = 'index.html';
+              });
+            }
+
+            document.addEventListener('click', function(e) {
+              const dropdown = document.getElementById('account-dropdown')
+              const accountBtn = document.getElementById('account-btn')
+              if (dropdown && !dropdown.contains(e.target) && !accountBtn.contains(e.target)) {
+                dropdown.style.display = 'none'
+              }
+            })
+
+            document.addEventListener('keydown', function(e) {
+              if (e.key === 'Escape') {
+                const dropdown = document.getElementById('account-dropdown')
+                if (dropdown) dropdown.style.display = 'none'
+              }
+            })
+          }
+        }
+      } catch (err) {
+        console.error('Navbar Auth Check error:', err);
+      }
+    });
+  </script>
+</body>
+</html>
