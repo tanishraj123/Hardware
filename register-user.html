@@ -818,7 +818,10 @@
         const { data, error } = await sb.auth.signUp({
           email,
           password,
-          options: { data: { full_name: fullName, role } }
+          options: {
+            emailRedirectTo: 'https://hardware-cfw.pages.dev',
+            data: { full_name: fullName, role }
+          }
         });
 
         if (error) {
@@ -839,7 +842,19 @@
           }]);
         }
 
-        showMessage('Account created! Please check your email to verify.', 'success');
+        // Auto sign the user in immediately
+        const { data: signInData, error: signInError } = await sb.auth.signInWithPassword({ email, password });
+        if (!signInError) {
+          showMessage('Account created successfully! Logging in...', 'success');
+          setTimeout(() => {
+            window.location.href = 'index.html';
+          }, 1000);
+        } else {
+          showMessage('Account created! Please sign in with your credentials.', 'success');
+          setTimeout(() => {
+            window.location.href = 'signin.html';
+          }, 2000);
+        }
       } catch (err) {
         showMessage(err.message || 'An unexpected error occurred.', 'error');
       } finally {
