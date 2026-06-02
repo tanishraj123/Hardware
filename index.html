@@ -291,15 +291,20 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 10px;
-      flex-wrap: wrap;
+      gap: 8px;
       margin-bottom: 32px;
+      width: 100%;
+      max-width: 680px;
+      overflow: hidden;
+      flex-wrap: nowrap;
     }
 
     .suggestion-label {
       font-size: 14px;
       color: #5f6368;
       font-weight: 600;
+      white-space: nowrap;
+      flex-shrink: 0;
     }
 
     .suggestion-chip {
@@ -321,6 +326,8 @@
       transform: translateX(0);
       white-space: nowrap;
       max-width: 300px;
+      flex-shrink: 0;
+      pointer-events: auto;
     }
 
     .suggestion-chip:hover {
@@ -973,7 +980,7 @@
       <!-- Suggestion chips centered below search bar -->
       <div class="suggestion-row">
         <span class="suggestion-label">Suggestions:</span>
-        <div id="suggestion-ticker-container" style="display: flex; align-items: center; gap: 10px; flex-wrap: nowrap; overflow: hidden; max-width: 100%;">
+        <div id="suggestion-ticker-container" style="display: flex; align-items: center; gap: 8px; flex-wrap: nowrap; overflow: hidden; width: 580px; max-width: calc(100% - 100px); pointer-events: none;">
           <!-- Populated by JavaScript -->
         </div>
       </div>
