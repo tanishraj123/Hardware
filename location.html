@@ -236,6 +236,8 @@
       opacity: 0;
       transform: translateY(20px);
       transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      white-space: pre-line;
+      text-align: left;
     }
 
     .toast.show {
@@ -373,7 +375,7 @@
         </div>
 
         <!-- Manual Location Search Field -->
-        <div style="position: relative; margin-bottom: 20px;">
+        <div id="manual-search-container" style="position: relative; margin-bottom: 20px; display: none;">
           <label style="font-size: 13px; font-weight: 600; color: #3c4043; display: block; margin-bottom: 6px; text-align: left;">Search Your Location</label>
           <div style="position: relative;">
             <input type="text" id="location-search-input" class="location-search-input-field" placeholder="Search location... e.g., Nehru Place, New Delhi">
@@ -389,6 +391,11 @@
         <button id="detect-location-btn" class="btn btn-primary" style="width: 100%; border-radius: 999px; height: 44px; display: inline-flex; align-items: center; justify-content: center; gap: 8px;">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon-inline" style="display: inline-block; vertical-align: text-bottom;"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>Detect My Location
         </button>
+        <div style="text-align: center; margin-top: 12px; margin-bottom: 4px;">
+          <button type="button" id="toggle-manual-search-btn" style="background: none; border: none; color: #4285F4; font-size: 13px; font-weight: 600; cursor: pointer; text-decoration: underline; font-family: inherit; padding: 4px 8px;">
+            Can't detect location? Type manually below
+          </button>
+        </div>
         <p style="font-size: 11px; color: #5f6368; text-align: center; margin-top: 8px; margin-bottom: 0;">We use your location only to calculate supplier distances</p>
       </div>
     </div>
@@ -578,7 +585,35 @@
         },
         (error) => {
           console.error('Geo error:', error);
-          showToast('Could not detect location. Please allow location access.', 'error');
+          
+          const getBrowserName = () => {
+            const ua = navigator.userAgent;
+            if (ua.indexOf('Ulaa') > -1) return 'Ulaa';
+            if (ua.indexOf('Safari') > -1 && ua.indexOf('Chrome') === -1) return 'Safari';
+            if (ua.indexOf('Chrome') > -1) return 'Chrome';
+            if (ua.indexOf('Firefox') > -1) return 'Firefox';
+            if (ua.indexOf('Edg') > -1) return 'Edge';
+            return 'Browser';
+          };
+
+          const getBrowserLocationMessage = () => {
+            const browser = getBrowserName();
+            if (browser === 'Ulaa') {
+              return "Location blocked in Ulaa Browser. To enable:\n1. Open Ulaa Settings → Privacy & Security\n2. Find Location Permissions\n3. Add Semiconk and set to 'Allow Always'\n4. Refresh page and try again";
+            } else if (browser === 'Safari') {
+              return "Location blocked in Safari. To enable:\n1. Go to Settings → Privacy → Location Services\n2. Find Semiconk and set to 'Allow'\n3. Try again";
+            } else if (browser === 'Chrome') {
+              return "Location permission denied. To enable:\n1. Click the lock icon in address bar\n2. Find Location → Allow\n3. Refresh and try again";
+            } else if (browser === 'Firefox') {
+              return "Location permission denied. To enable:\n1. Click the shield icon in address bar\n2. Select Location → Allow\n3. Try again";
+            } else if (browser === 'Edge') {
+              return "Location permission denied. To enable:\n1. Click the lock icon in address bar\n2. Find Location → Allow\n3. Refresh and try again";
+            } else {
+              return "Location access denied. Please check your browser privacy settings and allow location access for this site.";
+            }
+          };
+
+          showToast(getBrowserLocationMessage(), 'error');
           if (btn) {
             btn.innerHTML = originalHTML;
             btn.disabled = false;
@@ -809,6 +844,21 @@
       document.addEventListener('click', (e) => {
         if (searchInput && suggestionsDropdown && !searchInput.contains(e.target) && !suggestionsDropdown.contains(e.target)) {
           suggestionsDropdown.style.display = 'none';
+        }
+      });
+    }
+
+    // Toggle manual input search container block
+    const toggleManualSearchBtn = document.getElementById('toggle-manual-search-btn');
+    const manualSearchContainer = document.getElementById('manual-search-container');
+    if (toggleManualSearchBtn && manualSearchContainer) {
+      toggleManualSearchBtn.addEventListener('click', () => {
+        if (manualSearchContainer.style.display === 'none') {
+          manualSearchContainer.style.display = 'block';
+          const inputEl = document.getElementById('location-search-input');
+          if (inputEl) inputEl.focus();
+        } else {
+          manualSearchContainer.style.display = 'none';
         }
       });
     }

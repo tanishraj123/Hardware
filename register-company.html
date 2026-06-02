@@ -202,6 +202,25 @@
       opacity: 0;
       transform: translateY(20px);
       transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      white-space: pre-line;
+      text-align: left;
+    }
+
+    .suggestion-item {
+      padding: 10px 16px;
+      font-size: 13.5px;
+      color: #3c4043;
+      cursor: pointer;
+      border-bottom: 1px solid #f1f3f4;
+      transition: background-color 0.15s ease;
+      text-align: left;
+    }
+    .suggestion-item:last-child {
+      border-bottom: none;
+    }
+    .suggestion-item:hover {
+      background-color: #f8f9fa;
+      color: #4285F4;
     }
 
     .toast.show {
@@ -396,6 +415,22 @@
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon-inline" style="display: inline-block; vertical-align: text-bottom;"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
               Detect Company Location
             </button>
+            <button type="button" id="toggle-company-manual-btn" style="background: none; border: none; color: #4285F4; font-size: 12.5px; font-weight: 600; cursor: pointer; text-decoration: underline; font-family: inherit; margin-top: 6px; width: fit-content; display: block; text-align: left; padding: 4px 0;">
+              Can't detect location? Type manually below
+            </button>
+            <!-- Manual Search Text Input (initially hidden) -->
+            <div id="company-manual-search-container" style="position: relative; margin-top: 12px; display: none; width: 100%;">
+              <label style="font-size: 12px; font-weight: 600; color: #5f6368; display: block; margin-bottom: 6px; text-align: left;">Type Address to Search</label>
+              <div style="position: relative;">
+                <input type="text" id="company-manual-search-input" style="width: 100%; height: 38px; border: 1px solid #dadce0; border-radius: 8px; padding: 0 12px; font-size: 13px; color: #1a1a1a; outline: none; box-sizing: border-box;" placeholder="Search location... e.g., Nehru Place, New Delhi">
+                <div id="company-search-spinner" style="display: none; position: absolute; right: 12px; top: 11px;">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#4285F4" stroke-width="2.5" style="animation: spin 1s linear infinite;"><path d="M12 2v4m0 12v4M4.93 4.93l2.83 2.83m8.48 8.48l2.83 2.83M2 12h4m12 0h4M4.93 19.07l2.83-2.83m8.48-8.48l2.83-2.83"/></svg>
+                </div>
+              </div>
+              <!-- Dropdown container -->
+              <div id="company-location-suggestions" style="display: none; position: absolute; left: 0; right: 0; top: 100%; margin-top: 4px; background-color: #ffffff; border: 1px solid #dadce0; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); z-index: 1000; max-height: 185px; overflow-y: auto; text-align: left;">
+              </div>
+            </div>
           </div>
 
           <div style="display: flex; flex-direction: column; gap: 6px;">
@@ -758,11 +793,136 @@
           },
           (error) => {
             console.error('Geolocation position mismatch:', error);
-            showToast('Unable to detect GPS position. You can type the address manually.', 'error');
+            
+            const getBrowserName = () => {
+              const ua = navigator.userAgent;
+              if (ua.indexOf('Ulaa') > -1) return 'Ulaa';
+              if (ua.indexOf('Safari') > -1 && ua.indexOf('Chrome') === -1) return 'Safari';
+              if (ua.indexOf('Chrome') > -1) return 'Chrome';
+              if (ua.indexOf('Firefox') > -1) return 'Firefox';
+              if (ua.indexOf('Edg') > -1) return 'Edge';
+              return 'Browser';
+            };
+
+            const getBrowserLocationMessage = () => {
+              const browser = getBrowserName();
+              if (browser === 'Ulaa') {
+                return "Location blocked in Ulaa Browser. To enable:\n1. Open Ulaa Settings → Privacy & Security\n2. Find Location Permissions\n3. Add Semiconk and set to 'Allow Always'\n4. Refresh page and try again";
+              } else if (browser === 'Safari') {
+                return "Location blocked in Safari. To enable:\n1. Go to Settings → Privacy → Location Services\n2. Find Semiconk and set to 'Allow'\n3. Try again";
+              } else if (browser === 'Chrome') {
+                return "Location permission denied. To enable:\n1. Click the lock icon in address bar\n2. Find Location → Allow\n3. Refresh and try again";
+              } else if (browser === 'Firefox') {
+                return "Location permission denied. To enable:\n1. Click the shield icon in address bar\n2. Select Location → Allow\n3. Try again";
+              } else if (browser === 'Edge') {
+                return "Location permission denied. To enable:\n1. Click the lock icon in address bar\n2. Find Location → Allow\n3. Refresh and try again";
+              } else {
+                return "Location access denied. Please check your browser privacy settings and allow location access for this site.";
+              }
+            };
+
+            showToast(getBrowserLocationMessage(), 'error');
             detectCompanyLocBtn.innerHTML = originalHTML;
             detectCompanyLocBtn.disabled = false;
           }
         );
+      });
+    }
+
+    // Toggle manual/address-search on register-company.html
+    const toggleCompanyManualBtn = document.getElementById('toggle-company-manual-btn');
+    const companyManualContainer = document.getElementById('company-manual-search-container');
+    if (toggleCompanyManualBtn && companyManualContainer) {
+      toggleCompanyManualBtn.addEventListener('click', () => {
+        if (companyManualContainer.style.display === 'none') {
+          companyManualContainer.style.display = 'block';
+          const inputEl = document.getElementById('company-manual-search-input');
+          if (inputEl) inputEl.focus();
+        } else {
+          companyManualContainer.style.display = 'none';
+        }
+      });
+    }
+
+    // Debounce helper
+    function debounce(func, wait) {
+      let timeout;
+      return function(...args) {
+        clearTimeout(timeout);
+        timeout = setTimeout(() => func.apply(this, args), wait);
+      };
+    }
+
+    // Company Manual location autocomplete search
+    const companySearchInput = document.getElementById('company-manual-search-input');
+    const companySuggestionsDropdown = document.getElementById('company-location-suggestions');
+    const companySpinner = document.getElementById('company-search-spinner');
+
+    if (companySearchInput) {
+      const handleCompanyInput = debounce(async (e) => {
+        const query = e.target.value.trim();
+        if (query.length < 3) {
+          companySuggestionsDropdown.innerHTML = '';
+          companySuggestionsDropdown.style.display = 'none';
+          return;
+        }
+
+        if (companySpinner) companySpinner.style.display = 'block';
+
+        try {
+          const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&limit=5`);
+          if (!res.ok) throw new Error('Search request failed');
+          const data = await res.json();
+
+          companySuggestionsDropdown.innerHTML = '';
+          if (data && data.length > 0) {
+            data.forEach(item => {
+              const div = document.createElement('div');
+              div.className = 'suggestion-item';
+              div.textContent = item.display_name;
+              div.addEventListener('click', () => {
+                const display_name = item.display_name;
+
+                // Set manual input value
+                companySearchInput.value = display_name;
+                companySuggestionsDropdown.innerHTML = '';
+                companySuggestionsDropdown.style.display = 'none';
+
+                // Set main Company Address field value
+                const companyAddressField = document.getElementById('company-address-input');
+                if (companyAddressField) {
+                  companyAddressField.value = display_name;
+                  companyAddressField.dispatchEvent(new Event('input', { bubbles: true }));
+                }
+                
+                showToast("Address populated from search selection.");
+              });
+              companySuggestionsDropdown.appendChild(div);
+            });
+            companySuggestionsDropdown.style.display = 'block';
+          } else {
+            const emptyDiv = document.createElement('div');
+            emptyDiv.className = 'suggestion-item';
+            emptyDiv.style.color = '#70757a';
+            emptyDiv.style.fontStyle = 'italic';
+            emptyDiv.textContent = 'No suggestions found';
+            companySuggestionsDropdown.appendChild(emptyDiv);
+            companySuggestionsDropdown.style.display = 'block';
+          }
+        } catch (err) {
+          console.error('Error fetching company location suggestions:', err);
+        } finally {
+          if (companySpinner) companySpinner.style.display = 'none';
+        }
+      }, 400);
+
+      companySearchInput.addEventListener('input', handleCompanyInput);
+
+      // Hide dropdown when clicking outside
+      document.addEventListener('click', (e) => {
+        if (companySearchInput && companySuggestionsDropdown && !companySearchInput.contains(e.target) && !companySuggestionsDropdown.contains(e.target)) {
+          companySuggestionsDropdown.style.display = 'none';
+        }
       });
     }
 
