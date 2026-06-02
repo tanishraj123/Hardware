@@ -1,6 +1,6 @@
 {
   "name": "Local Hardware Sourcing Platform",
-  "description": "An AI-powered local hardware component sourcing platform to discover, search, and procure open-source hardware blueprints and components locally within a 40km radius.",
+  "description": "GrabRaw is an AI-powered search engine that breaks down any product into its complete Bill of Materials and finds local suppliers near you.",
   "requestFramePermissions": [],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }

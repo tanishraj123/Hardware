@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Register Your Company — Semiconk</title>
+  <title>Register Your Company — GrabRaw</title>
   
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -380,7 +380,7 @@
   <!-- Navbar -->
   <header>
     <div class="container nav-wrapper">
-      <a href="index.html" class="logo">Semiconk</a>
+      <a href="index.html" class="logo">GrabRaw</a>
       <nav class="nav-links">
         <a href="index.html#categories" class="nav-link">Categories</a>
         <a href="index.html#blueprints" class="nav-link">Blueprints</a>
@@ -401,7 +401,7 @@
     <div class="profile-card">
       <div id="company" class="section-div">
         <h2 class="section-heading" style="font-size: 18px; margin-bottom: 8px;">Register Your Company</h2>
-        <p class="section-subtext" style="margin-bottom: 20px;">List your business as a verified supplier on Semiconk</p>
+        <p class="section-subtext" style="margin-bottom: 20px;">List your business as a verified supplier on GrabRaw</p>
         
         <div id="company-status-container" style="margin-bottom: 20px;">
           <!-- Will inject company status badge dynamically -->
@@ -485,8 +485,8 @@
   <footer>
     <div class="container footer-grid">
       <div class="footer-col">
-        <h4 class="footer-title">Semiconk</h4>
-        <p class="footer-description">Semiconk breaks down any complex hardware or formula into raw components, helping hardware builders and suppliers connect within a 40km local radius seamlessly.</p>
+        <h4 class="footer-title">GrabRaw</h4>
+        <p class="footer-description">GrabRaw is an AI-powered search engine that breaks down any product into its complete Bill of Materials and finds local suppliers near you.</p>
       </div>
       <div class="footer-col" style="text-align: right;">
         <h4 class="footer-title">Supplier Standards</h4>
@@ -494,7 +494,7 @@
       </div>
     </div>
     <div class="container footer-bottom">
-      <div class="copyright">© 2026 Semiconk Inc. All rights reserved.</div>
+      <div class="copyright">© 2026 GrabRaw Inc. All rights reserved.</div>
       <div class="footer-legal-links">
         <a href="privacy-policy.html" class="footer-legal-link">Privacy Policy</a>
         <a href="terms-of-service.html" class="footer-legal-link">Terms of Service</a>
@@ -708,7 +708,7 @@
             const { error: upsertErr } = await sb.from('profiles').upsert({
               id: currentUser.id,
               ...updateData,
-              full_name: currentUser.user_metadata?.full_name || currentUser.user_metadata?.first_name || 'Semiconk Builder',
+              full_name: currentUser.user_metadata?.full_name || currentUser.user_metadata?.first_name || 'GrabRaw Builder',
               role: currentUser.user_metadata?.role || 'builder'
             });
             if (upsertErr) throw upsertErr;
@@ -807,9 +807,9 @@
             const getBrowserLocationMessage = () => {
               const browser = getBrowserName();
               if (browser === 'Ulaa') {
-                return "Location blocked in Ulaa Browser. To enable:\n1. Open Ulaa Settings → Privacy & Security\n2. Find Location Permissions\n3. Add Semiconk and set to 'Allow Always'\n4. Refresh page and try again";
+                return "Location blocked in Ulaa Browser. To enable:\n1. Open Ulaa Settings → Privacy & Security\n2. Find Location Permissions\n3. Add GrabRaw and set to 'Allow Always'\n4. Refresh page and try again";
               } else if (browser === 'Safari') {
-                return "Location blocked in Safari. To enable:\n1. Go to Settings → Privacy → Location Services\n2. Find Semiconk and set to 'Allow'\n3. Try again";
+                return "Location blocked in Safari. To enable:\n1. Go to Settings → Privacy → Location Services\n2. Find GrabRaw and set to 'Allow'\n3. Try again";
               } else if (browser === 'Chrome') {
                 return "Location permission denied. To enable:\n1. Click the lock icon in address bar\n2. Find Location → Allow\n3. Refresh and try again";
               } else if (browser === 'Firefox') {

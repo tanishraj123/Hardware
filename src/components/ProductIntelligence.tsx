@@ -105,7 +105,7 @@ export default function ProductIntelligence({
   const [materials, setMaterials] = useState<MaterialItem[]>([]);
   const [isBotChatOpen, setIsBotChatOpen] = useState(false);
   const [chatMessages, setChatMessages] = useState<Array<{ sender: 'user' | 'assistant', text: string }>>([
-    { sender: 'assistant', text: "Hi there! I'm the Semiconk Sourcing Assistant. Ask me anything about raw materials, logistics, pricing margins or local stock proximity." }
+    { sender: 'assistant', text: "Hi there! I'm the GrabRaw Sourcing Assistant. Ask me anything about raw materials, logistics, pricing margins or local stock proximity." }
   ]);
   const [userInput, setUserInput] = useState("");
 
@@ -135,7 +135,7 @@ export default function ProductIntelligence({
   };
 
   const handlePdfDownload = () => {
-    alert(`Generating high-fidelity Semiconk AI Sourcing Bill of Materials PDF for "${productName}"...\nIncludes 8 identified regional raw materials, logistics analysis, and 12 local verified suppliers.`);
+    alert(`Generating high-fidelity GrabRaw AI Sourcing Bill of Materials PDF for "${productName}"...\nIncludes 8 identified regional raw materials, logistics analysis, and 12 local verified suppliers.`);
   };
 
   const handleBotChatSend = (e: React.FormEvent) => {
@@ -350,7 +350,7 @@ export default function ProductIntelligence({
                 </div>
                 <div>
                   <h3 className="font-bold text-sm">Ask AI Sourcing Bot</h3>
-                  <p className="text-[10px] text-gray-400">Semiconk Local Intelligence</p>
+                  <p className="text-[10px] text-gray-400">GrabRaw Local Intelligence</p>
                 </div>
               </div>
               <button 

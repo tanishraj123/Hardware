@@ -44,7 +44,7 @@ export default function Navbar({
           }}
         >
           <span className="font-display text-xl sm:text-2xl font-bold tracking-tight text-gray-900" id="nav-logo-text">
-            Semiconk
+            GrabRaw
           </span>
         </div>
 

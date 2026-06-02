@@ -1038,10 +1038,10 @@ export default function App() {
             {/* Logo Column */}
             <div className="space-y-3">
               <div className="flex items-center">
-                <span className="font-display text-xl font-bold tracking-tight text-gray-900">Semiconk</span>
+                <span className="font-display text-xl font-bold tracking-tight text-gray-900">GrabRaw</span>
               </div>
               <p className="text-xs text-gray-500 leading-relaxed">
-                The AI-powered "Shopify for Products" sourcing pipeline. Read local schematics, scan inventory in Real-Time, and assemble within hours.
+                GrabRaw is an AI-powered search engine that breaks down any product into its complete Bill of Materials and finds local suppliers near you.
               </p>
             </div>
 
@@ -1077,18 +1077,18 @@ export default function App() {
                 About Us
               </h4>
               <p className="text-xs text-gray-500 leading-relaxed leading-normal">
-                Semiconk is committed to local, decentralized product prototyping. We empower makers to find local inventory within 40km.
+                GrabRaw is committed to local, decentralized product prototyping. We empower makers to find local inventory within 40km.
               </p>
             </div>
 
           </div>
 
           <div className="pt-8 border-t border-gray-100 flex flex-col md:flex-row items-center justify-between text-xs text-gray-400 font-medium">
-            <p>© 2026 Semiconk Inc. All rights reserved.</p>
+            <p>© 2026 GrabRaw Inc. All rights reserved.</p>
             <div className="flex space-x-6 mt-4 md:mt-0">
-              <a href="#" className="hover:underline hover:text-gray-600 transition">Privacy Policy</a>
-              <a href="#" className="hover:underline hover:text-gray-600 transition">Terms of Use</a>
-              <a href="#" className="hover:underline hover:text-gray-600 transition">Supplier Application</a>
+              <a href="privacy-policy.html" className="hover:underline hover:text-gray-600 transition">Privacy Policy</a>
+              <a href="terms-of-service.html" className="hover:underline hover:text-gray-600 transition">Terms of Service</a>
+              <a href="supplier-standards.html" className="hover:underline hover:text-gray-600 transition">Supplier Standards</a>
             </div>
           </div>
 

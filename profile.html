@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>User Profile — Semiconk</title>
+  <title>User Profile — GrabRaw</title>
   
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -640,7 +640,7 @@
   <!-- Navbar -->
   <header>
     <div class="container nav-wrapper">
-      <a href="index.html" class="logo">Semiconk</a>
+      <a href="index.html" class="logo">GrabRaw</a>
       <nav class="nav-links">
         <a href="index.html#categories" class="nav-link">Categories</a>
         <a href="index.html#blueprints" class="nav-link">Blueprints</a>
@@ -714,7 +714,7 @@
         <h3 class="section-heading" style="color: #ea4335; margin-bottom: 12px;">Danger Zone</h3>
         <div class="danger-zone">
           <p style="font-size: 13px; color: #5f6368; margin-bottom: 16px;">Logging out will clear your active session. You will need to sign in again to browse saved local suppliers.</p>
-          <button id="danger-signout-btn" class="btn btn-danger">Sign Out of Semiconk</button>
+          <button id="danger-signout-btn" class="btn btn-danger">Sign Out of GrabRaw</button>
         </div>
       </div>
 
@@ -744,8 +744,8 @@
   <footer>
     <div class="container footer-grid">
       <div class="footer-col">
-        <h4 class="footer-title">Semiconk</h4>
-        <p class="footer-description">Semiconk breaks down any complex hardware or formula into raw components, helping hardware builders and suppliers connect within a 40km local radius seamlessly.</p>
+        <h4 class="footer-title">GrabRaw</h4>
+        <p class="footer-description">GrabRaw is an AI-powered search engine that breaks down any product into its complete Bill of Materials and finds local suppliers near you.</p>
       </div>
       <div class="footer-col" style="text-align: right;">
         <h4 class="footer-title">Supplier Standards</h4>
@@ -753,7 +753,7 @@
       </div>
     </div>
     <div class="container footer-bottom">
-      <div class="copyright">© 2026 Semiconk Inc. All rights reserved.</div>
+      <div class="copyright">© 2026 GrabRaw Inc. All rights reserved.</div>
       <div class="footer-legal-links">
         <a href="privacy-policy.html" class="footer-legal-link">Privacy Policy</a>
         <a href="terms-of-service.html" class="footer-legal-link">Terms of Service</a>
@@ -1285,7 +1285,7 @@
         } else if (user.user_metadata && user.user_metadata.full_name) {
           fullName = user.user_metadata.full_name;
         } else {
-          fullName = user.user_metadata?.first_name || 'Semiconk Builder';
+          fullName = user.user_metadata?.first_name || 'GrabRaw Builder';
         }
         fullNameEl.textContent = fullName;
 
@@ -1399,7 +1399,7 @@
               phone_number: numberValue,
               phone_country_code: currentSelectedCountryCode,
               phone_verified: false,
-              full_name: currentUser.user_metadata?.full_name || currentUser.user_metadata?.first_name || 'Semiconk Builder',
+              full_name: currentUser.user_metadata?.full_name || currentUser.user_metadata?.first_name || 'GrabRaw Builder',
               role: currentUser.user_metadata?.role || 'builder'
             });
             if (upsertErr) throw upsertErr;
