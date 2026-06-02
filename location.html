@@ -180,6 +180,40 @@
       font-weight: 500;
     }
 
+    .location-search-input-field {
+      width: 100%;
+      height: 44px;
+      border: 1px solid #dadce0;
+      border-radius: 12px;
+      padding: 0 16px;
+      font-size: 14px;
+      color: #1a1a1a;
+      outline: none;
+      background-color: #ffffff;
+      box-sizing: border-box;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+    .location-search-input-field:focus {
+      border-color: #4285F4;
+      box-shadow: 0 0 0 2px rgba(66, 133, 244, 0.15);
+    }
+    .suggestion-item {
+      padding: 10px 16px;
+      font-size: 13.5px;
+      color: #3c4043;
+      cursor: pointer;
+      border-bottom: 1px solid #f1f3f4;
+      transition: background-color 0.15s ease;
+      text-align: left;
+    }
+    .suggestion-item:last-child {
+      border-bottom: none;
+    }
+    .suggestion-item:hover {
+      background-color: #f8f9fa;
+      color: #4285F4;
+    }
+
     /* Toast system */
     .toast-container {
       position: fixed;
@@ -335,6 +369,20 @@
           <!-- Will inject location saved status dynamically -->
           <div style="font-size: 14px; color: #5f6368; font-style: italic;">
             Loading location details...
+          </div>
+        </div>
+
+        <!-- Manual Location Search Field -->
+        <div style="position: relative; margin-bottom: 20px;">
+          <label style="font-size: 13px; font-weight: 600; color: #3c4043; display: block; margin-bottom: 6px; text-align: left;">Search Your Location</label>
+          <div style="position: relative;">
+            <input type="text" id="location-search-input" class="location-search-input-field" placeholder="Search location... e.g., Nehru Place, New Delhi">
+            <div id="search-loading-spinner" style="display: none; position: absolute; right: 12px; top: 14px;">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#4285F4" stroke-width="2.5" style="animation: spin 1s linear infinite;"><path d="M12 2v4m0 12v4M4.93 4.93l2.83 2.83m8.48 8.48l2.83 2.83M2 12h4m12 0h4M4.93 19.07l2.83-2.83m8.48-8.48l2.83-2.83"/></svg>
+            </div>
+          </div>
+          <!-- Dropdown container -->
+          <div id="location-suggestions-dropdown" style="display: none; position: absolute; left: 0; right: 0; top: 100%; margin-top: 4px; background-color: #ffffff; border: 1px solid #dadce0; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); z-index: 1000; max-height: 200px; overflow-y: auto;">
           </div>
         </div>
 
@@ -643,6 +691,125 @@
     if (detectLocBtn) {
       detectLocBtn.addEventListener('click', () => {
         detectLocation();
+      });
+    }
+
+    // Debounce helper
+    function debounce(func, wait) {
+      let timeout;
+      return function(...args) {
+        clearTimeout(timeout);
+        timeout = setTimeout(() => func.apply(this, args), wait);
+      };
+    }
+
+    async function saveSelectedLocation(lat, lon, locationText) {
+      if (!currentUser) {
+        showToast("Please sign in or register to set location.", "error");
+        return;
+      }
+      try {
+        const updateData = { 
+          latitude: lat, 
+          longitude: lon, 
+          location_text: locationText 
+        };
+
+        const { error: updateError } = await sb.from('profiles').update(updateData).eq('id', currentUser.id);
+        if (updateError) {
+          const { error: upsertErr } = await sb.from('profiles').upsert({
+            id: currentUser.id,
+            latitude: lat,
+            longitude: lon,
+            location_text: locationText,
+            full_name: currentUser.user_metadata?.full_name || currentUser.user_metadata?.first_name || 'Semiconk Builder',
+            role: currentUser.user_metadata?.role || 'builder'
+          });
+          if (upsertErr) throw upsertErr;
+        }
+
+        if (!currentProfileState) {
+          currentProfileState = {};
+        }
+        currentProfileState.latitude = lat;
+        currentProfileState.longitude = lon;
+        currentProfileState.location_text = locationText;
+
+        updateLocationDisplay(currentProfileState);
+        showToast("Location saved! We'll find suppliers near you.");
+
+      } catch (err) {
+        console.error('Error saving selected location:', err);
+        showToast('Failed to save selected location.', 'error');
+      }
+    }
+
+    // Manual location autocomplete search
+    const searchInput = document.getElementById('location-search-input');
+    const suggestionsDropdown = document.getElementById('location-suggestions-dropdown');
+    const spinner = document.getElementById('search-loading-spinner');
+
+    if (searchInput) {
+      const handleInput = debounce(async (e) => {
+        const query = e.target.value.trim();
+        if (query.length < 3) {
+          suggestionsDropdown.innerHTML = '';
+          suggestionsDropdown.style.display = 'none';
+          return;
+        }
+
+        if (spinner) spinner.style.display = 'block';
+
+        try {
+          const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&limit=5`);
+          if (!res.ok) throw new Error('Search request failed');
+          const data = await res.json();
+
+          suggestionsDropdown.innerHTML = '';
+          if (data && data.length > 0) {
+            data.forEach(item => {
+              const div = document.createElement('div');
+              div.className = 'suggestion-item';
+              div.textContent = item.display_name;
+              div.addEventListener('click', async () => {
+                const lat = parseFloat(item.lat);
+                const lon = parseFloat(item.lon);
+                const display_name = item.display_name;
+
+                // Set input value
+                searchInput.value = display_name;
+                suggestionsDropdown.innerHTML = '';
+                suggestionsDropdown.style.display = 'none';
+
+                // Save to Supabase
+                await saveSelectedLocation(lat, lon, display_name);
+              });
+              suggestionsDropdown.appendChild(div);
+            });
+            suggestionsDropdown.style.display = 'block';
+          } else {
+            const emptyDiv = document.createElement('div');
+            emptyDiv.className = 'suggestion-item';
+            emptyDiv.style.color = '#70757a';
+            emptyDiv.style.fontStyle = 'italic';
+            emptyDiv.textContent = 'No suggestions found';
+            suggestionsDropdown.appendChild(emptyDiv);
+            suggestionsDropdown.style.display = 'block';
+          }
+        } catch (err) {
+          console.error('Error fetching location suggestions:', err);
+        } finally {
+          if (spinner) spinner.style.display = 'none';
+        }
+      }, 400);
+
+      searchInput.addEventListener('input', handleInput);
+
+      // Hide dropdown when clicking outside
+      document.addEventListener('click', (e) => {
+        if (searchInput && suggestionsDropdown && !searchInput.contains(e.target) && !suggestionsDropdown.contains(e.target)) {
+          suggestionsDropdown.style.display = 'none';
+        }
       });
     }
 

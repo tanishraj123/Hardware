@@ -217,6 +217,28 @@ export default function ProductIntelligence({
             </div>
           </div>
 
+          {/* Supplier Proximity Radar Sourcing Notification Note (CHANGE 2) */}
+          <div className="p-4 rounded-2xl bg-gray-50 border border-gray-150 text-left">
+            <div className="flex items-start gap-3">
+              <div className="bg-blue-50 text-[#4285F4] rounded-full w-5 h-5 flex items-center justify-center font-bold text-xs shrink-0 mt-0.5">
+                i
+              </div>
+              <div className="flex-1">
+                <p className="text-sm text-gray-600 leading-relaxed font-normal">
+                  Showing suppliers within 40km radius. If fewer than 3 suppliers found, we'll show the nearest available.
+                </p>
+                <div className="flex flex-col gap-1.5 mt-3 pt-2 border-t border-gray-200">
+                  <div className="flex items-center gap-1.5 text-xs font-semibold text-green-700">
+                    <span>✓</span> 5 suppliers found within 40km
+                  </div>
+                  <div className="flex items-center gap-1.5 text-xs font-medium text-amber-700">
+                    <span>⚠</span> Only 2 suppliers within 40km. Showing nearest 3 available within 65km
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
           {/* List items */}
           <div className="space-y-4">
             {materials.map((m) => {

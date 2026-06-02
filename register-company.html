@@ -389,6 +389,15 @@
         </div>
 
         <div style="display: flex; flex-direction: column; gap: 16px;">
+          <div style="display: flex; flex-direction: column; gap: 8px; border-bottom: 1px solid #f1f3f4; padding-bottom: 20px;">
+            <label style="font-size: 13px; font-weight: 600; color: #3c4043; text-align: left; display: block;">Company Location</label>
+            <p style="font-size: 11.5px; color: #5f6368; margin: 0 0 8px 0; text-align: left;">Detect your current coordinate position to automatically fill the company address below.</p>
+            <button type="button" id="detect-company-location-btn" class="btn btn-primary" style="background-color: #4285F4; color: #ffffff; width: fit-content; border-radius: 999px; height: 38px; padding: 0 16px; font-size: 13px; font-weight: 600; display: inline-flex; align-items: center; justify-content: center; gap: 6px; border: none; cursor: pointer;">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon-inline" style="display: inline-block; vertical-align: text-bottom;"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              Detect Company Location
+            </button>
+          </div>
+
           <div style="display: flex; flex-direction: column; gap: 6px;">
             <label style="font-size: 13px; font-weight: 600; color: #3c4043;">Company Name</label>
             <input type="text" id="company-name-input" class="company-input" placeholder="e.g. MetroTech Electronics">
@@ -689,6 +698,71 @@
           saveCompanyBtn.textContent = 'Save Company Info';
           saveCompanyBtn.disabled = false;
         }
+      });
+    }
+
+    // Geolocation trigger for Company Location
+    const detectCompanyLocBtn = document.getElementById('detect-company-location-btn');
+    if (detectCompanyLocBtn) {
+      detectCompanyLocBtn.addEventListener('click', () => {
+        const originalHTML = detectCompanyLocBtn.innerHTML;
+        detectCompanyLocBtn.textContent = 'Detecting...';
+        detectCompanyLocBtn.disabled = true;
+
+        if (!navigator.geolocation) {
+          showToast('Geolocation is not supported by your browser.', 'error');
+          detectCompanyLocBtn.innerHTML = originalHTML;
+          detectCompanyLocBtn.disabled = false;
+          return;
+        }
+
+        navigator.geolocation.getCurrentPosition(
+          async (position) => {
+            const lat = position.coords.latitude;
+            const lon = position.coords.longitude;
+
+            try {
+              const response = await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json`);
+              if (!response.ok) throw new Error('Geocoding service unavailable');
+              const data = await response.json();
+              
+              const addr = data.address || {};
+              const cityOrTown = addr.city || addr.town || addr.village || addr.city_district || '';
+              const state = addr.state || '';
+              const country = addr.country || '';
+              const road = addr.road || '';
+              const suburb = addr.suburb || addr.neighbourhood || '';
+              
+              let parts = [];
+              if (road) parts.push(road);
+              if (suburb) parts.push(suburb);
+              if (cityOrTown) parts.push(cityOrTown);
+              if (state) parts.push(state);
+              if (country) parts.push(country);
+
+              const fullAddress = parts.length > 0 ? parts.join(', ') : `${lat.toFixed(4)}, ${lon.toFixed(4)}`;
+              
+              const companyAddressInput = document.getElementById('company-address-input');
+              if (companyAddressInput) {
+                companyAddressInput.value = fullAddress;
+              }
+
+              showToast("Location detected! You can edit the address below if needed");
+            } catch (err) {
+              console.error('Error reverse geocoding:', err);
+              showToast('Geocoding service unavailable. You can type the address manually.', 'error');
+            } finally {
+              detectCompanyLocBtn.innerHTML = originalHTML;
+              detectCompanyLocBtn.disabled = false;
+            }
+          },
+          (error) => {
+            console.error('Geolocation position mismatch:', error);
+            showToast('Unable to detect GPS position. You can type the address manually.', 'error');
+            detectCompanyLocBtn.innerHTML = originalHTML;
+            detectCompanyLocBtn.disabled = false;
+          }
+        );
       });
     }
 
