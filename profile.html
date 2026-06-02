@@ -275,7 +275,7 @@
     /* Flex row for Phone number verification inputs */
     .phone-input-row {
       display: flex;
-      gap: 8px;
+      align-items: stretch;
       position: relative;
       margin-bottom: 16px;
     }
@@ -285,11 +285,12 @@
       align-items: center;
       gap: 6px;
       border: 1px solid #dadce0;
+      border-right: none;
       background-color: #ffffff;
       color: #202124;
-      border-radius: 8px;
+      border-radius: 12px 0 0 12px;
       padding: 0 16px;
-      height: 44px;
+      height: 48px;
       cursor: pointer;
       font-size: 15px;
       font-weight: 500;
@@ -300,14 +301,13 @@
 
     .country-selector:hover {
       background-color: #f8f9fa;
-      border-color: #bdc1c6;
     }
 
     .number-input {
       flex: 1;
-      height: 44px;
+      height: 48px;
       border: 1px solid #dadce0;
-      border-radius: 8px;
+      border-radius: 0 12px 12px 0;
       padding: 0 16px;
       font-size: 15px;
       color: #1a1a1a;
@@ -318,6 +318,8 @@
     .number-input:focus {
       border-color: #4285F4;
       box-shadow: 0 0 0 2px rgba(66, 133, 244, 0.15);
+      position: relative;
+      z-index: 1;
     }
 
     .button-group {
@@ -704,74 +706,6 @@
         </div>
       </div>
 
-      <!-- SECTION 2.5 — My Location -->
-      <div class="section-div" id="location">
-        <h3 class="section-heading">My Location</h3>
-        <p class="section-subtext">Used to find local suppliers near you. Never shared publicly.</p>
-        
-        <div id="location-display-container" style="margin-bottom: 16px;">
-          <!-- Will inject location saved status dynamically -->
-        </div>
-
-        <button id="detect-location-btn" class="btn btn-primary" style="width: 100%; border-radius: 999px; height: 44px; display: inline-flex; align-items: center; justify-content: center; gap: 8px;">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon-inline" style="display: inline-block; vertical-align: text-bottom;"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>Detect My Location
-        </button>
-        <p style="font-size: 11px; color: #5f6368; text-align: center; margin-top: 8px; margin-bottom: 0;">We use your location only to calculate supplier distances</p>
-      </div>
-
-      <!-- SECTION 2.6 — Register Your Company -->
-      <div id="company" class="section-div">
-        <h3 class="section-heading">Register Your Company</h3>
-        <p class="section-subtext" style="margin-bottom: 16px;">List your business as a verified supplier on Semiconk</p>
-        
-        <div id="company-status-container" style="margin-bottom: 16px;">
-          <!-- Will inject company status badge dynamically -->
-        </div>
-
-        <div style="display: flex; flex-direction: column; gap: 16px;">
-          <div style="display: flex; flex-direction: column; gap: 6px;">
-            <label style="font-size: 13px; font-weight: 600; color: #3c4043;">Company Name</label>
-            <input type="text" id="company-name-input" class="company-input" placeholder="e.g. MetroTech Electronics">
-          </div>
-
-          <div style="display: flex; flex-direction: column; gap: 6px;">
-            <label style="font-size: 13px; font-weight: 600; color: #3c4043;">Company Website (optional)</label>
-            <input type="url" id="company-web-input" class="company-input" placeholder="https://yourwebsite.com">
-          </div>
-
-          <div style="display: flex; flex-direction: column; gap: 6px;">
-            <label style="font-size: 13px; font-weight: 600; color: #3c4043;">Company Type</label>
-            <select id="company-type-input" class="company-select">
-              <option value="">Select company type</option>
-              <option value="Electronics Supplier">Electronics Supplier</option>
-              <option value="Chemical Supplier">Chemical Supplier</option>
-              <option value="Raw Materials">Raw Materials</option>
-              <option value="Packaging">Packaging</option>
-              <option value="Mechanical Parts">Mechanical Parts</option>
-              <option value="PCB Manufacturer">PCB Manufacturer</option>
-              <option value="Textile & Fabric">Textile & Fabric</option>
-              <option value="Food Ingredients">Food Ingredients</option>
-              <option value="Pharmaceutical">Pharmaceutical</option>
-              <option value="Other">Other</option>
-            </select>
-          </div>
-
-          <div style="display: flex; flex-direction: column; gap: 6px;">
-            <label style="font-size: 13px; font-weight: 600; color: #3c4043;">Company Address</label>
-            <input type="text" id="company-address-input" class="company-input" placeholder="Full address of your business">
-          </div>
-
-          <div style="display: flex; flex-direction: column; gap: 6px;">
-            <label style="font-size: 13px; font-weight: 600; color: #3c4043;">Products / Materials Supplied</label>
-            <textarea id="company-products-input" class="company-textarea" rows="3" placeholder="e.g. OLED screens, lithium batteries, copper wire..."></textarea>
-          </div>
-
-          <button id="save-company-btn" class="btn btn-primary" style="width: 100%; border-radius: 999px; height: 44px;">
-            Save Company Info
-          </button>
-        </div>
-      </div>
-
       <!-- SECTION 3 — Danger Zone -->
       <div class="section-div">
         <h3 class="section-heading" style="color: #ea4335; margin-bottom: 12px;">Danger Zone</h3>
@@ -1067,175 +1001,6 @@
       }, 3500);
     }
 
-    // Render My Location display state
-    function updateLocationDisplay(profileData) {
-      const container = document.getElementById('location-display-container');
-      if (!container) return;
-
-      if (profileData && profileData.latitude !== undefined && profileData.latitude !== null && profileData.longitude !== undefined && profileData.longitude !== null) {
-        const text = profileData.location_text || `${profileData.latitude.toFixed(4)}, ${profileData.longitude.toFixed(4)}`;
-        container.innerHTML = `
-          <div style="display: flex; flex-direction: column; gap: 8px;">
-            <div style="display: flex; align-items: center; gap: 8px;">
-              <span class="success-text" style="padding: 2px 8px; border-radius: 4px; font-size: 11px;">Location Saved</span>
-            </div>
-            <div style="font-size: 14px; color: #5f6368; display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
-              <span style="display: inline-flex; align-items: center; gap: 6px;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: inherit;"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>${text}</span>
-              <a href="#" id="update-location-link" style="color: #4285F4; text-decoration: none; font-size: 13px; font-weight: 600; cursor: pointer;">Update Location</a>
-            </div>
-          </div>
-        `;
-
-        // Bind update link
-        const updateLink = document.getElementById('update-location-link');
-        if (updateLink) {
-          updateLink.addEventListener('click', (e) => {
-            e.preventDefault();
-            detectLocation();
-          });
-        }
-      } else {
-        container.innerHTML = `
-          <div style="font-size: 14px; color: #5f6368; font-style: italic;">
-            No location saved yet
-          </div>
-        `;
-      }
-    }
-
-    // Geolocation trigger
-    function detectLocation() {
-      if (!currentUser) return;
-
-      const btn = document.getElementById('detect-location-btn');
-      const originalHTML = btn ? btn.innerHTML : '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon-inline" style="display: inline-block; vertical-align: text-bottom;"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>Detect My Location';
-      if (btn) {
-        btn.textContent = 'Detecting...';
-        btn.disabled = true;
-      }
-
-      if (!navigator.geolocation) {
-        showToast('Geolocation is not supported by your browser.', 'error');
-        if (btn) {
-          btn.innerHTML = originalHTML;
-          btn.disabled = false;
-        }
-        return;
-      }
-
-      navigator.geolocation.getCurrentPosition(
-        async (position) => {
-          const lat = position.coords.latitude;
-          const lon = position.coords.longitude;
-
-          try {
-            const response = await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json`);
-            if (!response.ok) throw new Error('Geocoding service unavailable');
-            const data = await response.json();
-            
-            const addr = data.address || {};
-            const cityOrTown = addr.city || addr.town || addr.village || addr.city_district || '';
-            const state = addr.state || '';
-            const country = addr.country || '';
-            
-            // Try to find a distinct local place name
-            const localPlace = addr.suburb || addr.neighbourhood || addr.industrial || addr.commercial || addr.road || addr.quarter || addr.amenity || '';
-
-            let parts = [];
-            if (localPlace) parts.push(localPlace);
-            if (cityOrTown && cityOrTown !== localPlace) parts.push(cityOrTown);
-            if (state) parts.push(state);
-            if (country) parts.push(country);
-
-            const locationText = parts.length > 0 ? parts.join(', ') : `${lat.toFixed(4)}, ${lon.toFixed(4)}`;
-
-            const updateData = { 
-              latitude: lat, 
-              longitude: lon, 
-              location_text: locationText 
-            };
-
-            const { error: updateError } = await sb.from('profiles').update(updateData).eq('id', currentUser.id);
-            if (updateError) {
-              const { error: upsertErr } = await sb.from('profiles').upsert({
-                id: currentUser.id,
-                latitude: lat,
-                longitude: lon,
-                location_text: locationText,
-                full_name: currentUser.user_metadata?.full_name || currentUser.user_metadata?.first_name || 'Semiconk Builder',
-                role: currentUser.user_metadata?.role || 'builder'
-              });
-              if (upsertErr) throw upsertErr;
-            }
-
-            if (!currentProfileState) {
-              currentProfileState = {};
-            }
-            currentProfileState.latitude = lat;
-            currentProfileState.longitude = lon;
-            currentProfileState.location_text = locationText;
-
-            updateLocationDisplay(currentProfileState);
-            showToast("Location saved! We'll find suppliers near you.");
-
-          } catch (err) {
-            console.error('Reverse geocode / save error:', err);
-            showToast('Failed to retrieve location details or save profile.', 'error');
-          } finally {
-            if (btn) {
-              btn.innerHTML = originalHTML;
-              btn.disabled = false;
-            }
-          }
-        },
-        (error) => {
-          console.error('Geo error:', error);
-          showToast('Could not detect location. Please allow location access.', 'error');
-          if (btn) {
-            btn.innerHTML = originalHTML;
-            btn.disabled = false;
-          }
-        },
-        { enableHighAccuracy: true }
-      );
-    }
-
-    // Render "Register Your Company" display state
-    function updateCompanyDisplay(profileData) {
-      const statusContainer = document.getElementById('company-status-container');
-      if (!statusContainer) return;
-
-      if (profileData && profileData.company_name) {
-        statusContainer.innerHTML = `
-          <div style="display: flex; flex-direction: column; gap: 8px;">
-            <div style="display: flex; align-items: center; gap: 8px;">
-              <span class="success-text" style="padding: 2px 8px; border-radius: 4px; font-size: 11px;">Company Registered</span>
-            </div>
-            <div style="font-size: 14px; color: #1a1a1a;">
-              Registered as: <strong>${profileData.company_name}</strong>
-            </div>
-          </div>
-        `;
-      } else {
-        statusContainer.innerHTML = '';
-      }
-
-      // Populate input values
-      if (profileData) {
-        const nameInput = document.getElementById('company-name-input');
-        const webInput = document.getElementById('company-web-input');
-        const typeInput = document.getElementById('company-type-input');
-        const addressInput = document.getElementById('company-address-input');
-        const productsInput = document.getElementById('company-products-input');
-
-        if (nameInput) nameInput.value = profileData.company_name || '';
-        if (webInput) webInput.value = profileData.company_website || '';
-        if (typeInput) typeInput.value = profileData.company_type || '';
-        if (addressInput) addressInput.value = profileData.company_address || '';
-        if (productsInput) productsInput.value = profileData.company_products_supplied || '';
-      }
-    }
-
     // Number input behavior helper
     const phoneInput = document.getElementById('phone-num-input');
     if (phoneInput) {
@@ -1432,18 +1197,9 @@
                   <div style="font-size: 13px; font-weight: 600; color: #202124; text-overflow: ellipsis; overflow: hidden; white-space: nowrap;" title="${email}">${email}</div>
                 </div>
                 <a href="profile.html" class="dropdown-item" style="display: block; padding: 10px 16px; font-size: 14px; color: #3c4043; transition: background-color 0.15s ease; text-decoration: none; font-weight: 500;">Profile</a>
-                <a href="profile.html#location" class="dropdown-item" style="display: flex; align-items: center; gap: 8px; padding: 10px 16px; font-size: 14px; color: #3c4043; transition: background-color 0.15s ease; text-decoration: none; font-weight: 500;">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: #5f6368;"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                  My Location
-                </a>
-                <a href="profile.html#company" class="dropdown-item" style="display: flex; align-items: center; gap: 8px; padding: 10px 16px; font-size: 14px; color: #3c4043; transition: background-color 0.15s ease; text-decoration: none; font-weight: 500;">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: #5f6368;"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 3v18"/><path d="M3 9h6"/><path d="M3 15h6"/></svg>
-                  Register Company
-                </a>
-                <a href="#" id="signout-link" class="dropdown-item" style="display: flex; align-items: center; gap: 8px; padding: 10px 16px; font-size: 14px; color: #d93025; transition: background-color 0.15s ease; text-decoration: none; font-weight: 600;">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: #d93025;"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
-                  Sign Out
-                </a>
+                <a href="location.html" class="dropdown-item" style="display: block; padding: 10px 16px; font-size: 14px; color: #3c4043; transition: background-color 0.15s ease; text-decoration: none; font-weight: 500;">My Location</a>
+                <a href="register-company.html" class="dropdown-item" style="display: block; padding: 10px 16px; font-size: 14px; color: #3c4043; transition: background-color 0.15s ease; text-decoration: none; font-weight: 500;">Register Company</a>
+                <a href="#" id="signout-link" class="dropdown-item" style="display: block; padding: 10px 16px; font-size: 14px; color: #d93025; transition: background-color 0.15s ease; text-decoration: none; font-weight: 600;">Sign Out</a>
               </div>
             </div>
           `;
@@ -1573,13 +1329,9 @@
           }
           
           updatePhoneStatusPill(profile.phone_number, profile.phone_verified);
-          updateLocationDisplay(profile);
-          updateCompanyDisplay(profile);
         } else {
           currentProfileState = {};
           updatePhoneStatusPill('', false);
-          updateLocationDisplay(null);
-          updateCompanyDisplay(null);
         }
 
       } catch (err) {
@@ -1659,77 +1411,6 @@
         } finally {
           savePhoneBtn.textContent = 'Save Number';
           savePhoneBtn.disabled = false;
-        }
-      });
-    }
-
-    // Detect Location Button Click
-    const detectLocBtn = document.getElementById('detect-location-btn');
-    if (detectLocBtn) {
-      detectLocBtn.addEventListener('click', () => {
-        detectLocation();
-      });
-    }
-
-    // Save Company Details Button Click
-    const saveCompanyBtn = document.getElementById('save-company-btn');
-    if (saveCompanyBtn) {
-      saveCompanyBtn.addEventListener('click', async () => {
-        if (!currentUser) return;
-
-        const company_name = document.getElementById('company-name-input').value.trim();
-        const company_website = document.getElementById('company-web-input').value.trim();
-        const company_type = document.getElementById('company-type-input').value;
-        const company_address = document.getElementById('company-address-input').value.trim();
-        const company_products_supplied = document.getElementById('company-products-input').value.trim();
-
-        if (!company_name) {
-          showToast('Please specify a Company Name.', 'error');
-          return;
-        }
-
-        saveCompanyBtn.textContent = 'Saving...';
-        saveCompanyBtn.disabled = true;
-
-        try {
-          const updateData = {
-            company_name,
-            company_website,
-            company_type,
-            company_address,
-            company_products_supplied
-          };
-
-          const { error: updateError } = await sb.from('profiles').update(updateData).eq('id', currentUser.id);
-          if (updateError) {
-            // Upsert fallback
-            const { error: upsertErr } = await sb.from('profiles').upsert({
-              id: currentUser.id,
-              ...updateData,
-              full_name: currentUser.user_metadata?.full_name || currentUser.user_metadata?.first_name || 'Semiconk Builder',
-              role: currentUser.user_metadata?.role || 'builder'
-            });
-            if (upsertErr) throw upsertErr;
-          }
-
-          if (!currentProfileState) {
-            currentProfileState = {};
-          }
-          currentProfileState.company_name = company_name;
-          currentProfileState.company_website = company_website;
-          currentProfileState.company_type = company_type;
-          currentProfileState.company_address = company_address;
-          currentProfileState.company_products_supplied = company_products_supplied;
-
-          showToast('Company info saved! Our team will review and list you as a supplier.');
-          updateCompanyDisplay(currentProfileState);
-
-        } catch (err) {
-          console.error('Error saving company parameters:', err);
-          showToast('Failed to save company info.', 'error');
-        } finally {
-          saveCompanyBtn.textContent = 'Save Company Info';
-          saveCompanyBtn.disabled = false;
         }
       });
     }

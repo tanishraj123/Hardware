@@ -428,6 +428,22 @@ async function startServer() {
     res.sendFile(filePath);
   });
 
+  app.get("/location", (req, res) => {
+    const isProd = process.env.NODE_ENV === "production";
+    const filePath = isProd 
+      ? path.join(process.cwd(), "dist/location.html")
+      : path.join(process.cwd(), "location.html");
+    res.sendFile(filePath);
+  });
+
+  app.get("/register-company", (req, res) => {
+    const isProd = process.env.NODE_ENV === "production";
+    const filePath = isProd 
+      ? path.join(process.cwd(), "dist/register-company.html")
+      : path.join(process.cwd(), "register-company.html");
+    res.sendFile(filePath);
+  });
+
   app.get("/", (req, res) => {
     const isProd = process.env.NODE_ENV === "production";
     const filePath = isProd 

@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Location — Semiconk</title>
+  
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    /* Modern Custom Stylesheet (Google Inspired Clean UI) */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      background-color: #f8f9fa;
+      color: #1a1a1a;
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* Navbar */
+    header {
+      background-color: #FFFFFF;
+      border-bottom: 1px solid #f1f3f4;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+
+    .nav-wrapper {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 0;
+    }
+
+    .logo {
+      font-size: 22px;
+      font-weight: 800;
+      color: #1a1a1a;
+      letter-spacing: -0.5px;
+    }
+
+    .nav-links {
+      display: none;
+      align-items: center;
+      gap: 32px;
+    }
+
+    @media (min-width: 768px) {
+      .nav-links {
+        display: flex;
+      }
+    }
+
+    .nav-link {
+      font-size: 14px;
+      font-weight: 500;
+      color: #5f6368;
+      transition: color 0.15s ease;
+    }
+
+    .nav-link:hover {
+      color: #4285F4;
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    /* Standardized Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: 600;
+      padding: 10px 20px;
+      border-radius: 8px;
+      transition: all 0.2s ease;
+      cursor: pointer;
+      border: none;
+      text-align: center;
+    }
+
+    .btn-outline {
+      background-color: transparent;
+      border: 1px solid #dadce0;
+      color: #3c4043;
+    }
+
+    .btn-outline:hover {
+      background-color: #f8f9fa;
+      border-color: #bdc1c6;
+    }
+
+    .btn-primary {
+      background-color: #4285F4;
+      color: #FFFFFF;
+    }
+
+    .btn-primary:hover {
+      background-color: #2b72eb;
+      box-shadow: 0 2px 6px rgba(66, 133, 244, 0.2);
+    }
+
+    /* Profile Page Main Wrap */
+    main {
+      flex: 1;
+      padding: 40px 16px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .profile-card {
+      width: 100%;
+      max-width: 600px;
+      background: #FFFFFF;
+      border-radius: 16px;
+      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
+      border: 1px solid #f1f3f4;
+      padding: 32px;
+    }
+
+    .section-div {
+      padding-bottom: 0px;
+      margin-bottom: 0px;
+    }
+
+    .section-heading {
+      font-size: 16px;
+      font-weight: 700;
+      color: #1a1a1a;
+      margin-bottom: 8px;
+    }
+
+    .section-subtext {
+      font-size: 13px;
+      color: #5f6368;
+      margin-bottom: 16px;
+    }
+
+    /* Warning & Success statuses */
+    .success-text {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      color: #137333;
+      background-color: #e6f4ea;
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-weight: 500;
+    }
+
+    /* Toast system */
+    .toast-container {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      z-index: 10000;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .toast {
+      background-color: #323232;
+      color: #ffffff;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .toast.toast-success {
+      background-color: #137333;
+    }
+
+    .toast.toast-error {
+      background-color: #c5221f;
+    }
+
+    /* Footer styled matching index.html */
+    footer {
+      background-color: #FFFFFF;
+      border-top: 1px solid #e8eaed;
+      padding: 40px 0 24px;
+      text-align: center;
+      margin-top: auto;
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 40px;
+      padding-bottom: 40px;
+    }
+
+    @media (min-width: 768px) {
+      .footer-grid {
+        grid-template-columns: 2fr 1fr;
+        text-align: left;
+      }
+    }
+
+    .footer-description {
+      font-size: 13px;
+      color: #5f6368;
+      line-height: 1.6;
+    }
+
+    .footer-col {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .footer-title {
+      font-size: 12px;
+      font-weight: 700;
+      color: #5f6368;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .footer-bottom {
+      background-color: #FFFFFF;
+      border-top: 1px solid #e8eaed;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    @media (min-width: 768px) {
+      .footer-bottom {
+        flex-direction: row;
+      }
+    }
+
+    .copyright {
+      font-size: 12px;
+      color: #5f6368;
+    }
+
+    .footer-legal-links {
+      display: flex;
+      gap: 20px;
+    }
+
+    .footer-legal-link {
+      font-size: 12px;
+      color: #3c4043;
+      transition: color 0.15s ease;
+    }
+
+    .footer-legal-link:hover {
+      color: #4285F4;
+    }
+
+    /* Dropdown CSS overrides */
+    .dropdown-item:hover {
+      background-color: #f8f9fa !important;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <header>
+    <div class="container nav-wrapper">
+      <a href="index.html" class="logo">Semiconk</a>
+      <nav class="nav-links">
+        <a href="index.html#categories" class="nav-link">Categories</a>
+        <a href="index.html#blueprints" class="nav-link">Blueprints</a>
+        <a href="index.html#suppliers" class="nav-link">Suppliers</a>
+        <a href="info.html" class="nav-link">BOM Matcher</a>
+        <a href="index.html#ask-ai" class="nav-link">Ask AI</a>
+      </nav>
+      <div class="nav-actions">
+        <!-- Replaced via Auth Check script below -->
+        <a href="signin.html" class="btn btn-outline" style="border-radius: 100px;">Sign In</a>
+        <a href="register-user.html" class="btn btn-primary" style="border-radius: 100px;">Get Started</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- My Location main content wrapper -->
+  <main>
+    <div class="profile-card">
+      <div class="section-div" id="location">
+        <h2 class="section-heading" style="font-size: 18px; margin-bottom: 8px;">My Location</h2>
+        <p class="section-subtext">Used to find local suppliers near you. Never shared publicly.</p>
+        
+        <div id="location-display-container" style="margin-bottom: 20px;">
+          <!-- Will inject location saved status dynamically -->
+          <div style="font-size: 14px; color: #5f6368; font-style: italic;">
+            Loading location details...
+          </div>
+        </div>
+
+        <button id="detect-location-btn" class="btn btn-primary" style="width: 100%; border-radius: 999px; height: 44px; display: inline-flex; align-items: center; justify-content: center; gap: 8px;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon-inline" style="display: inline-block; vertical-align: text-bottom;"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>Detect My Location
+        </button>
+        <p style="font-size: 11px; color: #5f6368; text-align: center; margin-top: 8px; margin-bottom: 0;">We use your location only to calculate supplier distances</p>
+      </div>
+    </div>
+  </main>
+
+  <!-- Toast system wrapper -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container footer-grid">
+      <div class="footer-col">
+        <h4 class="footer-title">Semiconk</h4>
+        <p class="footer-description">Semiconk breaks down any complex hardware or formula into raw components, helping hardware builders and suppliers connect within a 40km local radius seamlessly.</p>
+      </div>
+      <div class="footer-col" style="text-align: right;">
+        <h4 class="footer-title">Supplier Standards</h4>
+        <p class="footer-description">Helping local electronics retail and logistics hubs digitize instantly.</p>
+      </div>
+    </div>
+    <div class="container footer-bottom">
+      <div class="copyright">© 2026 Semiconk Inc. All rights reserved.</div>
+      <div class="footer-legal-links">
+        <a href="#" class="footer-legal-link">Privacy Policy</a>
+        <a href="#" class="footer-legal-link">Terms of Service</a>
+        <a href="#" class="footer-legal-link">Supplier Standards</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Script Logic -->
+  <script>
+    // Supabase credentials
+    const { createClient } = supabase;
+    const sb = createClient(
+      'https://cbaseyojrpcufndmybkb.supabase.co',
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNiYXNleW9qcnBjdWZuZG15YmtiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAzMjU0NzUsImV4cCI6MjA5NTkwMTQ3NX0.f5zuumrdjyltFFyJs4tcqkI68yUMhTFLZM35UDPc3c8'
+    );
+
+    let currentUser = null;
+    let currentProfileState = null;
+
+    // Elegant Toast Notification System
+    function showToast(message, type = 'success') {
+      const container = document.getElementById('toast-container');
+      if (!container) return;
+      
+      const toast = document.createElement('div');
+      toast.className = `toast toast-${type}`;
+      toast.textContent = message;
+      container.appendChild(toast);
+      
+      // Trigger animations
+      setTimeout(() => {
+        toast.classList.add('show');
+      }, 50);
+      
+      // Auto removal
+      setTimeout(() => {
+        toast.classList.remove('show');
+        setTimeout(() => {
+          toast.remove();
+        }, 300);
+      }, 3500);
+    }
+
+    // Render My Location display state
+    function updateLocationDisplay(profileData) {
+      const container = document.getElementById('location-display-container');
+      if (!container) return;
+
+      if (profileData && profileData.latitude !== undefined && profileData.latitude !== null && profileData.longitude !== undefined && profileData.longitude !== null) {
+        const text = profileData.location_text || `${profileData.latitude.toFixed(4)}, ${profileData.longitude.toFixed(4)}`;
+        container.innerHTML = `
+          <div style="display: flex; flex-direction: column; gap: 8px;">
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <span class="success-text" style="padding: 2px 8px; border-radius: 4px; font-size: 11px;">Location Saved</span>
+            </div>
+            <div style="font-size: 14px; color: #5f6368; display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+              <span style="display: inline-flex; align-items: center; gap: 6px;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: inherit;"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>${text}</span>
+              <a href="#" id="update-location-link" style="color: #4285F4; text-decoration: none; font-size: 13px; font-weight: 600; cursor: pointer;">Update Location</a>
+            </div>
+          </div>
+        `;
+
+        // Bind update link
+        const updateLink = document.getElementById('update-location-link');
+        if (updateLink) {
+          updateLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            detectLocation();
+          });
+        }
+      } else {
+        container.innerHTML = `
+          <div style="font-size: 14px; color: #5f6368; font-style: italic;">
+            No location saved yet
+          </div>
+        `;
+      }
+    }
+
+    // Geolocation trigger
+    function detectLocation() {
+      if (!currentUser) return;
+
+      const btn = document.getElementById('detect-location-btn');
+      const originalHTML = btn ? btn.innerHTML : '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon-inline" style="display: inline-block; vertical-align: text-bottom;"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>Detect My Location';
+      if (btn) {
+        btn.textContent = 'Detecting...';
+        btn.disabled = true;
+      }
+
+      if (!navigator.geolocation) {
+        showToast('Geolocation is not supported by your browser.', 'error');
+        if (btn) {
+          btn.innerHTML = originalHTML;
+          btn.disabled = false;
+        }
+        return;
+      }
+
+      navigator.geolocation.getCurrentPosition(
+        async (position) => {
+          const lat = position.coords.latitude;
+          const lon = position.coords.longitude;
+
+          try {
+            const response = await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json`);
+            if (!response.ok) throw new Error('Geocoding service unavailable');
+            const data = await response.json();
+            
+            const addr = data.address || {};
+            const cityOrTown = addr.city || addr.town || addr.village || addr.city_district || '';
+            const state = addr.state || '';
+            const country = addr.country || '';
+            
+            // Try to find a distinct local place name
+            const localPlace = addr.suburb || addr.neighbourhood || addr.industrial || addr.commercial || addr.road || addr.quarter || addr.amenity || '';
+
+            let parts = [];
+            if (localPlace) parts.push(localPlace);
+            if (cityOrTown && cityOrTown !== localPlace) parts.push(cityOrTown);
+            if (state) parts.push(state);
+            if (country) parts.push(country);
+
+            const locationText = parts.length > 0 ? parts.join(', ') : `${lat.toFixed(4)}, ${lon.toFixed(4)}`;
+
+            const updateData = { 
+              latitude: lat, 
+              longitude: lon, 
+              location_text: locationText 
+            };
+
+            const { error: updateError } = await sb.from('profiles').update(updateData).eq('id', currentUser.id);
+            if (updateError) {
+              const { error: upsertErr } = await sb.from('profiles').upsert({
+                id: currentUser.id,
+                latitude: lat,
+                longitude: lon,
+                location_text: locationText,
+                full_name: currentUser.user_metadata?.full_name || currentUser.user_metadata?.first_name || 'Semiconk Builder',
+                role: currentUser.user_metadata?.role || 'builder'
+              });
+              if (upsertErr) throw upsertErr;
+            }
+
+            if (!currentProfileState) {
+              currentProfileState = {};
+            }
+            currentProfileState.latitude = lat;
+            currentProfileState.longitude = lon;
+            currentProfileState.location_text = locationText;
+
+            updateLocationDisplay(currentProfileState);
+            showToast("Location saved! We'll find suppliers near you.");
+
+          } catch (err) {
+            console.error('Reverse geocode / save error:', err);
+            showToast('Failed to retrieve location details or save profile.', 'error');
+          } finally {
+            if (btn) {
+              btn.innerHTML = originalHTML;
+              btn.disabled = false;
+            }
+          }
+        },
+        (error) => {
+          console.error('Geo error:', error);
+          showToast('Could not detect location. Please allow location access.', 'error');
+          if (btn) {
+            btn.innerHTML = originalHTML;
+            btn.disabled = false;
+          }
+        },
+        { enableHighAccuracy: true }
+      );
+    }
+
+    // MAIN AUTH CHECK AND MOUNT FLOW
+    document.addEventListener('DOMContentLoaded', async () => {
+      try {
+        const { data: { user } } = await sb.auth.getUser();
+        
+        // If no user → redirect to signin.html
+        if (!user) {
+          window.location.href = 'signin.html';
+          return;
+        }
+
+        currentUser = user;
+
+        // Render Navbar Account Dropdown seamlessly
+        const navActions = document.querySelector('.nav-actions');
+        if (navActions) {
+          const email = user.email || '';
+          const initial = email ? email.charAt(0).toUpperCase() : '?';
+          navActions.innerHTML = `
+            <div class="user-profile-menu-container" style="position: relative;">
+               <button id="account-btn" class="btn" style="border: 1px solid #dadce0; background-color: #ffffff; color: #3c4043; border-radius: 100px; display: inline-flex; align-items: center; gap: 8px; padding: 4px 12px 4px 16px; cursor: pointer; transition: all 0.2s ease; height: 40px; box-shadow: 0 1px 2px rgba(0,0,0,0.05); text-decoration: none;">
+                <span style="font-size: 14px; font-weight: 600;">My Account</span>
+                <div style="background-color: #4285F4; color: #ffffff; border-radius: 50%; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 700; text-transform: uppercase;">${initial}</div>
+              </button>
+              <div id="account-dropdown" style="display: none; position: absolute; right: 0; top: calc(100% + 8px); background-color: #ffffff; border: 1px solid #dadce0; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); width: 220px; z-index: 1000; overflow: hidden; padding: 6px 0; text-align: left;">
+                <div style="padding: 10px 16px; border-bottom: 1px solid #f1f3f4; margin-bottom: 4px;">
+                  <div style="font-size: 11px; font-weight: 500; color: #70757a; text-transform: uppercase; letter-spacing: 0.5px;">Signed in as</div>
+                  <div style="font-size: 13px; font-weight: 600; color: #202124; text-overflow: ellipsis; overflow: hidden; white-space: nowrap;" title="${email}">${email}</div>
+                </div>
+                <a href="profile.html" class="dropdown-item" style="display: block; padding: 10px 16px; font-size: 14px; color: #3c4043; transition: background-color 0.15s ease; text-decoration: none; font-weight: 500;">Profile</a>
+                <a href="location.html" class="dropdown-item" style="display: block; padding: 10px 16px; font-size: 14px; color: #3c4043; transition: background-color 0.15s ease; text-decoration: none; font-weight: 500;">My Location</a>
+                <a href="register-company.html" class="dropdown-item" style="display: block; padding: 10px 16px; font-size: 14px; color: #3c4043; transition: background-color 0.15s ease; text-decoration: none; font-weight: 500;">Register Company</a>
+                <a href="#" id="signout-link" class="dropdown-item" style="display: block; padding: 10px 16px; font-size: 14px; color: #d93025; transition: background-color 0.15s ease; text-decoration: none; font-weight: 600;">Sign Out</a>
+              </div>
+            </div>
+          `;
+
+          const styleNode = document.createElement('style');
+          styleNode.textContent = `
+            .dropdown-item:hover {
+              background-color: #f8f9fa !important;
+            }
+          `;
+          document.head.appendChild(styleNode);
+
+          const accountBtn = document.getElementById('account-btn');
+          const dropdown = document.getElementById('account-dropdown');
+          const signOutLink = document.getElementById('signout-link');
+
+          if (accountBtn && dropdown) {
+            accountBtn.addEventListener('click', (e) => {
+              const isOpen = dropdown.style.display === 'block';
+              dropdown.style.display = isOpen ? 'none' : 'block';
+            });
+          }
+
+          if (signOutLink) {
+            signOutLink.addEventListener('click', async (e) => {
+              e.preventDefault();
+              await sb.auth.signOut();
+              window.location.href = 'index.html';
+            });
+          }
+
+          document.addEventListener('click', function(e) {
+            const dropdown = document.getElementById('account-dropdown')
+            const accountBtn = document.getElementById('account-btn')
+            if (dropdown && !dropdown.contains(e.target) && !accountBtn.contains(e.target)) {
+              dropdown.style.display = 'none'
+            }
+          })
+
+          document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+              const dropdown = document.getElementById('account-dropdown')
+              if (dropdown) dropdown.style.display = 'none'
+            }
+          })
+        }
+
+        // Fetch user profile row:
+        const { data: profile, error: profileErr } = await sb.from('profiles').select('*').eq('id', user.id).maybeSingle();
+
+        // Load existing location details if present
+        if (profile) {
+          currentProfileState = profile;
+          updateLocationDisplay(profile);
+        } else {
+          currentProfileState = {};
+          updateLocationDisplay(null);
+        }
+
+      } catch (err) {
+        console.error('Location Mount error:', err);
+        showToast('Failed to load profile parameters.', 'error');
+      }
+    });
+
+    // Detect Location Button Click
+    const detectLocBtn = document.getElementById('detect-location-btn');
+    if (detectLocBtn) {
+      detectLocBtn.addEventListener('click', () => {
+        detectLocation();
+      });
+    }
+
+  </script>
+</body>
+</html>

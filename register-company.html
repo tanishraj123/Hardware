@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Register Your Company — Semiconk</title>
+  
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    /* Modern Custom Stylesheet (Google Inspired Clean UI) */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      background-color: #f8f9fa;
+      color: #1a1a1a;
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* Navbar */
+    header {
+      background-color: #FFFFFF;
+      border-bottom: 1px solid #f1f3f4;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+
+    .nav-wrapper {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 0;
+    }
+
+    .logo {
+      font-size: 22px;
+      font-weight: 800;
+      color: #1a1a1a;
+      letter-spacing: -0.5px;
+    }
+
+    .nav-links {
+      display: none;
+      align-items: center;
+      gap: 32px;
+    }
+
+    @media (min-width: 768px) {
+      .nav-links {
+        display: flex;
+      }
+    }
+
+    .nav-link {
+      font-size: 14px;
+      font-weight: 500;
+      color: #5f6368;
+      transition: color 0.15s ease;
+    }
+
+    .nav-link:hover {
+      color: #4285F4;
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    /* Standardized Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: 600;
+      padding: 10px 20px;
+      border-radius: 8px;
+      transition: all 0.2s ease;
+      cursor: pointer;
+      border: none;
+      text-align: center;
+    }
+
+    .btn-outline {
+      background-color: transparent;
+      border: 1px solid #dadce0;
+      color: #3c4043;
+    }
+
+    .btn-outline:hover {
+      background-color: #f8f9fa;
+      border-color: #bdc1c6;
+    }
+
+    .btn-primary {
+      background-color: #4285F4;
+      color: #FFFFFF;
+    }
+
+    .btn-primary:hover {
+      background-color: #2b72eb;
+      box-shadow: 0 2px 6px rgba(66, 133, 244, 0.2);
+    }
+
+    /* Profile Page Main Wrap */
+    main {
+      flex: 1;
+      padding: 40px 16px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .profile-card {
+      width: 100%;
+      max-width: 600px;
+      background: #FFFFFF;
+      border-radius: 16px;
+      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
+      border: 1px solid #f1f3f4;
+      padding: 32px;
+    }
+
+    .section-div {
+      padding-bottom: 0px;
+      margin-bottom: 0px;
+    }
+
+    .section-heading {
+      font-size: 16px;
+      font-weight: 700;
+      color: #1a1a1a;
+      margin-bottom: 8px;
+    }
+
+    .section-subtext {
+      font-size: 13px;
+      color: #5f6368;
+      margin-bottom: 16px;
+    }
+
+    /* Warning & Success statuses */
+    .success-text {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      color: #137333;
+      background-color: #e6f4ea;
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-weight: 500;
+    }
+
+    /* Toast system */
+    .toast-container {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      z-index: 10000;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .toast {
+      background-color: #323232;
+      color: #ffffff;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .toast.toast-success {
+      background-color: #137333;
+    }
+
+    .toast.toast-error {
+      background-color: #c5221f;
+    }
+
+    /* Footer styled matching index.html */
+    footer {
+      background-color: #FFFFFF;
+      border-top: 1px solid #e8eaed;
+      padding: 40px 0 24px;
+      text-align: center;
+      margin-top: auto;
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 40px;
+      padding-bottom: 40px;
+    }
+
+    @media (min-width: 768px) {
+      .footer-grid {
+        grid-template-columns: 2fr 1fr;
+        text-align: left;
+      }
+    }
+
+    .footer-description {
+      font-size: 13px;
+      color: #5f6368;
+      line-height: 1.6;
+    }
+
+    .footer-col {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .footer-title {
+      font-size: 12px;
+      font-weight: 700;
+      color: #5f6368;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .footer-bottom {
+      background-color: #FFFFFF;
+      border-top: 1px solid #e8eaed;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    @media (min-width: 768px) {
+      .footer-bottom {
+        flex-direction: row;
+      }
+    }
+
+    .copyright {
+      font-size: 12px;
+      color: #5f6368;
+    }
+
+    .footer-legal-links {
+      display: flex;
+      gap: 20px;
+    }
+
+    .footer-legal-link {
+      font-size: 12px;
+      color: #3c4043;
+      transition: color 0.15s ease;
+    }
+
+    .footer-legal-link:hover {
+      color: #4285F4;
+    }
+
+    /* Dropdown CSS overrides */
+    .dropdown-item:hover {
+      background-color: #f8f9fa !important;
+    }
+
+    /* Company registration form style overrides */
+    .company-input {
+      width: 100%;
+      height: 44px;
+      border: 1px solid #dadce0;
+      border-radius: 12px;
+      padding: 0 16px;
+      font-size: 15px;
+      color: #1a1a1a;
+      outline: none;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+      box-sizing: border-box;
+      background-color: #ffffff;
+    }
+    .company-input:focus {
+      border-color: #4285F4;
+      box-shadow: 0 0 0 2px rgba(66, 133, 244, 0.15);
+    }
+    .company-textarea {
+      width: 100%;
+      border: 1px solid #dadce0;
+      border-radius: 12px;
+      padding: 12px 16px;
+      font-size: 15px;
+      color: #1a1a1a;
+      outline: none;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+      box-sizing: border-box;
+      background-color: #ffffff;
+      resize: vertical;
+    }
+    .company-textarea:focus {
+      border-color: #4285F4;
+      box-shadow: 0 0 0 2px rgba(66, 133, 244, 0.15);
+    }
+    .company-select {
+      width: 100%;
+      height: 44px;
+      border: 1px solid #dadce0;
+      border-radius: 12px;
+      padding: 0 16px;
+      font-size: 15px;
+      color: #1a1a1a;
+      outline: none;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+      box-sizing: border-box;
+      background-color: #ffffff;
+    }
+    .company-select:focus {
+      border-color: #4285F4;
+      box-shadow: 0 0 0 2px rgba(66, 133, 244, 0.15);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <header>
+    <div class="container nav-wrapper">
+      <a href="index.html" class="logo">Semiconk</a>
+      <nav class="nav-links">
+        <a href="index.html#categories" class="nav-link">Categories</a>
+        <a href="index.html#blueprints" class="nav-link">Blueprints</a>
+        <a href="index.html#suppliers" class="nav-link">Suppliers</a>
+        <a href="info.html" class="nav-link">BOM Matcher</a>
+        <a href="index.html#ask-ai" class="nav-link">Ask AI</a>
+      </nav>
+      <div class="nav-actions">
+        <!-- Replaced via Auth Check script below -->
+        <a href="signin.html" class="btn btn-outline" style="border-radius: 100px;">Sign In</a>
+        <a href="register-user.html" class="btn btn-primary" style="border-radius: 100px;">Get Started</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Register Company main content wrapper -->
+  <main>
+    <div class="profile-card">
+      <div id="company" class="section-div">
+        <h2 class="section-heading" style="font-size: 18px; margin-bottom: 8px;">Register Your Company</h2>
+        <p class="section-subtext" style="margin-bottom: 20px;">List your business as a verified supplier on Semiconk</p>
+        
+        <div id="company-status-container" style="margin-bottom: 20px;">
+          <!-- Will inject company status badge dynamically -->
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 16px;">
+          <div style="display: flex; flex-direction: column; gap: 6px;">
+            <label style="font-size: 13px; font-weight: 600; color: #3c4043;">Company Name</label>
+            <input type="text" id="company-name-input" class="company-input" placeholder="e.g. MetroTech Electronics">
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 6px;">
+            <label style="font-size: 13px; font-weight: 600; color: #3c4043;">Company Website (optional)</label>
+            <input type="url" id="company-web-input" class="company-input" placeholder="https://yourwebsite.com">
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 6px;">
+            <label style="font-size: 13px; font-weight: 600; color: #3c4043;">Company Type</label>
+            <select id="company-type-input" class="company-select">
+              <option value="">Select company type</option>
+              <option value="Electronics Supplier">Electronics Supplier</option>
+              <option value="Chemical Supplier">Chemical Supplier</option>
+              <option value="Raw Materials">Raw Materials</option>
+              <option value="Packaging">Packaging</option>
+              <option value="Mechanical Parts">Mechanical Parts</option>
+              <option value="PCB Manufacturer">PCB Manufacturer</option>
+              <option value="Textile & Fabric">Textile & Fabric</option>
+              <option value="Food Ingredients">Food Ingredients</option>
+              <option value="Pharmaceutical">Pharmaceutical</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 6px;">
+            <label style="font-size: 13px; font-weight: 600; color: #3c4043;">Company Address</label>
+            <input type="text" id="company-address-input" class="company-input" placeholder="Full address of your business">
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 6px;">
+            <label style="font-size: 13px; font-weight: 600; color: #3c4043;">Products / Materials Supplied</label>
+            <textarea id="company-products-input" class="company-textarea" rows="3" placeholder="e.g. OLED screens, lithium batteries, copper wire..."></textarea>
+          </div>
+
+          <button id="save-company-btn" class="btn btn-primary" style="width: 100%; border-radius: 999px; height: 44px; font-size: 14px;">
+            Save Company Info
+          </button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Toast system wrapper -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container footer-grid">
+      <div class="footer-col">
+        <h4 class="footer-title">Semiconk</h4>
+        <p class="footer-description">Semiconk breaks down any complex hardware or formula into raw components, helping hardware builders and suppliers connect within a 40km local radius seamlessly.</p>
+      </div>
+      <div class="footer-col" style="text-align: right;">
+        <h4 class="footer-title">Supplier Standards</h4>
+        <p class="footer-description">Helping local electronics retail and logistics hubs digitize instantly.</p>
+      </div>
+    </div>
+    <div class="container footer-bottom">
+      <div class="copyright">© 2026 Semiconk Inc. All rights reserved.</div>
+      <div class="footer-legal-links">
+        <a href="#" class="footer-legal-link">Privacy Policy</a>
+        <a href="#" class="footer-legal-link">Terms of Service</a>
+        <a href="#" class="footer-legal-link">Supplier Standards</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Script Logic -->
+  <script>
+    // Supabase credentials
+    const { createClient } = supabase;
+    const sb = createClient(
+      'https://cbaseyojrpcufndmybkb.supabase.co',
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNiYXNleW9qcnBjdWZuZG15YmtiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAzMjU0NzUsImV4cCI6MjA5NTkwMTQ3NX0.f5zuumrdjyltFFyJs4tcqkI68yUMhTFLZM35UDPc3c8'
+    );
+
+    let currentUser = null;
+    let currentProfileState = null;
+
+    // Elegant Toast Notification System
+    function showToast(message, type = 'success') {
+      const container = document.getElementById('toast-container');
+      if (!container) return;
+      
+      const toast = document.createElement('div');
+      toast.className = `toast toast-${type}`;
+      toast.textContent = message;
+      container.appendChild(toast);
+      
+      // Trigger animations
+      setTimeout(() => {
+        toast.classList.add('show');
+      }, 50);
+      
+      // Auto removal
+      setTimeout(() => {
+        toast.classList.remove('show');
+        setTimeout(() => {
+          toast.remove();
+        }, 300);
+      }, 3500);
+    }
+
+    // Render "Register Your Company" display state
+    function updateCompanyDisplay(profileData) {
+      const statusContainer = document.getElementById('company-status-container');
+      if (!statusContainer) return;
+
+      if (profileData && profileData.company_name) {
+        statusContainer.innerHTML = `
+          <div style="display: flex; flex-direction: column; gap: 8px;">
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <span class="success-text" style="padding: 2px 8px; border-radius: 4px; font-size: 11px;">Company Registered</span>
+            </div>
+            <div style="font-size: 14px; color: #1a1a1a;">
+              Registered as: <strong>${profileData.company_name}</strong>
+            </div>
+          </div>
+        `;
+      } else {
+        statusContainer.innerHTML = '';
+      }
+
+      // Populate input values
+      if (profileData) {
+        const nameInput = document.getElementById('company-name-input');
+        const webInput = document.getElementById('company-web-input');
+        const typeInput = document.getElementById('company-type-input');
+        const addressInput = document.getElementById('company-address-input');
+        const productsInput = document.getElementById('company-products-input');
+
+        if (nameInput) nameInput.value = profileData.company_name || '';
+        if (webInput) webInput.value = profileData.company_website || '';
+        if (typeInput) typeInput.value = profileData.company_type || '';
+        if (addressInput) addressInput.value = profileData.company_address || '';
+        if (productsInput) productsInput.value = profileData.company_products_supplied || '';
+      }
+    }
+
+    // MAIN AUTH CHECK AND MOUNT FLOW
+    document.addEventListener('DOMContentLoaded', async () => {
+      try {
+        const { data: { user } } = await sb.auth.getUser();
+        
+        // If no user → redirect to signin.html
+        if (!user) {
+          window.location.href = 'signin.html';
+          return;
+        }
+
+        currentUser = user;
+
+        // Render Navbar Account Dropdown seamlessly
+        const navActions = document.querySelector('.nav-actions');
+        if (navActions) {
+          const email = user.email || '';
+          const initial = email ? email.charAt(0).toUpperCase() : '?';
+          navActions.innerHTML = `
+            <div class="user-profile-menu-container" style="position: relative;">
+               <button id="account-btn" class="btn" style="border: 1px solid #dadce0; background-color: #ffffff; color: #3c4043; border-radius: 100px; display: inline-flex; align-items: center; gap: 8px; padding: 4px 12px 4px 16px; cursor: pointer; transition: all 0.2s ease; height: 40px; box-shadow: 0 1px 2px rgba(0,0,0,0.05); text-decoration: none;">
+                <span style="font-size: 14px; font-weight: 600;">My Account</span>
+                <div style="background-color: #4285F4; color: #ffffff; border-radius: 50%; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 700; text-transform: uppercase;">${initial}</div>
+              </button>
+              <div id="account-dropdown" style="display: none; position: absolute; right: 0; top: calc(100% + 8px); background-color: #ffffff; border: 1px solid #dadce0; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); width: 220px; z-index: 1000; overflow: hidden; padding: 6px 0; text-align: left;">
+                <div style="padding: 10px 16px; border-bottom: 1px solid #f1f3f4; margin-bottom: 4px;">
+                  <div style="font-size: 11px; font-weight: 500; color: #70757a; text-transform: uppercase; letter-spacing: 0.5px;">Signed in as</div>
+                  <div style="font-size: 13px; font-weight: 600; color: #202124; text-overflow: ellipsis; overflow: hidden; white-space: nowrap;" title="${email}">${email}</div>
+                </div>
+                <a href="profile.html" class="dropdown-item" style="display: block; padding: 10px 16px; font-size: 14px; color: #3c4043; transition: background-color 0.15s ease; text-decoration: none; font-weight: 500;">Profile</a>
+                <a href="location.html" class="dropdown-item" style="display: block; padding: 10px 16px; font-size: 14px; color: #3c4043; transition: background-color 0.15s ease; text-decoration: none; font-weight: 500;">My Location</a>
+                <a href="register-company.html" class="dropdown-item" style="display: block; padding: 10px 16px; font-size: 14px; color: #3c4043; transition: background-color 0.15s ease; text-decoration: none; font-weight: 500;">Register Company</a>
+                <a href="#" id="signout-link" class="dropdown-item" style="display: block; padding: 10px 16px; font-size: 14px; color: #d93025; transition: background-color 0.15s ease; text-decoration: none; font-weight: 600;">Sign Out</a>
+              </div>
+            </div>
+          `;
+
+          const styleNode = document.createElement('style');
+          styleNode.textContent = `
+            .dropdown-item:hover {
+              background-color: #f8f9fa !important;
+            }
+          `;
+          document.head.appendChild(styleNode);
+
+          const accountBtn = document.getElementById('account-btn');
+          const dropdown = document.getElementById('account-dropdown');
+          const signOutLink = document.getElementById('signout-link');
+
+          if (accountBtn && dropdown) {
+            accountBtn.addEventListener('click', (e) => {
+              const isOpen = dropdown.style.display === 'block';
+              dropdown.style.display = isOpen ? 'none' : 'block';
+            });
+          }
+
+          if (signOutLink) {
+            signOutLink.addEventListener('click', async (e) => {
+              e.preventDefault();
+              await sb.auth.signOut();
+              window.location.href = 'index.html';
+            });
+          }
+
+          document.addEventListener('click', function(e) {
+            const dropdown = document.getElementById('account-dropdown')
+            const accountBtn = document.getElementById('account-btn')
+            if (dropdown && !dropdown.contains(e.target) && !accountBtn.contains(e.target)) {
+              dropdown.style.display = 'none'
+            }
+          })
+
+          document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+              const dropdown = document.getElementById('account-dropdown')
+              if (dropdown) dropdown.style.display = 'none'
+            }
+          })
+        }
+
+        // Fetch user profile row:
+        const { data: profile, error: profileErr } = await sb.from('profiles').select('*').eq('id', user.id).maybeSingle();
+
+        // Load existing company details if present
+        if (profile) {
+          currentProfileState = profile;
+          updateCompanyDisplay(profile);
+        } else {
+          currentProfileState = {};
+          updateCompanyDisplay(null);
+        }
+
+      } catch (err) {
+        console.error('Company Mount error:', err);
+        showToast('Failed to load profile parameters.', 'error');
+      }
+    });
+
+    // Save Company Details Button Click
+    const saveCompanyBtn = document.getElementById('save-company-btn');
+    if (saveCompanyBtn) {
+      saveCompanyBtn.addEventListener('click', async () => {
+        if (!currentUser) return;
+
+        const company_name = document.getElementById('company-name-input').value.trim();
+        const company_website = document.getElementById('company-web-input').value.trim();
+        const company_type = document.getElementById('company-type-input').value;
+        const company_address = document.getElementById('company-address-input').value.trim();
+        const company_products_supplied = document.getElementById('company-products-input').value.trim();
+
+        if (!company_name) {
+          showToast('Please specify a Company Name.', 'error');
+          return;
+        }
+
+        saveCompanyBtn.textContent = 'Saving...';
+        saveCompanyBtn.disabled = true;
+
+        try {
+          const updateData = {
+            company_name,
+            company_website,
+            company_type,
+            company_address,
+            company_products_supplied
+          };
+
+          const { error: updateError } = await sb.from('profiles').update(updateData).eq('id', currentUser.id);
+          if (updateError) {
+            // Upsert fallback
+            const { error: upsertErr } = await sb.from('profiles').upsert({
+              id: currentUser.id,
+              ...updateData,
+              full_name: currentUser.user_metadata?.full_name || currentUser.user_metadata?.first_name || 'Semiconk Builder',
+              role: currentUser.user_metadata?.role || 'builder'
+            });
+            if (upsertErr) throw upsertErr;
+          }
+
+          if (!currentProfileState) {
+            currentProfileState = {};
+          }
+          currentProfileState.company_name = company_name;
+          currentProfileState.company_website = company_website;
+          currentProfileState.company_type = company_type;
+          currentProfileState.company_address = company_address;
+          currentProfileState.company_products_supplied = company_products_supplied;
+
+          showToast('Company info saved! Our team will review and list you as a supplier.');
+          updateCompanyDisplay(currentProfileState);
+
+        } catch (err) {
+          console.error('Error saving company parameters:', err);
+          showToast('Failed to save company info.', 'error');
+        } finally {
+          saveCompanyBtn.textContent = 'Save Company Info';
+          saveCompanyBtn.disabled = false;
+        }
+      });
+    }
+
+  </script>
+</body>
+</html>
