@@ -305,20 +305,49 @@
     .suggestion-chip {
       font-size: 14px;
       font-weight: 500;
-      color: #5f6368;
-      background-color: transparent;
+      color: #1a1a1a;
+      background-color: #ffffff;
       border: 1px solid #dadce0;
-      padding: 6px 14px;
-      border-radius: 100px;
-      transition: all 0.2s ease;
+      padding: 8px 16px;
+      border-radius: 999px;
+      transition: border-color 0.3s ease, color 0.3s ease, background-color 0.3s ease, opacity 300ms ease, transform 300ms ease, margin 300ms ease, padding 300ms ease, width 300ms ease, max-width 300ms ease;
       text-decoration: none;
-      display: inline-block;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-sizing: border-box;
+      opacity: 1;
+      transform: translateX(0);
+      white-space: nowrap;
+      max-width: 300px;
     }
 
     .suggestion-chip:hover {
-      background-color: #e8f0fe;
-      color: #4285F4;
       border-color: #4285F4;
+      color: #4285F4;
+      background-color: #ffffff;
+    }
+
+    .suggestion-chip.entering {
+      opacity: 0;
+      transform: translateX(10px);
+    }
+
+    .suggestion-chip.leaving {
+      opacity: 0;
+      transform: translateX(-10px);
+      width: 0 !important;
+      max-width: 0 !important;
+      padding-left: 0 !important;
+      padding-right: 0 !important;
+      margin-left: 0 !important;
+      margin-right: -10px !important;
+      border-left-width: 0 !important;
+      border-right-width: 0 !important;
+      overflow: hidden;
+      white-space: nowrap;
+      pointer-events: none;
     }
 
     /* Centered Single Line Stats */
@@ -944,11 +973,9 @@
       <!-- Suggestion chips centered below search bar -->
       <div class="suggestion-row">
         <span class="suggestion-label">Suggestions:</span>
-        <a href="/info?q=iPhone+15" class="suggestion-chip">iPhone 15</a>
-        <a href="/info?q=Shampoo" class="suggestion-chip">Shampoo</a>
-        <a href="/info?q=Smartwatch" class="suggestion-chip">Smartwatch</a>
-        <a href="/info?q=Solar+Panel" class="suggestion-chip">Solar Panel</a>
-        <a href="/info?q=Laptop" class="suggestion-chip">Laptop</a>
+        <div id="suggestion-ticker-container" style="display: flex; align-items: center; gap: 10px; flex-wrap: nowrap; overflow: hidden; max-width: 100%;">
+          <!-- Populated by JavaScript -->
+        </div>
       </div>
 
       <!-- Centered 3 small stats separated by dots -->
@@ -1213,6 +1240,71 @@
     );
 
     document.addEventListener('DOMContentLoaded', async () => {
+      // Dynamic suggestion ticker initialization
+      const tickerContainer = document.getElementById('suggestion-ticker-container');
+      if (tickerContainer) {
+        const allSuggestions = [
+          "iPhone 15", "Herbal Shampoo", "Smartwatch", "Solar Panel", "Laptop", 
+          "Arduino Uno", "Raspberry Pi", "Drone", "Wireless Earbuds", "Electric Scooter", 
+          "3D Printer", "Smart Home Hub", "Bluetooth Speaker", "Action Camera", "LED Strip Lights", 
+          "Solar Inverter", "IoT Sensor Kit", "Furniture Polish", "Baby Monitor", "Robot Vacuum", 
+          "Mechanical Keyboard", "Dash Cam", "Power Bank", "Air Purifier", "Smart Watch Band", 
+          "Wooden Toy", "Electric Toothbrush", "Fitness Tracker", "Portable Projector", "Mini PC", 
+          "Face Cream", "Hair Serum", "Perfume Bottle", "Candle Set", "Soap Bar", 
+          "Face Mask", "Hand Sanitizer", "Vitamin Supplements", "Protein Powder", "Yoga Mat"
+        ];
+
+        let nextItemIndex = 5;
+
+        // Function to create a search-chip
+        function createChip(text) {
+          const chip = document.createElement('div');
+          chip.className = 'suggestion-chip';
+          chip.textContent = text;
+          chip.addEventListener('click', () => {
+            const searchInput = document.querySelector('.search-box input[name="q"]');
+            if (searchInput) {
+              searchInput.value = text;
+              searchInput.focus();
+            }
+          });
+          return chip;
+        }
+
+        // Initialize first 5 chips
+        allSuggestions.slice(0, 5).forEach(text => {
+          tickerContainer.appendChild(createChip(text));
+        });
+
+        // Auto rotation every 2.5s
+        setInterval(() => {
+          const chips = tickerContainer.querySelectorAll('.suggestion-chip');
+          if (chips.length < 5) return;
+
+          const oldFirstChip = chips[0];
+          const nextText = allSuggestions[nextItemIndex];
+          nextItemIndex = (nextItemIndex + 1) % allSuggestions.length;
+
+          const newChip = createChip(nextText);
+          newChip.classList.add('entering');
+          tickerContainer.appendChild(newChip);
+
+          // Stagger the animation: 
+          // Immediately make first chip begin leaving (fade & slide-left & shrink-width)
+          oldFirstChip.classList.add('leaving');
+
+          // Slightly stagger entry of the new chip to feel fluid and live
+          setTimeout(() => {
+            newChip.classList.remove('entering');
+          }, 50);
+
+          // Remove the leaving chip after transition completes
+          setTimeout(() => {
+            oldFirstChip.remove();
+          }, 350);
+        }, 2500);
+      }
+
       try {
         const { data: { user } } = await sb.auth.getUser();
         if (user) {
@@ -1222,11 +1314,11 @@
             const initial = email ? email.charAt(0).toUpperCase() : '?';
             navActions.innerHTML = `
               <div class="user-profile-menu-container" style="position: relative;">
-                <button id="my-account-btn" class="btn" style="border: 1px solid #dadce0; background-color: #ffffff; color: #3c4043; border-radius: 100px; display: inline-flex; align-items: center; gap: 8px; padding: 4px 12px 4px 16px; cursor: pointer; transition: all 0.2s ease; height: 40px; box-shadow: 0 1px 2px rgba(0,0,0,0.05); text-decoration: none;">
+                <button id="account-btn" class="btn" style="border: 1px solid #dadce0; background-color: #ffffff; color: #3c4043; border-radius: 100px; display: inline-flex; align-items: center; gap: 8px; padding: 4px 12px 4px 16px; cursor: pointer; transition: all 0.2s ease; height: 40px; box-shadow: 0 1px 2px rgba(0,0,0,0.05); text-decoration: none;">
                   <span style="font-size: 14px; font-weight: 600;">My Account</span>
                   <div style="background-color: #4285F4; color: #ffffff; border-radius: 50%; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 700; text-transform: uppercase;">${initial}</div>
                 </button>
-                <div id="user-dropdown-menu" style="display: none; position: absolute; right: 0; top: calc(100% + 8px); background-color: #ffffff; border: 1px solid #dadce0; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); width: 220px; z-index: 1000; overflow: hidden; padding: 6px 0; text-align: left;">
+                <div id="account-dropdown" style="display: none; position: absolute; right: 0; top: calc(100% + 8px); background-color: #ffffff; border: 1px solid #dadce0; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); width: 220px; z-index: 1000; overflow: hidden; padding: 6px 0; text-align: left;">
                   <div style="padding: 10px 16px; border-bottom: 1px solid #f1f3f4; margin-bottom: 4px;">
                     <div style="font-size: 11px; font-weight: 500; color: #70757a; text-transform: uppercase; letter-spacing: 0.5px;">Signed in as</div>
                     <div style="font-size: 13px; font-weight: 600; color: #202124; text-overflow: ellipsis; overflow: hidden; white-space: nowrap;" title="${email}">${email}</div>
@@ -1248,15 +1340,14 @@
             `;
             document.head.appendChild(styleNode);
 
-            const myAccountBtn = document.getElementById('my-account-btn');
-            const dropdownMenu = document.getElementById('user-dropdown-menu');
+            const accountBtn = document.getElementById('account-btn');
+            const dropdown = document.getElementById('account-dropdown');
             const signOutLink = document.getElementById('signout-link');
 
-            if (myAccountBtn && dropdownMenu) {
-              myAccountBtn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                const isOpen = dropdownMenu.style.display === 'block';
-                dropdownMenu.style.display = isOpen ? 'none' : 'block';
+            if (accountBtn && dropdown) {
+              accountBtn.addEventListener('click', (e) => {
+                const isOpen = dropdown.style.display === 'block';
+                dropdown.style.display = isOpen ? 'none' : 'block';
               });
             }
 
@@ -1268,13 +1359,20 @@
               });
             }
 
-            window.addEventListener('click', (event) => {
-              if (dropdownMenu && myAccountBtn) {
-                if (!myAccountBtn.contains(event.target) && !dropdownMenu.contains(event.target)) {
-                  dropdownMenu.style.display = 'none';
-                }
+            document.addEventListener('click', function(e) {
+              const dropdown = document.getElementById('account-dropdown')
+              const accountBtn = document.getElementById('account-btn')
+              if (dropdown && !dropdown.contains(e.target) && !accountBtn.contains(e.target)) {
+                dropdown.style.display = 'none'
               }
-            });
+            })
+
+            document.addEventListener('keydown', function(e) {
+              if (e.key === 'Escape') {
+                const dropdown = document.getElementById('account-dropdown')
+                if (dropdown) dropdown.style.display = 'none'
+              }
+            })
           }
         }
       } catch (err) {

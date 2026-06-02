@@ -723,11 +723,11 @@
             const initial = email ? email.charAt(0).toUpperCase() : '?';
             navActions.innerHTML = `
               <div class="user-profile-menu-container" style="position: relative;">
-                <button id="my-account-btn" class="btn" style="border: 1px solid #dadce0; background-color: #ffffff; color: #3c4043; border-radius: 100px; display: inline-flex; align-items: center; gap: 8px; padding: 4px 12px 4px 16px; cursor: pointer; transition: all 0.2s ease; height: 40px; box-shadow: 0 1px 2px rgba(0,0,0,0.05); text-decoration: none;">
+                <button id="account-btn" class="btn" style="border: 1px solid #dadce0; background-color: #ffffff; color: #3c4043; border-radius: 100px; display: inline-flex; align-items: center; gap: 8px; padding: 4px 12px 4px 16px; cursor: pointer; transition: all 0.2s ease; height: 40px; box-shadow: 0 1px 2px rgba(0,0,0,0.05); text-decoration: none;">
                   <span style="font-size: 14px; font-weight: 600;">My Account</span>
                   <div style="background-color: #4285F4; color: #ffffff; border-radius: 50%; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 700; text-transform: uppercase;">${initial}</div>
                 </button>
-                <div id="user-dropdown-menu" style="display: none; position: absolute; right: 0; top: calc(100% + 8px); background-color: #ffffff; border: 1px solid #dadce0; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); width: 220px; z-index: 1000; overflow: hidden; padding: 6px 0; text-align: left;">
+                <div id="account-dropdown" style="display: none; position: absolute; right: 0; top: calc(100% + 8px); background-color: #ffffff; border: 1px solid #dadce0; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); width: 220px; z-index: 1000; overflow: hidden; padding: 6px 0; text-align: left;">
                   <div style="padding: 10px 16px; border-bottom: 1px solid #f1f3f4; margin-bottom: 4px;">
                     <div style="font-size: 11px; font-weight: 500; color: #70757a; text-transform: uppercase; letter-spacing: 0.5px;">Signed in as</div>
                     <div style="font-size: 13px; font-weight: 600; color: #202124; text-overflow: ellipsis; overflow: hidden; white-space: nowrap;" title="${email}">${email}</div>
@@ -749,15 +749,14 @@
             `;
             document.head.appendChild(styleNode);
 
-            const myAccountBtn = document.getElementById('my-account-btn');
-            const dropdownMenu = document.getElementById('user-dropdown-menu');
+            const accountBtn = document.getElementById('account-btn');
+            const dropdown = document.getElementById('account-dropdown');
             const signOutLink = document.getElementById('signout-link');
 
-            if (myAccountBtn && dropdownMenu) {
-              myAccountBtn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                const isOpen = dropdownMenu.style.display === 'block';
-                dropdownMenu.style.display = isOpen ? 'none' : 'block';
+            if (accountBtn && dropdown) {
+              accountBtn.addEventListener('click', (e) => {
+                const isOpen = dropdown.style.display === 'block';
+                dropdown.style.display = isOpen ? 'none' : 'block';
               });
             }
 
@@ -769,13 +768,20 @@
               });
             }
 
-            window.addEventListener('click', (event) => {
-              if (dropdownMenu && myAccountBtn) {
-                if (!myAccountBtn.contains(event.target) && !dropdownMenu.contains(event.target)) {
-                  dropdownMenu.style.display = 'none';
-                }
+            document.addEventListener('click', function(e) {
+              const dropdown = document.getElementById('account-dropdown')
+              const accountBtn = document.getElementById('account-btn')
+              if (dropdown && !dropdown.contains(e.target) && !accountBtn.contains(e.target)) {
+                dropdown.style.display = 'none'
               }
-            });
+            })
+
+            document.addEventListener('keydown', function(e) {
+              if (e.key === 'Escape') {
+                const dropdown = document.getElementById('account-dropdown')
+                if (dropdown) dropdown.style.display = 'none'
+              }
+            })
           }
         }
       } catch (err) {
