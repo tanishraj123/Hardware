@@ -1182,7 +1182,7 @@
         <h2 class="supplier-reg-title">Are You a Supplier or Manufacturer?</h2>
         <p class="supplier-reg-desc">List your company on Semiconk and get discovered by builders, manufacturers and businesses searching for your components locally.</p>
         <div class="supplier-actions">
-          <button class="btn btn-primary" onclick="alert('Join Semiconk Regional Network Partnership Registration Form.')">Register Your Company</button>
+          <button class="btn btn-primary" onclick="checkAuthThenNavigate('register-company.html')">Register Your Company</button>
           <button class="btn btn-outline" onclick="alert('Reading supplier compliance standards and localized distribution agreements.')">Learn More</button>
         </div>
       </div>
@@ -1245,6 +1245,22 @@
       'https://cbaseyojrpcufndmybkb.supabase.co',
       'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNiYXNleW9qcnBjdWZuZG15YmtiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAzMjU0NzUsImV4cCI6MjA5NTkwMTQ3NX0.f5zuumrdjyltFFyJs4tcqkI68yUMhTFLZM35UDPc3c8'
     );
+
+    // Dynamic auth-check navigation method
+    async function checkAuthThenNavigate(destination) {
+      try {
+        const { data: { user } } = await sb.auth.getUser();
+        if (user) {
+          window.location.href = destination;
+        } else {
+          window.location.href = `signin.html?redirect=${encodeURIComponent(destination)}`;
+        }
+      } catch (err) {
+        console.error('Auth verification flow exception:', err);
+        window.location.href = `signin.html?redirect=${encodeURIComponent(destination)}`;
+      }
+    }
+    window.checkAuthThenNavigate = checkAuthThenNavigate;
 
     document.addEventListener('DOMContentLoaded', async () => {
       // Dynamic suggestion ticker initialization
