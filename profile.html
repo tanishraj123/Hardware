@@ -1,0 +1,1131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>User Profile — Semiconk</title>
+  
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    /* Modern Custom Stylesheet (Google Inspired Clean UI) */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      background-color: #f8f9fa;
+      color: #1a1a1a;
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* Navbar */
+    header {
+      background-color: #FFFFFF;
+      border-bottom: 1px solid #f1f3f4;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+
+    .nav-wrapper {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 0;
+    }
+
+    .logo {
+      font-size: 22px;
+      font-weight: 800;
+      color: #1a1a1a;
+      letter-spacing: -0.5px;
+    }
+
+    .nav-links {
+      display: none;
+      align-items: center;
+      gap: 32px;
+    }
+
+    @media (min-width: 768px) {
+      .nav-links {
+        display: flex;
+      }
+    }
+
+    .nav-link {
+      font-size: 14px;
+      font-weight: 500;
+      color: #5f6368;
+      transition: color 0.15s ease;
+    }
+
+    .nav-link:hover {
+      color: #4285F4;
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    /* Standardized Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: 600;
+      padding: 10px 20px;
+      border-radius: 8px;
+      transition: all 0.2s ease;
+      cursor: pointer;
+      border: none;
+      text-align: center;
+    }
+
+    .btn-outline {
+      background-color: transparent;
+      border: 1px solid #dadce0;
+      color: #3c4043;
+    }
+
+    .btn-outline:hover {
+      background-color: #f8f9fa;
+      border-color: #bdc1c6;
+    }
+
+    .btn-primary {
+      background-color: #4285F4;
+      color: #FFFFFF;
+    }
+
+    .btn-primary:hover {
+      background-color: #2b72eb;
+      box-shadow: 0 2px 6px rgba(66, 133, 244, 0.2);
+    }
+
+    /* Profile Page Main Wrap */
+    main {
+      flex: 1;
+      padding: 40px 16px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .profile-card {
+      width: 100%;
+      max-width: 600px;
+      background: #FFFFFF;
+      border-radius: 16px;
+      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
+      border: 1px solid #f1f3f4;
+      padding: 32px;
+    }
+
+    .section-div {
+      padding-bottom: 28px;
+      margin-bottom: 28px;
+      border-bottom: 1px solid #f1f3f4;
+    }
+
+    .section-div:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .section-heading {
+      font-size: 16px;
+      font-weight: 700;
+      color: #1a1a1a;
+      margin-bottom: 8px;
+    }
+
+    .section-subtext {
+      font-size: 13px;
+      color: #5f6368;
+      margin-bottom: 16px;
+    }
+
+    /* Info display styles */
+    .account-header {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      margin-bottom: 20px;
+    }
+
+    .large-avatar {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      background-color: #4285F4;
+      color: #FFFFFF;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 26px;
+      font-weight: 700;
+      border: 2px solid #ffffff;
+      box-shadow: 0 2px 8px rgba(66, 133, 244, 0.25);
+      object-fit: cover;
+    }
+
+    .account-meta {
+      flex: 1;
+    }
+
+    .meta-name {
+      font-size: 18px;
+      font-weight: 700;
+      color: #1a1a1a;
+      margin-bottom: 4px;
+    }
+
+    .meta-email-wrap {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 4px;
+    }
+
+    .meta-email {
+      font-size: 14px;
+      color: #3c4043;
+    }
+
+    .provider-badge {
+      font-size: 11px;
+      font-weight: 500;
+      color: #5f6368;
+      background-color: #f1f3f4;
+      padding: 2px 8px;
+      border-radius: 100px;
+    }
+
+    .meta-date {
+      font-size: 12px;
+      color: #70757a;
+    }
+
+    .role-badge {
+      display: inline-flex;
+      font-size: 12px;
+      font-weight: 600;
+      color: #1967d2;
+      background-color: #e8f0fe;
+      padding: 4px 12px;
+      border-radius: 100px;
+      margin-top: 8px;
+    }
+
+    /* Warning & Success statuses */
+    .warning-text {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      color: #b05a00;
+      background-color: #fef7e0;
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-weight: 500;
+    }
+
+    .success-text {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      color: #137333;
+      background-color: #e6f4ea;
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-weight: 500;
+    }
+
+    /* Flex row for Phone number verification inputs */
+    .phone-input-row {
+      display: flex;
+      gap: 8px;
+      position: relative;
+      margin-bottom: 16px;
+    }
+
+    .country-selector {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      border: 1px solid #dadce0;
+      background-color: #ffffff;
+      color: #202124;
+      border-radius: 8px;
+      padding: 0 16px;
+      height: 44px;
+      cursor: pointer;
+      font-size: 15px;
+      font-weight: 500;
+      transition: all 0.2s ease;
+      user-select: none;
+      white-space: nowrap;
+    }
+
+    .country-selector:hover {
+      background-color: #f8f9fa;
+      border-color: #bdc1c6;
+    }
+
+    .number-input {
+      flex: 1;
+      height: 44px;
+      border: 1px solid #dadce0;
+      border-radius: 8px;
+      padding: 0 16px;
+      font-size: 15px;
+      color: #1a1a1a;
+      outline: none;
+      transition: border-color 0.2s ease;
+    }
+
+    .number-input:focus {
+      border-color: #4285F4;
+      box-shadow: 0 0 0 2px rgba(66, 133, 244, 0.15);
+    }
+
+    .button-group {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    /* Danger zone */
+    .danger-zone {
+      background-color: #fdf6f6;
+      border: 1px dashed #f5c2c2;
+      border-radius: 12px;
+      padding: 20px;
+    }
+
+    .btn-danger {
+      background-color: transparent;
+      border: 1px solid #ea4335;
+      color: #ea4335;
+      width: 100%;
+    }
+
+    .btn-danger:hover {
+      background-color: #fcebeb;
+    }
+
+    /* Toast system */
+    .toast-container {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      z-index: 10000;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .toast {
+      background-color: #323232;
+      color: #ffffff;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .toast.toast-success {
+      background-color: #137333;
+    }
+
+    .toast.toast-error {
+      background-color: #c5221f;
+    }
+
+    /* Country Dropdown Modal Backdrop */
+    .country-modal-backdrop {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background-color: rgba(32, 33, 36, 0.6);
+      z-index: 10000;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+
+    .country-modal {
+      background-color: #ffffff;
+      border-radius: 12px;
+      width: 100%;
+      max-width: 400px;
+      max-height: 80vh;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.25);
+      border: 1px solid #dadce0;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      animation: modalFadeIn 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    @keyframes modalFadeIn {
+      from { opacity: 0; transform: scale(0.95); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    .modal-header {
+      padding: 16px;
+      border-bottom: 1px solid #f1f3f4;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .modal-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: #1a1a1a;
+    }
+
+    .modal-close-btn {
+      background: none;
+      border: none;
+      font-size: 20px;
+      color: #5f6368;
+      cursor: pointer;
+    }
+
+    .modal-search-box {
+      padding: 12px 16px;
+      border-bottom: 1px solid #f1f3f4;
+    }
+
+    .modal-search-input {
+      width: 100%;
+      height: 38px;
+      border: 1px solid #dadce0;
+      border-radius: 8px;
+      padding: 0 12px;
+      font-size: 14px;
+      color: #1a1a1a;
+      outline: none;
+    }
+
+    .modal-search-input:focus {
+      border-color: #4285F4;
+    }
+
+    .country-list {
+      flex: 1;
+      overflow-y: auto;
+      padding: 8px 0;
+    }
+
+    .country-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 20px;
+      cursor: pointer;
+      font-size: 14px;
+      color: #202124;
+      transition: background-color 0.15s ease;
+    }
+
+    .country-item:hover {
+      background-color: #f1f3f4;
+    }
+
+    .country-left-info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .country-flag-symbol {
+      font-size: 18px;
+    }
+
+    .country-dial-code {
+      font-weight: 600;
+      color: #5f6368;
+    }
+
+    /* Footer styled matching index.html */
+    footer {
+      background-color: #FFFFFF;
+      border-top: 1px solid #e8eaed;
+      padding: 40px 0 24px;
+      text-align: center;
+      margin-top: auto;
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 40px;
+      padding-bottom: 40px;
+    }
+
+    @media (min-width: 768px) {
+      .footer-grid {
+        grid-template-columns: 2fr 1fr;
+        text-align: left;
+      }
+    }
+
+    .footer-description {
+      font-size: 13px;
+      color: #5f6368;
+      line-height: 1.6;
+    }
+
+    .footer-col {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .footer-title {
+      font-size: 12px;
+      font-weight: 700;
+      color: #5f6368;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .footer-bottom {
+      background-color: #FFFFFF;
+      border-top: 1px solid #e8eaed;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    @media (min-width: 768px) {
+      .footer-bottom {
+        flex-direction: row;
+      }
+    }
+
+    .copyright {
+      font-size: 12px;
+      color: #5f6368;
+    }
+
+    .footer-legal-links {
+      display: flex;
+      gap: 20px;
+    }
+
+    .footer-legal-link {
+      font-size: 12px;
+      color: #3c4043;
+      transition: color 0.15s ease;
+    }
+
+    .footer-legal-link:hover {
+      color: #4285F4;
+    }
+
+    /* Dropdown CSS overrides */
+    .dropdown-item:hover {
+      background-color: #f8f9fa !important;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <header>
+    <div class="container nav-wrapper">
+      <a href="index.html" class="logo">Semiconk</a>
+      <nav class="nav-links">
+        <a href="index.html#categories" class="nav-link">Categories</a>
+        <a href="index.html#blueprints" class="nav-link">Blueprints</a>
+        <a href="index.html#suppliers" class="nav-link">Suppliers</a>
+        <a href="info.html" class="nav-link">BOM Matcher</a>
+        <a href="index.html#ask-ai" class="nav-link">Ask AI</a>
+      </nav>
+      <div class="nav-actions">
+        <!-- Replaced via Auth Check script below -->
+        <a href="signin.html" class="btn btn-outline" style="border-radius: 100px;">Sign In</a>
+        <a href="register-user.html" class="btn btn-primary" style="border-radius: 100px;">Get Started</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Profile main content wrapper -->
+  <main>
+    <div class="profile-card">
+      
+      <!-- SECTION 1 — Account Info (read only) -->
+      <div class="section-div">
+        <h2 class="section-heading" style="font-size: 18px; margin-bottom: 20px;">Account Settings</h2>
+        
+        <div class="account-header">
+          <!-- Avatar will contain an image (if Google OAuth) or a capitalized letter symbol -->
+          <div id="user-avatar-container">
+            <div id="user-avatar" class="large-avatar">?</div>
+          </div>
+          
+          <div class="account-meta">
+            <div id="user-full-name" class="meta-name">Loading...</div>
+            <div class="meta-email-wrap">
+              <span id="user-email" class="meta-email">Loading...</span>
+              <span id="provider-badge" class="provider-badge">Email Account</span>
+            </div>
+            <div id="user-joined-date" class="meta-date">Member since: Loading...</div>
+            
+            <div id="user-role-badge" class="role-badge" style="display: none;">Builder / Maker</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTION 2 — Phone Number (editable) -->
+      <div class="section-div">
+        <h3 class="section-heading">Phone Number</h3>
+        
+        <div style="margin-bottom: 16px;">
+          <div id="phone-status-container">
+            <!-- Will inject warning/success badges dynamically -->
+          </div>
+        </div>
+
+        <div class="phone-input-row">
+          <!-- Country code button selector -->
+          <button id="country-select-btn" class="country-selector">
+            <span id="selected-flag">🇮🇳</span> <span id="selected-dial-code">+91</span>
+          </button>
+          
+          <!-- Numeric only phone number input field -->
+          <input type="text" id="phone-num-input" class="number-input" placeholder="Enter phone number">
+        </div>
+
+        <div class="button-group">
+          <button id="save-phone-btn" class="btn btn-outline">Save Number</button>
+          <button id="verify-otp-btn" class="btn btn-primary">Verify via OTP</button>
+        </div>
+      </div>
+
+      <!-- SECTION 3 — Danger Zone -->
+      <div class="section-div">
+        <h3 class="section-heading" style="color: #ea4335; margin-bottom: 12px;">Danger Zone</h3>
+        <div class="danger-zone">
+          <p style="font-size: 13px; color: #5f6368; margin-bottom: 16px;">Logging out will clear your active session. You will need to sign in again to browse saved local suppliers.</p>
+          <button id="danger-signout-btn" class="btn btn-danger">Sign Out of Semiconk</button>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Country Selector Modal -->
+  <div id="country-modal-backdrop" class="country-modal-backdrop">
+    <div class="country-modal">
+      <div class="modal-header">
+        <div class="modal-title">Select country code</div>
+        <button id="modal-close-btn" class="modal-close-btn">×</button>
+      </div>
+      <div class="modal-search-box">
+        <input type="text" id="modal-search-input" class="modal-search-input" placeholder="Search country...">
+      </div>
+      <div id="country-list-container" class="country-list">
+        <!-- Rendered dynamically -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast system wrapper -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container footer-grid">
+      <div class="footer-col">
+        <h4 class="footer-title">Semiconk</h4>
+        <p class="footer-description">Semiconk breaks down any complex hardware or formula into raw components, helping hardware builders and suppliers connect within a 40km local radius seamlessly.</p>
+      </div>
+      <div class="footer-col" style="text-align: right;">
+        <h4 class="footer-title">Supplier Standards</h4>
+        <p class="footer-description">Helping local electronics retail and logistics hubs digitize instantly.</p>
+      </div>
+    </div>
+    <div class="container footer-bottom">
+      <div class="copyright">© 2026 Semiconk Inc. All rights reserved.</div>
+      <div class="footer-legal-links">
+        <a href="#" class="footer-legal-link">Privacy Policy</a>
+        <a href="#" class="footer-legal-link">Terms of Service</a>
+        <a href="#" class="footer-legal-link">Supplier Standards</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Script Logic -->
+  <script>
+    // Supabase credentials
+    const { createClient } = supabase;
+    const sb = createClient(
+      'https://cbaseyojrpcufndmybkb.supabase.co',
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNiYXNleW9qcnBjdWZuZG15YmtiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAzMjU0NzUsImV4cCI6MjA5NTkwMTQ3NX0.f5zuumrdjyltFFyJs4tcqkI68yUMhTFLZM35UDPc3c8'
+    );
+
+    // Dynamic country database list
+    const countries = [
+      { name: 'India', code: '+91', flag: '🇮🇳' },
+      { name: 'United States', code: '+1', flag: '🇺🇸' },
+      { name: 'United Kingdom', code: '+44', flag: '🇬🇧' },
+      { name: 'United Arab Emirates', code: '+971', flag: '🇦🇪' },
+      { name: 'Germany', code: '+49', flag: '🇩🇪' },
+      { name: 'Singapore', code: '+65', flag: '🇸🇬' },
+      { name: 'Australia', code: '+61', flag: '🇦🇺' },
+      { name: 'Canada', code: '+1', flag: '🇨🇦' },
+      { name: 'France', code: '+33', flag: '🇫🇷' },
+      { name: 'Japan', code: '+81', flag: '🇯🇵' },
+      { name: 'China', code: '+86', flag: '🇨🇳' },
+      { name: 'Brazil', code: '+55', flag: '🇧🇷' },
+      { name: 'Nigeria', code: '+234', flag: '🇳🇬' },
+      { name: 'South Africa', code: '+27', flag: '🇿🇦' },
+      { name: 'Pakistan', code: '+92', flag: '🇵🇰' },
+      { name: 'Bangladesh', code: '+880', flag: '🇧🇩' },
+      { name: 'Indonesia', code: '+62', flag: '🇮🇩' },
+      { name: 'Italy', code: '+39', flag: '🇮🇹' },
+      { name: 'Spain', code: '+34', flag: '🇪🇸' },
+      { name: 'Netherlands', code: '+31', flag: '🇳🇱' },
+      { name: 'Saudi Arabia', code: '+966', flag: '🇸🇦' },
+      { name: 'Russia', code: '+7', flag: '🇷🇺' },
+      { name: 'Mexico', code: '+52', flag: '🇲🇽' },
+      { name: 'Malaysia', code: '+60', flag: '🇲🇾' },
+      { name: 'New Zealand', code: '+64', flag: '🇳🇿' },
+      { name: 'Turkey', code: '+90', flag: '🇹🇷' }
+    ];
+
+    let currentSelectedCountryCode = '+91';
+    let currentSelectedFlag = '🇮🇳';
+    let currentUser = null;
+
+    // Elegant Toast Notification System
+    function showToast(message, type = 'success') {
+      const container = document.getElementById('toast-container');
+      if (!container) return;
+      
+      const toast = document.createElement('div');
+      toast.className = `toast toast-${type}`;
+      toast.textContent = message;
+      container.appendChild(toast);
+      
+      // Trigger animations
+      setTimeout(() => {
+        toast.classList.add('show');
+      }, 50);
+      
+      // Auto removal
+      setTimeout(() => {
+        toast.classList.remove('show');
+        setTimeout(() => {
+          toast.remove();
+        }, 300);
+      }, 3500);
+    }
+
+    // Number input behavior helper
+    const phoneInput = document.getElementById('phone-num-input');
+    if (phoneInput) {
+      phoneInput.addEventListener('input', (e) => {
+        // Enforce digits only
+        e.target.value = e.target.value.replace(/[^0-9]/g, '');
+      });
+    }
+
+    // Modal Control Logic
+    const countrySelectBtn = document.getElementById('country-select-btn');
+    const countryBackdrop = document.getElementById('country-modal-backdrop');
+    const modalCloseBtn = document.getElementById('modal-close-btn');
+    const modalSearchInput = document.getElementById('modal-search-input');
+    const countryListContainer = document.getElementById('country-list-container');
+
+    function openCountrySelectorModal() {
+      if (countryBackdrop) {
+        countryBackdrop.style.display = 'flex';
+        renderCountriesList('');
+        if (modalSearchInput) {
+          modalSearchInput.value = '';
+          modalSearchInput.focus();
+        }
+      }
+    }
+
+    function closeCountrySelectorModal() {
+      if (countryBackdrop) {
+        countryBackdrop.style.display = 'none';
+      }
+    }
+
+    function renderCountriesList(searchTerm) {
+      if (!countryListContainer) return;
+      countryListContainer.innerHTML = '';
+      
+      const filtered = countries.filter(c => 
+        c.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
+        c.code.includes(searchTerm)
+      );
+
+      if (filtered.length === 0) {
+        countryListContainer.innerHTML = '<div style="padding: 20px; text-align: center; color: #5f6368; font-size: 14px;">No countries found</div>';
+        return;
+      }
+
+      filtered.forEach(country => {
+        const item = document.createElement('div');
+        item.className = 'country-item';
+        item.innerHTML = `
+          <div class="country-left-info">
+            <span class="country-flag-symbol">${country.flag}</span>
+            <span>${country.name}</span>
+          </div>
+          <span class="country-dial-code">${country.code}</span>
+        `;
+        item.addEventListener('click', () => {
+          selectCountry(country.flag, country.code);
+          closeCountrySelectorModal();
+        });
+        countryListContainer.appendChild(item);
+      });
+    }
+
+    function selectCountry(flag, dialCode) {
+      currentSelectedFlag = flag;
+      currentSelectedCountryCode = dialCode;
+      
+      const flagSpan = document.getElementById('selected-flag');
+      const dialSpan = document.getElementById('selected-dial-code');
+      if (flagSpan) flagSpan.textContent = flag;
+      if (dialSpan) dialSpan.textContent = dialCode;
+    }
+
+    if (countrySelectBtn) {
+      countrySelectBtn.addEventListener('click', openCountrySelectorModal);
+    }
+    if (modalCloseBtn) {
+      modalCloseBtn.addEventListener('click', closeCountrySelectorModal);
+    }
+    if (countryBackdrop) {
+      countryBackdrop.addEventListener('click', (e) => {
+        if (e.target === countryBackdrop) {
+          closeCountrySelectorModal();
+        }
+      });
+    }
+    if (modalSearchInput) {
+      modalSearchInput.addEventListener('input', (e) => {
+        renderCountriesList(e.target.value);
+      });
+    }
+
+    // Verify via OTP trigger
+    const verifyOtpBtn = document.getElementById('verify-otp-btn');
+    if (verifyOtpBtn) {
+      verifyOtpBtn.addEventListener('click', () => {
+        showToast('OTP verification coming soon', 'success');
+      });
+    }
+
+    // Danger Zone sign out
+    const dangerSignoutBtn = document.getElementById('danger-signout-btn');
+    if (dangerSignoutBtn) {
+      dangerSignoutBtn.addEventListener('click', async () => {
+        await sb.auth.signOut();
+        window.location.href = 'index.html';
+      });
+    }
+
+    // MAIN AUTH CHECK AND MOUNT FLOW
+    document.addEventListener('DOMContentLoaded', async () => {
+      try {
+        const { data: { user } } = await sb.auth.getUser();
+        
+        // 2. If no user → redirect to signin.html
+        if (!user) {
+          window.location.href = 'signin.html';
+          return;
+        }
+
+        currentUser = user;
+
+        // Render Navbar Account Dropdown seamlessly
+        const navActions = document.querySelector('.nav-actions');
+        if (navActions) {
+          const email = user.email || '';
+          const initial = email ? email.charAt(0).toUpperCase() : '?';
+          navActions.innerHTML = `
+            <div class="user-profile-menu-container" style="position: relative;">
+              <button id="my-account-btn" class="btn" style="border: 1px solid #dadce0; background-color: #ffffff; color: #3c4043; border-radius: 100px; display: inline-flex; align-items: center; gap: 8px; padding: 4px 12px 4px 16px; cursor: pointer; transition: all 0.2s ease; height: 40px; box-shadow: 0 1px 2px rgba(0,0,0,0.05); text-decoration: none;">
+                <span style="font-size: 14px; font-weight: 600;">My Account</span>
+                <div style="background-color: #4285F4; color: #ffffff; border-radius: 50%; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 700; text-transform: uppercase;">${initial}</div>
+              </button>
+              <div id="user-dropdown-menu" style="display: none; position: absolute; right: 0; top: calc(100% + 8px); background-color: #ffffff; border: 1px solid #dadce0; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); width: 220px; z-index: 1000; overflow: hidden; padding: 6px 0; text-align: left;">
+                <div style="padding: 10px 16px; border-bottom: 1px solid #f1f3f4; margin-bottom: 4px;">
+                  <div style="font-size: 11px; font-weight: 500; color: #70757a; text-transform: uppercase; letter-spacing: 0.5px;">Signed in as</div>
+                  <div style="font-size: 13px; font-weight: 600; color: #202124; text-overflow: ellipsis; overflow: hidden; white-space: nowrap;" title="${email}">${email}</div>
+                </div>
+                <a href="profile.html" class="dropdown-item" style="display: flex; align-items: center; gap: 8px; padding: 10px 16px; font-size: 14px; color: #3c4043; transition: background-color 0.15s ease; text-decoration: none; font-weight: 500;">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: #5f6368;"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                  Profile
+                </a>
+                <a href="#" id="signout-link" class="dropdown-item" style="display: flex; align-items: center; gap: 8px; padding: 10px 16px; font-size: 14px; color: #d93025; transition: background-color 0.15s ease; text-decoration: none; font-weight: 600;">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: #d93025;"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+                  Sign Out
+                </a>
+              </div>
+            </div>
+          `;
+
+          const styleNode = document.createElement('style');
+          styleNode.textContent = `
+            .dropdown-item:hover {
+              background-color: #f8f9fa !important;
+            }
+          `;
+          document.head.appendChild(styleNode);
+
+          const myAccountBtn = document.getElementById('my-account-btn');
+          const dropdownMenu = document.getElementById('user-dropdown-menu');
+          const signOutLink = document.getElementById('signout-link');
+
+          if (myAccountBtn && dropdownMenu) {
+            myAccountBtn.addEventListener('click', (e) => {
+              e.stopPropagation();
+              const isOpen = dropdownMenu.style.display === 'block';
+              dropdownMenu.style.display = isOpen ? 'none' : 'block';
+            });
+          }
+
+          if (signOutLink) {
+            signOutLink.addEventListener('click', async (e) => {
+              e.preventDefault();
+              await sb.auth.signOut();
+              window.location.href = 'index.html';
+            });
+          }
+
+          window.addEventListener('click', (event) => {
+            if (dropdownMenu && myAccountBtn) {
+              if (!myAccountBtn.contains(event.target) && !dropdownMenu.contains(event.target)) {
+                dropdownMenu.style.display = 'none';
+              }
+            }
+          });
+        }
+
+        // 3. Fetch their profile row:
+        const { data: profile, error: profileErr } = await sb.from('profiles').select('*').eq('id', user.id).maybeSingle();
+
+        // Feed display elements
+        const emailEl = document.getElementById('user-email');
+        const providerBadge = document.getElementById('provider-badge');
+        const joinedDateEl = document.getElementById('user-joined-date');
+        const fullNameEl = document.getElementById('user-full-name');
+        const rolePill = document.getElementById('user-role-badge');
+        const avatarContainer = document.getElementById('user-avatar-container');
+        
+        // Metadata & display resolution
+        const email = user.email || '';
+        const initial = email ? email.charAt(0).toUpperCase() : '?';
+        const provider = user.app_metadata?.provider || 'email';
+        const rawDate = user.created_at;
+        const formattedDate = rawDate ? new Date(rawDate).toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' }) : 'Unknown date';
+        
+        emailEl.textContent = email;
+        joinedDateEl.textContent = `Member since: ${formattedDate}`;
+
+        // Set Account Provider label nicely
+        if (provider === 'google') {
+          providerBadge.textContent = 'Google Account';
+        } else {
+          providerBadge.textContent = 'Email Account';
+        }
+
+        // Fullname resolution
+        let fullName = '';
+        if (profile && profile.full_name) {
+          fullName = profile.full_name;
+        } else if (user.user_metadata && user.user_metadata.full_name) {
+          fullName = user.user_metadata.full_name;
+        } else {
+          fullName = user.user_metadata?.first_name || 'Semiconk Builder';
+        }
+        fullNameEl.textContent = fullName;
+
+        // Avatar layout resolution
+        const avatarUrl = user.user_metadata?.avatar_url;
+        if (provider === 'google' && avatarUrl) {
+          avatarContainer.innerHTML = `<img src="${avatarUrl}" class="large-avatar" alt="Avatar" referrerpolicy="no-referrer">`;
+        } else {
+          avatarContainer.innerHTML = `<div class="large-avatar">${initial}</div>`;
+        }
+
+        // User role resolution
+        let userRole = 'Builder / Maker';
+        if (profile && profile.role) {
+          const rawRole = profile.role.toLowerCase();
+          if (rawRole === 'supplier' || rawRole === 'seller' || rawRole.includes('supp')) {
+            userRole = 'Supplier';
+          }
+        } else if (user.user_metadata && user.user_metadata.role) {
+          const rawRole = user.user_metadata.role.toLowerCase();
+          if (rawRole === 'supplier' || rawRole === 'seller' || rawRole.includes('supp')) {
+            userRole = 'Supplier';
+          }
+        }
+        rolePill.textContent = userRole;
+        rolePill.style.display = 'inline-flex';
+
+        // Load existing phone profiles details if present
+        if (profile) {
+          const numberInput = document.getElementById('phone-num-input');
+          if (profile.phone_number && numberInput) {
+            numberInput.value = profile.phone_number;
+          }
+
+          if (profile.phone_country_code) {
+            const matchedCountry = countries.find(c => c.code === profile.phone_country_code || c.code.replace('+', '') === profile.phone_country_code);
+            if (matchedCountry) {
+              selectCountry(matchedCountry.flag, matchedCountry.code);
+            } else {
+              // Custom code not matched fallback
+              selectCountry('🏳️', profile.phone_country_code.startsWith('+') ? profile.phone_country_code : '+' + profile.phone_country_code);
+            }
+          }
+          
+          updatePhoneStatusPill(profile.phone_number, profile.phone_verified);
+        } else {
+          updatePhoneStatusPill('', false);
+        }
+
+      } catch (err) {
+        console.error('Profile Mount error:', err);
+        showToast('Failed to load profile parameters.', 'error');
+      }
+    });
+
+    // Helper dynamically updating verification label status
+    function updatePhoneStatusPill(number, verified) {
+      const statusBox = document.getElementById('phone-status-container');
+      if (!statusBox) return;
+
+      if (!number) {
+        statusBox.innerHTML = ''; // Empty when no number has ever been saved
+        return;
+      }
+
+      if (verified === true) {
+        statusBox.innerHTML = `
+          <div class="success-text">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+            Verified phone line
+          </div>
+        `;
+      } else {
+        statusBox.innerHTML = `
+          <div class="warning-text">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+            Number saved but not verified
+          </div>
+        `;
+      }
+    }
+
+    // Save Phone profile functionality
+    const savePhoneBtn = document.getElementById('save-phone-btn');
+    if (savePhoneBtn) {
+      savePhoneBtn.addEventListener('click', async () => {
+        if (!currentUser) return;
+
+        const numberValue = document.getElementById('phone-num-input').value.trim();
+        if (!numberValue) {
+          showToast('Please specify a valid phone number digit first.', 'error');
+          return;
+        }
+
+        savePhoneBtn.textContent = 'Saving...';
+        savePhoneBtn.disabled = true;
+
+        try {
+          const { error } = await sb.from('profiles').update({ 
+            phone_number: numberValue, 
+            phone_country_code: currentSelectedCountryCode,
+            phone_verified: false 
+          }).eq('id', currentUser.id);
+
+          if (error) {
+            // If the row doesn't exist yet, we will upsert
+            const { error: upsertErr } = await sb.from('profiles').upsert({
+              id: currentUser.id,
+              phone_number: numberValue,
+              phone_country_code: currentSelectedCountryCode,
+              phone_verified: false,
+              full_name: currentUser.user_metadata?.full_name || currentUser.user_metadata?.first_name || 'Semiconk Builder',
+              role: currentUser.user_metadata?.role || 'builder'
+            });
+            if (upsertErr) throw upsertErr;
+          }
+
+          showToast('Number saved!');
+          updatePhoneStatusPill(numberValue, false);
+
+        } catch (err) {
+          console.error('Error saving phone parameters:', err);
+          showToast('Failed to persist phone parameters.', 'error');
+        } finally {
+          savePhoneBtn.textContent = 'Save Number';
+          savePhoneBtn.disabled = false;
+        }
+      });
+    }
+
+  </script>
+</body>
+</html>
