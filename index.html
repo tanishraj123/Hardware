@@ -918,6 +918,104 @@
     .footer-legal-link:hover {
       color: #4285F4;
     }
+
+    .navbar-logo-wrapper {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      cursor: pointer;
+      transition: opacity 0.3s ease;
+      padding: 8px;
+    }
+
+    .navbar-logo-wrapper:hover {
+      opacity: 0.85;
+    }
+
+    .navbar-logo-image {
+      height: 50px;
+      width: auto;
+      max-width: 100%;
+      object-fit: contain;
+      display: block;
+    }
+
+    .navbar-logo-text {
+      font-size: 24px;
+      font-weight: 700;
+      color: #1a1a1a;
+      font-family: Inter, system-ui, sans-serif;
+      letter-spacing: -0.5px;
+    }
+
+    .footer-logo-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .footer-logo-image {
+      height: 40px;
+      width: auto;
+      max-width: 100%;
+      object-fit: contain;
+      display: block;
+    }
+
+    .footer-logo-text {
+      font-size: 18px;
+      font-weight: 700;
+      color: #1a1a1a;
+      font-family: Inter, system-ui, sans-serif;
+    }
+
+    @media (max-width: 1023px) {
+      .navbar-logo-wrapper {
+        gap: 10px;
+        padding: 6px;
+      }
+      
+      .navbar-logo-image {
+        height: 45px;
+      }
+      
+      .navbar-logo-text {
+        font-size: 22px;
+      }
+      
+      .footer-logo-image {
+        height: 38px;
+      }
+      
+      .footer-logo-text {
+        font-size: 16px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .navbar-logo-wrapper {
+        gap: 8px;
+        padding: 4px;
+      }
+      
+      .navbar-logo-image {
+        height: 40px;
+      }
+      
+      .navbar-logo-text {
+        font-size: 20px;
+      }
+      
+      .footer-logo-image {
+        height: 35px;
+      }
+      
+      .footer-logo-text {
+        font-size: 14px;
+      }
+    }
   </style>
 
   <!-- Inline SVG helper -->
@@ -935,10 +1033,15 @@
 
   <!-- Navbar -->
   <nav class="navbar">
-    <div class="logo" style="display: flex; align-items: center; gap: 12px; text-decoration: none; cursor: pointer;" onclick="window.location.href='/'">
-      <img src="/assets/logo.png" alt="GrabRaw Logo" height="40" style="vertical-align: middle;" referrerPolicy="no-referrer">
-      <span style="font-size: 26px; font-weight: 700; color: #1a1a1a; letter-spacing: -0.5px; margin: 0;">GrabRaw</span>
-    </div>
+    <a href="/" class="navbar-logo-wrapper">
+      <img 
+        src="https://res.cloudinary.com/duh9wvgzu/image/upload/q_auto/f_auto/v1780501537/IMG_5442_r9v9ez.jpg"
+        alt="GrabRaw Logo"
+        class="navbar-logo-image"
+        loading="lazy"
+      />
+      <span class="navbar-logo-text">GrabRaw</span>
+    </a>
     <nav class="nav-links">
       <a href="#categories" class="nav-link">Categories</a>
       <a href="#blueprints" class="nav-link">Blueprints</a>
@@ -1198,9 +1301,14 @@
   <footer>
     <div class="container footer-grid">
       <div class="footer-col col-brand">
-        <div class="logo" style="display: flex; align-items: center; gap: 12px;">
-          <img src="/assets/logo.png" alt="GrabRaw Logo" height="40" style="vertical-align: middle;" referrerPolicy="no-referrer">
-          <span style="font-size: 26px; font-weight: 700; color: #1a1a1a;">GrabRaw</span>
+        <div class="footer-logo-wrapper">
+          <img 
+            src="https://res.cloudinary.com/duh9wvgzu/image/upload/q_auto/f_auto/v1780501537/IMG_5442_r9v9ez.jpg"
+            alt="GrabRaw Logo"
+            class="footer-logo-image"
+            loading="lazy"
+          />
+          <span class="footer-logo-text">GrabRaw</span>
         </div>
         <p class="footer-description">
           GrabRaw is an AI-powered search engine that breaks down any product into its complete Bill of Materials and finds local suppliers near you.
