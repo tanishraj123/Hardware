@@ -29,8 +29,8 @@ export default function Navbar({
   };
 
   return (
-    <header className="sticky top-0 z-40 w-full bg-white shadow-xs border-b border-gray-100">
-      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
+    <header className="sticky top-0 z-50 w-full h-[64px] max-w-full m-0 bg-white/75 backdrop-blur-[10px] border-b border-black/10 shadow-[0_2px_8px_rgba(0,0,0,0.05)] transition-all font-sans">
+      <div className="flex h-full items-center justify-between px-4 sm:px-6 md:px-8">
         
         {/* Left Side: Logo */}
         <div 
@@ -56,26 +56,18 @@ export default function Navbar({
         </div>
 
         {/* Center: Desktop Navigation Links */}
-        <nav className="hidden md:flex items-center space-x-8 text-sm font-normal text-[#5f6368]">
+        <nav className="hidden md:flex items-center space-x-6 text-sm font-medium text-[#1a1a1a] flex-1 ml-10">
           <button 
             onClick={() => handleNavClick("categories")}
-            className="transition hover:text-[#4285F4] py-1"
+            className="transition hover:text-[#4285F4] hover:bg-[#f0f0f0] px-3 py-2 rounded-lg duration-200"
             id="nav-link-categories"
           >
             Categories
           </button>
-          
-          <button 
-            onClick={() => handleNavClick("blueprints")}
-            className="transition hover:text-[#4285F4] py-1"
-            id="nav-link-blueprints"
-          >
-            Blueprints
-          </button>
 
           <button 
             onClick={() => handleNavClick("radar")}
-            className="transition hover:text-[#4285F4] py-1"
+            className="transition hover:text-[#4285F4] hover:bg-[#f0f0f0] px-3 py-2 rounded-lg duration-200"
             id="nav-link-suppliers"
           >
             Suppliers
@@ -83,15 +75,15 @@ export default function Navbar({
 
           <button 
             onClick={() => handleNavClick("bom-parser")}
-            className="transition hover:text-[#4285F4] py-1"
+            className="transition hover:text-[#1a1a1a] font-medium bg-transparent hover:bg-[#f0f0f0] hover:text-[#4285F4] px-4 py-2 rounded-lg cursor-pointer duration-200 text-sm"
             id="nav-link-compare"
           >
-            BOM Matcher
+            GrabRaw +
           </button>
 
           <button 
             onClick={onOpenAssistant}
-            className="transition hover:text-[#4285F4] py-1"
+            className="transition hover:text-[#4285F4] hover:bg-[#f0f0f0] px-3 py-2 rounded-lg duration-200"
             id="nav-link-ai"
           >
             Ask AI
@@ -99,7 +91,7 @@ export default function Navbar({
         </nav>
 
         {/* Right Side: CTA Buttons */}
-        <div className="flex items-center space-x-3">
+        <div className="flex items-center space-x-4 ml-auto">
           <button
             className="cursor-pointer border border-gray-300 text-gray-700 hover:text-google-blue hover:border-google-blue/80 bg-transparent px-4 py-1.5 inline-flex items-center justify-center font-sans font-semibold tracking-wide rounded-full transition-all text-sm active:scale-95"
             id="nav-signin-btn"
@@ -107,7 +99,7 @@ export default function Navbar({
             Sign In
           </button>
           <button
-            className="cursor-pointer px-5 py-1.5 inline-flex items-center justify-center font-sans font-semibold tracking-wide text-white bg-[#4285F4] hover:bg-blue-600 rounded-full shadow-sm transition-all text-sm active:scale-95"
+            className="cursor-pointer px-5 py-2 inline-flex items-center justify-center font-sans font-semibold tracking-wide text-white bg-[#4285F4] hover:bg-[#3367D6] hover:-translate-y-0.5 rounded-full shadow-xs transition-all text-sm active:scale-95"
             id="nav-getstarted-btn"
           >
             Get Started

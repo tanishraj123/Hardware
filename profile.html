@@ -42,33 +42,33 @@
     }
 
     /* Navbar */
-    header {
-      background-color: #FFFFFF;
-      border-bottom: 1px solid #f1f3f4;
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-    }
-
-    .nav-wrapper {
+    .navbar {
+      height: 64px;
+      padding: 12px 24px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 16px 0;
-    }
-
-    .logo {
-      font-size: 22px;
-      font-weight: 800;
-      color: #1a1a1a;
-      letter-spacing: -0.5px;
+      background: rgba(255, 255, 255, 0.75);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px); /* Apple support */
+      border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      font-family: Inter, system-ui, sans-serif;
+      box-sizing: border-box;
+      width: 100%;
+      max-width: 100%;
+      margin: 0;
     }
 
     .nav-links {
       display: none;
+      gap: 24px;
       align-items: center;
-      gap: 32px;
+      flex: 1;
+      margin-left: 40px;
     }
 
     @media (min-width: 768px) {
@@ -79,19 +79,49 @@
 
     .nav-link {
       font-size: 14px;
+      color: #1a1a1a;
+      text-decoration: none;
       font-weight: 500;
-      color: #5f6368;
-      transition: color 0.15s ease;
+      padding: 8px 12px;
+      border-radius: 8px;
+      transition: background-color 0.2s ease, color 0.2s ease;
     }
 
     .nav-link:hover {
+      background-color: #f0f0f0;
       color: #4285F4;
     }
 
     .nav-actions {
       display: flex;
+      gap: 16px;
       align-items: center;
-      gap: 12px;
+      margin-left: auto;
+    }
+
+    .nav-actions .btn {
+      transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+
+    .nav-actions .btn:hover {
+      transform: translateY(-2px);
+    }
+
+    @media (max-width: 768px) {
+      .navbar {
+        height: 56px;
+        padding: 8px 16px;
+      }
+      
+      .nav-links {
+        gap: 16px;
+        margin-left: 20px;
+      }
+      
+      .nav-link {
+        font-size: 13px;
+        padding: 6px 10px;
+      }
     }
 
     /* Standardized Buttons */
@@ -736,29 +766,26 @@
 <body>
 
   <!-- Navbar -->
-  <header>
-    <div class="container nav-wrapper">
-      <a href="/" class="navbar-logo-wrapper">
-        <img 
-          src="https://res.cloudinary.com/duh9wvgzu/image/upload/q_auto/f_auto/v1780501537/IMG_5442_r9v9ez.jpg"
-          alt="GrabRaw Logo"
-          class="navbar-logo-image"
-          loading="lazy"
-        />
-        <span class="navbar-logo-text">GrabRaw</span>
-      </a>
-      <nav class="nav-links">
-        <a href="index.html#categories" class="nav-link">Categories</a>
-        <a href="index.html#blueprints" class="nav-link">Blueprints</a>
-        <a href="index.html#suppliers" class="nav-link">Suppliers</a>
-        <a href="info.html" class="nav-link">BOM Matcher</a>
-        <a href="index.html#ask-ai" class="nav-link">Ask AI</a>
-      </nav>
-      <div class="nav-actions">
-        <!-- Replaced via Auth Check script below -->
-        <a href="signin.html" class="btn btn-outline" style="border-radius: 100px;">Sign In</a>
-        <a href="register-user.html" class="btn btn-primary" style="border-radius: 100px;">Get Started</a>
-      </div>
+  <header class="navbar">
+    <a href="/" class="navbar-logo-wrapper">
+      <img 
+        src="https://res.cloudinary.com/duh9wvgzu/image/upload/q_auto/f_auto/v1780501537/IMG_5442_r9v9ez.jpg"
+        alt="GrabRaw Logo"
+        class="navbar-logo-image"
+        loading="lazy"
+      />
+      <span class="navbar-logo-text">GrabRaw</span>
+    </a>
+    <nav class="nav-links">
+      <a href="/#categories" class="nav-link">Categories</a>
+      <a href="/#suppliers" class="nav-link">Suppliers</a>
+      <a href="/info" class="nav-link">GrabRaw +</a>
+      <a href="/#ask-ai" class="nav-link">Ask AI</a>
+    </nav>
+    <div class="nav-actions">
+      <!-- Replaced via Auth Check script below -->
+      <a href="/signin" class="btn btn-outline" style="border-radius: 100px;">Sign In</a>
+      <a href="/register-user" class="btn btn-primary" style="border-radius: 100px;">Get Started</a>
     </div>
   </header>
 
