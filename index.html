@@ -72,24 +72,20 @@
     }
 
     /* Navbar */
-    .navbar {
+    header {
       background-color: #FFFFFF;
       border-bottom: 1px solid #f1f3f4;
       position: sticky;
       top: 0;
       z-index: 100;
       box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+
+    .nav-wrapper {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 16px 24px;
-      width: 100%;
-    }
-
-    @media (min-width: 1200px) {
-      .navbar {
-        padding: 16px calc((100% - 1200px) / 2 + 24px);
-      }
+      padding: 16px 0;
     }
 
     .logo {
@@ -934,23 +930,22 @@
 <body>
 
   <!-- Navbar -->
-  <nav class="navbar">
-    <div class="logo" style="display: flex; align-items: center; gap: 12px; text-decoration: none; cursor: pointer;" onclick="window.location.href='/'">
-      <img src="/assets/logo.png" alt="GrabRaw Logo" height="40" style="vertical-align: middle;" referrerPolicy="no-referrer">
-      <span style="font-size: 26px; font-weight: 700; color: #1a1a1a; letter-spacing: -0.5px; margin: 0;">GrabRaw</span>
+  <header>
+    <div class="container nav-wrapper">
+      <a href="/" class="logo">GrabRaw</a>
+      <nav class="nav-links">
+        <a href="#categories" class="nav-link">Categories</a>
+        <a href="#blueprints" class="nav-link">Blueprints</a>
+        <a href="#suppliers" class="nav-link">Suppliers</a>
+        <a href="/info" class="nav-link">BOM Matcher</a>
+        <a href="#ask-ai" class="nav-link">Ask AI</a>
+      </nav>
+      <div class="nav-actions">
+        <a href="/signin" class="btn btn-outline" style="border-radius: 100px;">Sign In</a>
+        <a href="/register-user" class="btn btn-primary" style="border-radius: 100px;">Get Started</a>
+      </div>
     </div>
-    <nav class="nav-links">
-      <a href="#categories" class="nav-link">Categories</a>
-      <a href="#blueprints" class="nav-link">Blueprints</a>
-      <a href="#suppliers" class="nav-link">Suppliers</a>
-      <a href="/info" class="nav-link">BOM Matcher</a>
-      <a href="#ask-ai" class="nav-link">Ask AI</a>
-    </nav>
-    <div class="nav-actions">
-      <a href="/signin" class="btn btn-outline" style="border-radius: 100px;">Sign In</a>
-      <a href="/register-user" class="btn btn-primary" style="border-radius: 100px;">Get Started</a>
-    </div>
-  </nav>
+  </header>
 
   <!-- Hero Section -->
   <section class="hero">
@@ -1198,10 +1193,7 @@
   <footer>
     <div class="container footer-grid">
       <div class="footer-col col-brand">
-        <div class="logo" style="display: flex; align-items: center; gap: 12px;">
-          <img src="/assets/logo.png" alt="GrabRaw Logo" height="40" style="vertical-align: middle;" referrerPolicy="no-referrer">
-          <span style="font-size: 26px; font-weight: 700; color: #1a1a1a;">GrabRaw</span>
-        </div>
+        <div class="logo">GrabRaw</div>
         <p class="footer-description">
           GrabRaw is an AI-powered search engine that breaks down any product into its complete Bill of Materials and finds local suppliers near you.
         </p>

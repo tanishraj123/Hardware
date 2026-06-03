@@ -34,7 +34,7 @@ export default function Navbar({
         
         {/* Left Side: Logo */}
         <div 
-          className="flex cursor-pointer items-center gap-3"
+          className="flex cursor-pointer items-center"
           onClick={() => {
             if (onNavigate) {
               onNavigate('home');
@@ -43,8 +43,7 @@ export default function Navbar({
             }
           }}
         >
-          <img src="/assets/logo.png" alt="GrabRaw Logo" className="h-10 w-10 object-contain" referrerPolicy="no-referrer" />
-          <span className="font-sans text-2xl font-bold text-[#1a1a1a] tracking-tight" id="nav-logo-text">
+          <span className="font-display text-xl sm:text-2xl font-bold tracking-tight text-gray-900" id="nav-logo-text">
             GrabRaw
           </span>
         </div>
