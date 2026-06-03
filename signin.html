@@ -271,36 +271,71 @@
       box-shadow: 0 0 0 3px rgba(66, 133, 244, 0.15);
     }
 
-    /* Input with Icon integration (Eye password toggle) */
-    .input-with-toggle {
-      position: relative;
-      width: 100%;
+    /* Google-style Show Password Checkbox styling */
+    .show-password-container {
+      display: flex !important;
+      align-items: center !important;
+      gap: 8px !important;
+      margin-top: 12px !important;
+      margin-bottom: 8px !important;
+      text-align: left !important;
+      cursor: pointer !important;
+      user-select: none !important;
     }
 
-    .input-with-toggle .form-input {
-      padding-right: 48px;
+    .show-password-checkbox {
+      appearance: none !important;
+      -webkit-appearance: none !important;
+      width: 18px !important;
+      height: 18px !important;
+      border: 1px solid #dadce0 !important;
+      border-radius: 4px !important;
+      background-color: #ffffff !important;
+      outline: none !important;
+      cursor: pointer !important;
+      position: relative !important;
+      transition: background-color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease !important;
+      flex-shrink: 0 !important;
+      display: inline-block !important;
+      padding: 0 !important;
+      margin: 0 !important;
     }
 
-    .eye-toggle {
-      position: absolute;
-      right: 12px;
-      top: 50%;
-      transform: translateY(-50%);
-      background: none;
-      border: none;
-      color: #5f6368;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 8px;
-      border-radius: 50%;
-      transition: background-color 0.15s, color 0.15s;
+    .show-password-checkbox:hover {
+      border-color: #dadce0 !important;
+      background-color: #f8f9fa !important;
     }
 
-    .eye-toggle:hover {
-      background-color: #f1f3f4;
-      color: #1a1a1a;
+    .show-password-checkbox:checked {
+      background-color: #4285F4 !important;
+      border-color: #4285F4 !important;
+    }
+
+    .show-password-checkbox:checked:hover {
+      background-color: #357ae8 !important;
+      border-color: #357ae8 !important;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.2) !important;
+    }
+
+    /* White checkmark inside the checked checkbox */
+    .show-password-checkbox:checked::after {
+      content: "" !important;
+      position: absolute !important;
+      left: 5px !important;
+      top: 1px !important;
+      width: 6px !important;
+      height: 10px !important;
+      border: solid #ffffff !important;
+      border-width: 0 2px 2px 0 !important;
+      transform: rotate(45deg) !important;
+    }
+
+    .show-password-label-text {
+      font-family: 'Inter', system-ui, sans-serif !important;
+      font-size: 14px !important;
+      font-weight: 400 !important;
+      color: #5f6368 !important;
+      cursor: pointer !important;
     }
 
     /* Password link placement & blue layout link text rules */
@@ -880,18 +915,13 @@
           <input type="email" id="email-field" class="form-input" placeholder="Email address" required>
         </div>
 
-        <!-- Password Input -->
+        <!-- Password Input with Custom Show password checkbox -->
         <div class="form-group">
-          <div class="input-with-toggle">
-            <input type="password" id="password-field" class="form-input" placeholder="Password" required>
-            <button type="button" class="eye-toggle" id="toggle-password" title="Show password">
-              <!-- Inline Eye Icon SVG -->
-              <svg id="eye-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 20px; height: 20px;">
-                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-                <circle cx="12" cy="12" r="3"></circle>
-              </svg>
-            </button>
-          </div>
+          <input type="password" id="password-field" class="form-input" placeholder="Password" required>
+          <label class="show-password-container" for="toggle-password">
+            <input type="checkbox" id="toggle-password" class="show-password-checkbox">
+            <span class="show-password-label-text">Show password</span>
+          </label>
         </div>
 
         <!-- Forgot Password link -->
@@ -1054,26 +1084,15 @@
       }
     });
 
-    // Password visibility toggle logic
-    const toggleBtn = document.getElementById('toggle-password');
+    // Password visibility toggle logic (Checkbox)
+    const toggleCheckbox = document.getElementById('toggle-password');
     const passwordField = document.getElementById('password-field');
-    const eyeIcon = document.getElementById('eye-icon');
 
-    toggleBtn.addEventListener('click', () => {
-      if (passwordField.type === 'password') {
-        passwordField.type = 'text';
-        eyeIcon.innerHTML = `
-          <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 ... 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
-          <line x1="1" y1="1" x2="23" y2="23"></line>
-        `;
-      } else {
-        passwordField.type = 'password';
-        eyeIcon.innerHTML = `
-          <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-          <circle cx="12" cy="12" r="3"></circle>
-        `;
-      }
-    });
+    if (toggleCheckbox && passwordField) {
+      toggleCheckbox.addEventListener('change', () => {
+        passwordField.type = toggleCheckbox.checked ? 'text' : 'password';
+      });
+    }
 
     // Unified dynamic visual message handler (red or green, dismisses in 5s)
     let dismissTimeout = null;

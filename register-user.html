@@ -372,6 +372,73 @@
       border-color: #4285F4;
     }
 
+    /* Google-style Show Password Checkbox styling */
+    .show-password-container {
+      display: flex !important;
+      align-items: center !important;
+      gap: 8px !important;
+      margin-top: 12px !important;
+      margin-bottom: 8px !important;
+      text-align: left !important;
+      cursor: pointer !important;
+      user-select: none !important;
+    }
+
+    .show-password-checkbox {
+      appearance: none !important;
+      -webkit-appearance: none !important;
+      width: 18px !important;
+      height: 18px !important;
+      border: 1px solid #dadce0 !important;
+      border-radius: 4px !important;
+      background-color: #ffffff !important;
+      outline: none !important;
+      cursor: pointer !important;
+      position: relative !important;
+      transition: background-color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease !important;
+      flex-shrink: 0 !important;
+      display: inline-block !important;
+      padding: 0 !important;
+      margin: 0 !important;
+    }
+
+    .show-password-checkbox:hover {
+      border-color: #dadce0 !important;
+      background-color: #f8f9fa !important;
+    }
+
+    .show-password-checkbox:checked {
+      background-color: #4285F4 !important;
+      border-color: #4285F4 !important;
+    }
+
+    .show-password-checkbox:checked:hover {
+      background-color: #357ae8 !important;
+      border-color: #357ae8 !important;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.2) !important;
+    }
+
+    /* White checkmark inside the checked checkbox */
+    .show-password-checkbox:checked::after {
+      content: "" !important;
+      position: absolute !important;
+      left: 5px !important;
+      top: 1px !important;
+      width: 6px !important;
+      height: 10px !important;
+      border: solid #ffffff !important;
+      border-width: 0 2px 2px 0 !important;
+      transform: rotate(45deg) !important;
+    }
+
+    .show-password-label-text {
+      font-family: 'Inter', system-ui, sans-serif !important;
+      font-size: 14px !important;
+      font-weight: 400 !important;
+      color: #5f6368 !important;
+      cursor: pointer !important;
+    }
+
     /* Custom Checkbox formatting */
     .checkbox-container {
       display: flex;
@@ -948,9 +1015,13 @@
           </div>
         </div>
 
-        <!-- Confirm Password visual checks -->
+        <!-- Confirm Password visual checks with Custom Show password checkbox -->
         <div class="form-group">
           <input type="password" id="confirm-password" class="form-input" placeholder="Confirm password" required>
+          <label class="show-password-container" for="toggle-password">
+            <input type="checkbox" id="toggle-password" class="show-password-checkbox">
+            <span class="show-password-label-text">Show password</span>
+          </label>
         </div>
 
         <!-- User Role Selector Side-by-side Pills -->
@@ -1127,6 +1198,19 @@
         console.error('Navbar Auth Check error:', err);
       }
     });
+
+    // Password visibility toggle logic (Checkbox)
+    const toggleCheckbox = document.getElementById('toggle-password');
+    const passwordField = document.getElementById('password');
+    const confirmPasswordField = document.getElementById('confirm-password');
+
+    if (toggleCheckbox && passwordField && confirmPasswordField) {
+      toggleCheckbox.addEventListener('change', () => {
+        const type = toggleCheckbox.checked ? 'text' : 'password';
+        passwordField.type = type;
+        confirmPasswordField.type = type;
+      });
+    }
 
     // Realtime Password Strength Monitor
     const pwdField = document.getElementById('password');
