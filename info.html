@@ -662,6 +662,217 @@
       display: inline-block;
       vertical-align: middle;
     }
+
+    /* Save & Expand Icons container */
+    .material-card {
+      position: relative; /* ensure relative positioning for icons */
+    }
+    
+    .card-actions-top-right {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      z-index: 10;
+    }
+    
+    .btn-save-supplier, .btn-expand-alternatives {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      border: 1px solid #dadce0;
+      background-color: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      padding: 0;
+      transition: all 0.2s ease;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    
+    .btn-save-supplier {
+      color: #4285F4; /* Blue #4285F4 */
+    }
+    .btn-save-supplier:hover {
+      background-color: #e8f0fe;
+      border-color: #4285F4;
+    }
+    
+    .btn-save-supplier.saved {
+      background-color: #34A853 !important; /* change to ✓ checkmark with green #34A853 background */
+      border-color: #34A853 !important;
+      color: #ffffff !important;
+    }
+    
+    .btn-expand-alternatives {
+      color: #5f6368; /* Grey #5f6368 */
+    }
+    .btn-expand-alternatives:hover {
+      background-color: #f1f3f4;
+    }
+    .btn-expand-alternatives.disabled {
+      opacity: 0.35;
+      cursor: not-allowed;
+      pointer-events: none;
+    }
+    
+    /* Alternatives dropdown / popup style */
+    .alternatives-dropdown-panel {
+      position: absolute;
+      top: 100%;
+      right: 0;
+      width: 100%; /* full width on mobile */
+      background-color: #ffffff;
+      border: 1px solid #dadce0;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.12);
+      z-index: 1000;
+      padding: 16px;
+      margin-top: 8px;
+      box-sizing: border-box;
+      display: none;
+      animation: fadeInDown 0.2s ease-out;
+    }
+    
+    @keyframes fadeInDown {
+      from { opacity: 0; transform: translateY(-5px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    @media (min-width: 768px) {
+      .alternatives-dropdown-panel {
+        width: 320px; /* Floating box on desktop */
+        right: 16px;
+      }
+    }
+    
+    .alt-panel-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: #202124;
+      border-bottom: 1px solid #f1f3f4;
+      padding-bottom: 8px;
+      margin-bottom: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .alt-supplier-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      padding: 10px 0;
+      border-bottom: 1px solid #f1f3f4;
+      position: relative;
+    }
+    .alt-supplier-row:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+    
+    .alt-supplier-info {
+      flex: 1;
+      padding-right: 36px;
+    }
+    
+    .alt-name-line {
+      font-weight: 600;
+      font-size: 13.5px;
+      color: #202124;
+    }
+    
+    .alt-meta-line {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      font-weight: 500;
+      margin-top: 2px;
+    }
+    
+    .alt-distance-pill {
+      background-color: #e8f0fe;
+      color: #1a73e8;
+      padding: 1px 6px;
+      border-radius: 4px;
+    }
+    
+    .alt-stock-indicator {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .alt-stock-dot {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+    }
+    
+    .alt-address-line {
+      font-size: 11.5px;
+      color: #70757a;
+      margin-top: 4px;
+    }
+    
+    .btn-alt-save {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      border: 1px solid #dadce0;
+      background-color: #ffffff;
+      color: #4285F4;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      position: absolute;
+      right: 0;
+      top: 10px;
+      padding: 0;
+      transition: all 0.2s;
+    }
+    .btn-alt-save:hover {
+      background-color: #e8f0fe;
+      border-color: #4285F4;
+    }
+    .btn-alt-save.saved {
+      background-color: #34A853 !important;
+      border-color: #34A853 !important;
+      color: #ffffff !important;
+    }
+    
+    /* Toast System container & style */
+    .toast-container {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    
+    .toast {
+      background-color: #323232;
+      color: #ffffff;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      animation: slideUp 0.25s ease-out forwards;
+      opacity: 0.95;
+    }
+    
+    @keyframes slideUp {
+      from { transform: translateY(30px); opacity: 0; }
+      to { transform: translateY(0); opacity: 0.95; }
+    }
   </style>
 </head>
 <body>
@@ -1017,6 +1228,7 @@
                   </div>
                   <a href="profile.html" class="dropdown-item" style="display: block; padding: 10px 16px; font-size: 14px; color: #3c4043; transition: background-color 0.15s ease; text-decoration: none; font-weight: 500;">Profile</a>
                   <a href="location.html" class="dropdown-item" style="display: block; padding: 10px 16px; font-size: 14px; color: #3c4043; transition: background-color 0.15s ease; text-decoration: none; font-weight: 500;">My Location</a>
+                  <a href="/my-partners" class="dropdown-item" style="display: block; padding: 10px 16px; font-size: 14px; color: #3c4043; transition: background-color 0.15s ease; text-decoration: none; font-weight: 500;">My Partner</a>
                   <a href="register-company.html" class="dropdown-item" style="display: block; padding: 10px 16px; font-size: 14px; color: #3c4043; transition: background-color 0.15s ease; text-decoration: none; font-weight: 500;">Register Company</a>
                   <a href="#" id="signout-link" class="dropdown-item" style="display: block; padding: 10px 16px; font-size: 14px; color: #d93025; transition: background-color 0.15s ease; text-decoration: none; font-weight: 600;">Sign Out</a>
                 </div>
@@ -1068,6 +1280,370 @@
         }
       } catch (err) {
         console.error('Navbar Auth Check error:', err);
+      }
+
+      // --- SAVE SUPPLIERS & EXPAND ALTERNATIVES IMPLEMENTATION ---
+      try {
+        const ALTERNATIVES_DATA = {
+          "OLED Display Panel": [
+            {
+              id: "alt-oled-1",
+              supplier_name: "Pioneer Robotics & Dev Kits",
+              distance: "5.1 km",
+              stock: "In Stock",
+              address: "7 Pioneer Circle, Tech Hub",
+              maps_link: "https://maps.google.com/?q=Pioneer+Robotics+Tech+Hub"
+            },
+            {
+              id: "alt-oled-2",
+              supplier_name: "Alpha Circuit Labs",
+              distance: "14.2 km",
+              stock: "In Stock",
+              address: "48 Innovation Parkway, Suite B",
+              maps_link: "https://maps.google.com/?q=Alpha+Circuit+Labs+Parkway"
+            },
+            {
+              id: "alt-oled-3",
+              supplier_name: "Node-X IoT Supplies",
+              distance: "23.7 km",
+              stock: "Low Stock",
+              address: "900 Wireless Boulevard",
+              maps_link: "https://maps.google.com/?q=Node-X+IoT+Supplies"
+            }
+          ],
+          "A17 Bionic Chip": [
+            {
+              id: "alt-bionic-1",
+              supplier_name: "MetroTech Electronics Ltd.",
+              distance: "8.4 km",
+              stock: "Low Stock",
+              address: "102 Technology Drive, Delhi",
+              maps_link: "https://maps.google.com/?q=MetroTech+Electronics+Delhi"
+            },
+            {
+              id: "alt-bionic-2",
+              supplier_name: "Alpha Circuit Labs",
+              distance: "14.2 km",
+              stock: "In Stock",
+              address: "48 Innovation Parkway, Suite B",
+              maps_link: "https://maps.google.com/?q=Alpha+Circuit+Labs+Parkway"
+            }
+          ],
+          "Lithium Battery Cell": [
+            {
+              id: "alt-battery-1",
+              supplier_name: "Pioneer Robotics",
+              distance: "5.1 km",
+              stock: "In Stock",
+              address: "7 Pioneer Circle, Tech Hub",
+              maps_link: "https://maps.google.com/?q=Pioneer+Robotics+Tech+Hub"
+            },
+            {
+              id: "alt-battery-2",
+              supplier_name: "MetroTech Electronics",
+              distance: "8.4 km",
+              stock: "In Stock",
+              address: "102 Technology Drive, Delhi",
+              maps_link: "https://maps.google.com/?q=MetroTech+Electronics+Delhi"
+            }
+          ],
+          "Titanium Frame": [], // 0 alternatives to demonstrate disabled state
+          "Camera Lens Module": [
+            {
+              id: "alt-lens-1",
+              supplier_name: "Summit Hardware Sourcing",
+              distance: "31.1 km",
+              stock: "In Stock",
+              address: "15 Industrial Road",
+              maps_link: "https://maps.google.com/?q=Summit+Hardware+Sourcing+Industrial+Road"
+            }
+          ],
+          "Sapphire Glass Cover": [
+            {
+              id: "alt-glass-1",
+              supplier_name: "Summit Hardware Sourcing",
+              distance: "31.1 km",
+              stock: "In Stock",
+              address: "15 Industrial Road",
+              maps_link: "https://maps.google.com/?q=Summit+Hardware+Sourcing+Industrial+Road"
+            }
+          ],
+          "NFC Antenna Module": [
+            {
+              id: "alt-nfc-1",
+              supplier_name: "Alpha Circuit Labs",
+              distance: "14.2 km",
+              stock: "In Stock",
+              address: "48 Innovation Parkway, Suite B",
+              maps_link: "https://maps.google.com/?q=Alpha+Circuit+Labs+Parkway"
+            },
+            {
+              id: "alt-nfc-2",
+              supplier_name: "Node-X IoT Supplies",
+              distance: "23.7 km",
+              stock: "In Stock",
+              address: "900 Wireless Boulevard",
+              maps_link: "https://maps.google.com/?q=Node-X+IoT+Supplies"
+            }
+          ],
+          "Speaker Mesh Component": [] // 0 alternatives to demonstrate disabled state
+        };
+
+        // Elegant Toast System
+        function showToast(message) {
+          let container = document.getElementById('toast-container');
+          if (!container) {
+            container = document.createElement('div');
+            container.id = 'toast-container';
+            container.className = 'toast-container';
+            document.body.appendChild(container);
+          }
+          const toast = document.createElement('div');
+          toast.className = 'toast';
+          toast.textContent = message;
+          container.appendChild(toast);
+          setTimeout(() => {
+            toast.remove();
+          }, 2000);
+        }
+
+        // Helper to check if supplier is saved
+        function isSupplierSaved(id) {
+          const saved = JSON.parse(localStorage.getItem('saved_suppliers') || '[]');
+          return saved.some(item => item.id === id);
+        }
+
+        // Helper to save/toggle supplier
+        function toggleSaveSupplier(supData) {
+          let saved = JSON.parse(localStorage.getItem('saved_suppliers') || '[]');
+          const index = saved.findIndex(item => item.id === supData.id);
+          if (index > -1) {
+            saved.splice(index, 1);
+            localStorage.setItem('saved_suppliers', JSON.stringify(saved));
+            showToast(`Removed ${supData.supplier_name} from Partners`);
+            return false;
+          } else {
+            saved.push({
+              ...supData,
+              saved_date: new Date().toISOString().slice(0, 10)
+            });
+            localStorage.setItem('saved_suppliers', JSON.stringify(saved));
+            showToast(`Added ${supData.supplier_name} to My Partners`);
+            return true;
+          }
+        }
+
+        // Render alternative suppliers popup panel list
+        function renderAlternativesPanel(card, mainId, materialName) {
+          const panel = card.querySelector('.alternatives-dropdown-panel');
+          const alts = ALTERNATIVES_DATA[materialName] || [];
+          
+          // Sort by distance (nearest first)
+          const sorted = [...alts].sort((a,b) => parseFloat(a.distance) - parseFloat(b.distance));
+          
+          let rowsHtml = sorted.map(alt => {
+            const isAltSaved = isSupplierSaved(alt.id);
+            const stockClass = alt.stock.toLowerCase().includes('low') ? 'low-stock' : 'in-stock';
+            return `
+              <div class="alt-supplier-row">
+                <div class="alt-supplier-info">
+                  <div class="alt-name-line">${alt.supplier_name}</div>
+                  <div class="alt-meta-line">
+                    <span class="alt-distance-pill">
+                      <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display-inline-block; vertical-align: middle; margin-right: 2px;"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                      ${alt.distance} away
+                    </span>
+                    <span class="alt-stock-indicator ${stockClass}">
+                      <span class="alt-stock-dot"></span>
+                      ${alt.stock}
+                    </span>
+                  </div>
+                  <div class="alt-address-line">${alt.address}</div>
+                </div>
+                <button class="btn-alt-save ${isAltSaved ? 'saved' : ''}" data-id="${alt.id}" data-component="${materialName}" data-supplier-name="${alt.supplier_name}" data-address="${alt.address}" data-distance="${alt.distance}" data-stock="${alt.stock}" data-maps-link="${alt.maps_link}" title="${isAltSaved ? 'Remove from Saved Partners' : 'Save Partner'}">
+                  ${isAltSaved ? `
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                      <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                  ` : `
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                      <line x1="12" y1="5" x2="12" y2="19"></line>
+                      <line x1="5" y1="12" x2="19" y2="12"></line>
+                    </svg>
+                  `}
+                </button>
+              </div>
+            `;
+          }).join('');
+          
+          panel.innerHTML = `
+            <div class="alt-panel-title">
+              <span>Alternative Sources</span>
+              <span style="font-size: 11px; font-weight: 500; color: #70757a;">${sorted.length} found</span>
+            </div>
+            <div class="alt-suppliers-list">
+              ${rowsHtml}
+            </div>
+          `;
+          
+          // Attach click handlers inside panel
+          panel.querySelectorAll('.btn-alt-save').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+              e.stopPropagation();
+              const altData = {
+                id: btn.getAttribute('data-id'),
+                component: btn.getAttribute('data-component'),
+                supplier_name: btn.getAttribute('data-supplier-name'),
+                address: btn.getAttribute('data-address'),
+                distance: btn.getAttribute('data-distance'),
+                stock: btn.getAttribute('data-stock'),
+                maps_link: btn.getAttribute('data-maps-link')
+              };
+              const nowSaved = toggleSaveSupplier(altData);
+              if (nowSaved) {
+                btn.classList.add('saved');
+                btn.title = 'Remove from Saved Partners';
+                btn.innerHTML = `
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                  </svg>
+                `;
+              } else {
+                btn.classList.remove('saved');
+                btn.title = 'Save Partner';
+                btn.innerHTML = `
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                  </svg>
+                `;
+              }
+              
+              // Sync parent card UI
+              updateMainCardStats();
+            });
+          });
+        }
+
+        // Sync main upper actions
+        function updateMainCardStats() {
+          document.querySelectorAll('.btn-save-supplier').forEach(btn => {
+            const id = btn.getAttribute('data-id');
+            const isSaved = isSupplierSaved(id);
+            if (isSaved) {
+              btn.classList.add('saved');
+              btn.title = 'Remove from Saved Partners';
+              btn.innerHTML = `
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+              `;
+            } else {
+              btn.classList.remove('saved');
+              btn.title = 'Save Partner';
+              btn.innerHTML = `
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="12" y1="5" x2="12" y2="19"></line>
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                </svg>
+              `;
+            }
+          });
+        }
+
+        // Initialize parent cards
+        const cards = document.querySelectorAll('.material-card');
+        cards.forEach((card, index) => {
+          const rowNum = index + 1;
+          const id = `bom-row-${rowNum}`;
+          
+          // Parse info
+          const materialName = card.querySelector('.material-name').textContent.replace(/^\d+\.\s*/, '').trim();
+          const supplierName = card.querySelector('.supplier-name').textContent.trim();
+          const address = card.querySelector('.supplier-address').textContent.trim();
+          const distanceText = card.querySelector('.distance-badge').textContent.replace('~', '').trim();
+          const stockText = card.querySelector('.stock-indicator').textContent.trim();
+          const mapsLink = card.querySelector('.btn-supplier-maps').href;
+          
+          // Check database alternatives
+          const alts = ALTERNATIVES_DATA[materialName] || [];
+          const hasAlternatives = alts.length > 0;
+          
+          // Render action container top right
+          const isSaved = isSupplierSaved(id);
+          const actionContainer = document.createElement('div');
+          actionContainer.className = 'card-actions-top-right';
+          actionContainer.innerHTML = `
+            <button class="btn-save-supplier ${isSaved ? 'saved' : ''}" data-id="${id}" title="${isSaved ? 'Remove from Saved Partners' : 'Save Partner'}">
+              ${isSaved ? `
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+              ` : `
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="12" y1="5" x2="12" y2="19"></line>
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                </svg>
+              `}
+            </button>
+            <button class="btn-expand-alternatives ${!hasAlternatives ? 'disabled' : ''}" data-id="${id}" title="${hasAlternatives ? 'Show Alternative Suppliers' : 'No alternative suppliers available'}" ${!hasAlternatives ? 'disabled' : ''}>
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="6 9 12 15 18 9"></polyline>
+              </svg>
+            </button>
+          `;
+          card.appendChild(actionContainer);
+          
+          // Create Panel element
+          const panel = document.createElement('div');
+          panel.className = 'alternatives-dropdown-panel';
+          card.appendChild(panel);
+          
+          // Add click listener on Save button
+          actionContainer.querySelector('.btn-save-supplier').addEventListener('click', (e) => {
+            e.stopPropagation();
+            const supData = {
+              id: id,
+              component: materialName,
+              supplier_name: supplierName,
+              address: address,
+              distance: distanceText,
+              stock: stockText,
+              maps_link: mapsLink
+            };
+            toggleSaveSupplier(supData);
+            updateMainCardStats();
+          });
+          
+          // Add click listener on Expand button
+          actionContainer.querySelector('.btn-expand-alternatives').addEventListener('click', (e) => {
+            e.stopPropagation();
+            if (!hasAlternatives) return;
+            
+            const isCurrentlyShown = panel.style.display === 'block';
+            
+            // Close all other panels
+            document.querySelectorAll('.alternatives-dropdown-panel').forEach(p => {
+              p.style.display = 'none';
+            });
+            
+            if (!isCurrentlyShown) {
+              panel.style.display = 'block';
+              renderAlternativesPanel(card, id, materialName);
+            }
+          });
+        });
+        
+        // Document level click to hide dropdown panels
+        document.addEventListener('click', (e) => {
+          if (!e.target.closest('.material-card')) {
+            document.querySelectorAll('.alternatives-dropdown-panel').forEach(p => {
+              p.style.display = 'none';
+            });
+          }
+        });
+      } catch (err) {
+        console.error('Interactive Saving features failed to initialize:', err);
       }
     });
   </script>

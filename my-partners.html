@@ -1,0 +1,861 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Saved Suppliers — GrabRaw</title>
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Supabase -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  
+  <style>
+    :root {
+      --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+    }
+    
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    body {
+      font-family: var(--font-sans);
+      background-color: #ffffff;
+      color: #202124;
+      line-height: 1.5;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+    
+    .container {
+      width: 100%;
+      max-width: 1152px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    .container-slim {
+      width: 100%;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+    
+    /* Navbar */
+    header {
+      background-color: #FFFFFF;
+      border-bottom: 1px solid #f1f3f4;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    
+    .nav-wrapper {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 0;
+    }
+    
+    .logo {
+      font-size: 26px;
+      font-weight: 700;
+      color: #1a1a1a;
+      letter-spacing: -0.5px;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    
+    .nav-links {
+      display: none;
+      align-items: center;
+      gap: 32px;
+    }
+    
+    @media (min-width: 768px) {
+      .nav-links {
+        display: flex;
+      }
+    }
+    
+    .nav-link {
+      font-size: 14px;
+      font-weight: 500;
+      color: #5f6368;
+      transition: color 0.15s ease;
+      text-decoration: none;
+    }
+    
+    .nav-link:hover {
+      color: #4285F4;
+    }
+    
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    
+    /* Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: 600;
+      padding: 10px 20px;
+      border-radius: 8px;
+      transition: all 0.2s ease;
+      cursor: pointer;
+      border: none;
+      text-align: center;
+      text-decoration: none;
+    }
+    
+    .btn-outline {
+      background-color: transparent;
+      border: 1px solid #dadce0;
+      color: #3c4043;
+    }
+    
+    .btn-outline:hover {
+      background-color: #f8f9fa;
+      border-color: #bdc1c6;
+    }
+    
+    .btn-primary {
+      background-color: #4285F4;
+      color: #FFFFFF;
+    }
+    
+    .btn-primary:hover {
+      background-color: #2b72eb;
+      box-shadow: 0 2px 6px rgba(66, 133, 244, 0.2);
+    }
+    
+    /* Main Layout */
+    main {
+      flex: 1;
+      padding: 48px 0;
+    }
+    
+    .page-header {
+      margin-bottom: 32px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    @media (min-width: 768px) {
+      .page-header {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: flex-end;
+      }
+    }
+    
+    .title-area {
+      flex: 1;
+    }
+
+    .page-title {
+      font-size: 28px;
+      font-weight: 800;
+      color: #1a1a1a;
+      letter-spacing: -0.5px;
+      margin-bottom: 8px;
+    }
+    
+    .page-subtitle {
+      font-size: 15px;
+      color: #5f6368;
+    }
+
+    .btn-export {
+      background-color: #FFFFFF;
+      border: 1px solid #dadce0;
+      color: #3c4043;
+      padding: 10px 18px;
+      font-weight: 600;
+      border-radius: 100px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13.5px;
+    }
+
+    .btn-export:hover {
+      background-color: #f8f9fa;
+      border-color: #bdc1c6;
+    }
+    
+    /* Saved Partners List Grid */
+    .partners-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+    
+    @media (min-width: 768px) {
+      .partners-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+    
+    /* Card Styles matching BOM Results but with Blue left border */
+    .partner-card {
+      border: 1px solid #e0e0e0;
+      border-left: 3px solid #4285F4; /* Blue left border to distinguish */
+      border-radius: 12px;
+      padding: 24px;
+      background-color: #FFFFFF;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+      transition: box-shadow 0.2s ease, border-color 0.2s ease;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 20px;
+      position: relative;
+    }
+    
+    .partner-card:hover {
+      border-color: #dadce0;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.06); /* Subtle shadow increase on hover */
+    }
+    
+    .partner-header {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    
+    .component-name {
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: #5f6368;
+    }
+    
+    .supplier-name {
+      font-size: 20px;
+      font-weight: 700;
+      color: #1a1a1a;
+      letter-spacing: -0.3px;
+    }
+    
+    .partner-meta {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 4px;
+    }
+    
+    .distance-badge {
+      font-size: 11px;
+      font-weight: 600;
+      background-color: #E8F0FE;
+      color: #1A73E8;
+      padding: 3px 8px;
+      border-radius: 100px;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+    
+    .stock-indicator {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+    
+    .stock-indicator.in-stock {
+      color: #137333;
+    }
+
+    .stock-indicator.low-stock {
+      color: #d93025;
+    }
+    
+    .stock-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+    }
+    
+    .stock-indicator.in-stock .stock-dot {
+      background-color: #137333;
+    }
+
+    .stock-indicator.low-stock .stock-dot {
+      background-color: #d93025;
+    }
+    
+    .partner-address {
+      font-size: 13.5px;
+      color: #5f6368;
+      margin-top: 4px;
+    }
+    
+    .partner-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      border-top: 1px solid #f1f3f4;
+      padding-top: 16px;
+    }
+    
+    .btn-card-action {
+      flex: 1;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 8px 12px;
+      border-radius: 8px;
+      text-align: center;
+      white-space: nowrap;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+    }
+    
+    .btn-web {
+      background-color: #FFFFFF;
+      border: 1px solid #dadce0;
+      color: #3c4043;
+    }
+    
+    .btn-web:hover {
+      background-color: #f8f9fa;
+    }
+    
+    .btn-maps {
+      background-color: #e8f0fe;
+      color: #1a73e8;
+    }
+    
+    .btn-maps:hover {
+      background-color: #d2e3fc;
+    }
+    
+    .btn-remove {
+      background-color: transparent;
+      color: #EA4335; /* Red #EA4335 text as requested */
+      border: none;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 8px 12px;
+      border-radius: 8px;
+      transition: background-color 0.2s;
+    }
+    
+    .btn-remove:hover {
+      background-color: #fce8e6;
+    }
+    
+    /* Empty State */
+    .empty-state {
+      text-align: center;
+      padding: 64px 24px;
+      background-color: #f8f9fa;
+      border-radius: 16px;
+      border: 1px dashed #dadce0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+    }
+    
+    .empty-icon {
+      background-color: #e8f0fe;
+      color: #4285F4;
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .empty-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: #1a1a1a;
+    }
+    
+    .empty-text {
+      font-size: 14px;
+      color: #5f6368;
+      max-width: 400px;
+      line-height: 1.6;
+    }
+    
+    /* Footer */
+    footer {
+      background-color: #f8f9fa;
+      border-top: 1px solid #e1e3e5;
+      padding: 60px 0 0;
+    }
+    
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 40px;
+      margin-bottom: 40px;
+    }
+    
+    @media (min-width: 768px) {
+      .footer-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+    
+    .footer-col {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    
+    .footer-title {
+      font-size: 12px;
+      font-weight: 700;
+      color: #5f6368;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    
+    .footer-description {
+      font-size: 13px;
+      color: #5f6368;
+      line-height: 1.6;
+    }
+    
+    .footer-bottom {
+      background-color: #FFFFFF;
+      border-top: 1px solid #e8eaed;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+    
+    @media (min-width: 768px) {
+      .footer-bottom {
+        flex-direction: row;
+      }
+    }
+    
+    .copyright {
+      font-size: 12px;
+      color: #5f6368;
+    }
+    
+    .footer-legal-links {
+      display: flex;
+      gap: 20px;
+    }
+    
+    .footer-legal-link {
+      font-size: 12px;
+      color: #3c4043;
+      text-decoration: none;
+      transition: color 0.15s ease;
+    }
+    
+    .footer-legal-link:hover {
+      color: #4285F4;
+    }
+    
+    /* Toast CSS */
+    .toast-container {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    
+    .toast {
+      background-color: #323232;
+      color: #ffffff;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      animation: slideUp 0.25s ease-out forwards;
+      opacity: 0.95;
+    }
+    
+    @keyframes slideUp {
+      from {
+        transform: translateY(30px);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0);
+        opacity: 0.95;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <header>
+    <div class="container nav-wrapper">
+      <a href="/" class="logo">
+        <img src="/assets/logo.png" alt="GrabRaw Logo" height="40" style="vertical-align: middle;" referrerPolicy="no-referrer">
+        <span>GrabRaw</span>
+      </a>
+      <nav class="nav-links">
+        <a href="/#categories" class="nav-link">Categories</a>
+        <a href="/#blueprints" class="nav-link">Blueprints</a>
+        <a href="/#suppliers" class="nav-link">Suppliers</a>
+        <a href="/info" class="nav-link">BOM Matcher</a>
+        <a href="/#ask-ai" class="nav-link">Ask AI</a>
+      </nav>
+      <div class="nav-actions">
+        <a href="/signin" class="btn btn-outline" style="border-radius: 100px;">Sign In</a>
+        <a href="/register-user" class="btn btn-primary" style="border-radius: 100px;">Get Started</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content Area -->
+  <main>
+    <div class="container">
+      
+      <!-- Page Header -->
+      <div class="page-header">
+        <div class="title-area">
+          <h1 class="page-title">My Saved Suppliers</h1>
+          <p class="page-subtitle">All suppliers you've saved, sorted by nearest distance</p>
+        </div>
+        <div class="action-area" id="export-container" style="display: none;">
+          <button class="btn-export" onclick="downloadCSV()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="7 10 12 15 17 10"></polyline>
+              <line x1="12" y1="15" x2="12" y2="3"></line>
+            </svg>
+            Download My Suppliers as CSV
+          </button>
+        </div>
+      </div>
+      
+      <!-- Suppliers Container -->
+      <div id="partners-container">
+        <!-- Will be populated dynamically via JavaScript -->
+        <div style="text-align: center; padding: 40px;">
+          <p style="color: #5f6368; font-style: italic;">Loading saved suppliers...</p>
+        </div>
+      </div>
+      
+    </div>
+  </main>
+
+  <!-- Toast system container -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container footer-grid">
+      <div class="footer-col">
+        <h4 class="footer-title">GrabRaw</h4>
+        <p class="footer-description">GrabRaw is an AI-powered search engine that breaks down any product into its complete Bill of Materials and finds local suppliers near you.</p>
+      </div>
+      <div class="footer-col" style="text-align: right;">
+        <h4 class="footer-title">Supplier Standards</h4>
+        <p class="footer-description">Helping local electronics retail and logistics hubs digitize instantly.</p>
+      </div>
+    </div>
+    <div class="container footer-bottom">
+      <div class="copyright">© 2026 GrabRaw Inc. All rights reserved.</div>
+      <div class="footer-legal-links">
+        <a href="privacy-policy.html" class="footer-legal-link">Privacy Policy</a>
+        <a href="terms-of-service.html" class="footer-legal-link">Terms of Service</a>
+        <a href="supplier-standards.html" class="footer-legal-link">Supplier Standards</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Script Logic -->
+  <script>
+    // Supabase credentials
+    const { createClient } = supabase;
+    const sb = createClient(
+      'https://cbaseyojrpcufndmybkb.supabase.co',
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNiYXNleW9qcnBjdWZuZG15YmtiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAzMjU0NzUsImV4cCI6MjA5NTkwMTQ3NX0.f5zuumrdjyltFFyJs4tcqkI68yUMhTFLZM35UDPc3c8'
+    );
+
+    // Toast System
+    function showToast(message) {
+      const container = document.getElementById('toast-container');
+      if (!container) return;
+      const toast = document.createElement('div');
+      toast.className = 'toast';
+      toast.textContent = message;
+      container.appendChild(toast);
+      setTimeout(() => {
+        toast.remove();
+      }, 2500);
+    }
+
+    // Parse Distance for numeric sorting
+    function parseDistance(distStr) {
+      if (!distStr) return 9999;
+      // Extract numeric part like "8.2 km" -> 8.2 or "~8.2 km" -> 8.2
+      const match = distStr.replace(/[^0-9.]/g, '');
+      const parsed = parseFloat(match);
+      return isNaN(parsed) ? 9999 : parsed;
+    }
+
+    // Render Saved Suppliers
+    function renderSavedSuppliers() {
+      const partnersContainer = document.getElementById('partners-container');
+      const exportContainer = document.getElementById('export-container');
+      const saved = JSON.parse(localStorage.getItem('saved_suppliers') || '[]');
+      
+      if (saved.length === 0) {
+        exportContainer.style.display = 'none';
+        partnersContainer.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-icon">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                <circle cx="9" cy="7" r="4"></circle>
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+              </svg>
+            </div>
+            <h3 class="empty-title">No Saved Suppliers Yet</h3>
+            <p class="empty-text">No suppliers saved yet. Click the + icon on any supplier to add them here.</p>
+            <a href="/info" class="btn btn-primary" style="border-radius: 100px; margin-top: 8px;">Explore Supplier BOMs</a>
+          </div>
+        `;
+        return;
+      }
+      
+      // Show export button
+      exportContainer.style.display = 'block';
+      
+      // Sort saved suppliers by distance (nearest first)
+      const sorted = [...saved].sort((a, b) => parseDistance(a.distance) - parseDistance(b.distance));
+      
+      let html = '<div class="partners-grid">';
+      
+      sorted.forEach(sup => {
+        const mapsLink = sup.maps_link || `https://maps.google.com/?q=${encodeURIComponent(sup.supplier_name + ' ' + sup.address)}`;
+        const websiteLink = sup.website || '#';
+        const stockStatus = sup.stock || 'In Stock';
+        const stockClass = stockStatus.toLowerCase().includes('low') ? 'low-stock' : 'in-stock';
+        
+        html += `
+          <div class="partner-card" id="partner-card-${sup.id}">
+            <div class="partner-header">
+              <div class="component-name">${sup.component || 'General Material'}</div>
+              <div class="supplier-name">${sup.supplier_name}</div>
+              <div class="partner-meta">
+                <span class="distance-badge">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                    <circle cx="12" cy="10" r="3"></circle>
+                  </svg>
+                  ${sup.distance} away ⭐
+                </span>
+                <span class="stock-indicator ${stockClass}">
+                  <span class="stock-dot"></span>
+                  ${stockStatus}
+                </span>
+              </div>
+              <div class="partner-address">${sup.address}</div>
+            </div>
+            <div class="partner-actions">
+              <a href="#" class="btn-card-action btn-web" onclick="event.preventDefault(); alert('Navigating to ${sup.supplier_name} Official Website...')">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <line x1="2" y1="12" x2="22" y2="12"></line>
+                  <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+                </svg>
+                Website
+              </a>
+              <a href="${mapsLink}" target="_blank" rel="noopener noreferrer" class="btn-card-action btn-maps">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                  <circle cx="12" cy="10" r="3"></circle>
+                </svg>
+                Google Maps
+              </a>
+              <button class="btn-remove" onclick="removeSupplier('${sup.id}')">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="18" y1="6" x2="6" y2="18"></line>
+                  <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+                Remove ✕
+              </button>
+            </div>
+          </div>
+        `;
+      });
+      
+      html += '</div>';
+      partnersContainer.innerHTML = html;
+    }
+
+    // Remove Supplier
+    window.removeSupplier = function(id) {
+      let saved = JSON.parse(localStorage.getItem('saved_suppliers') || '[]');
+      const itemToRemove = saved.find(item => item.id === id);
+      saved = saved.filter(item => item.id !== id);
+      localStorage.setItem('saved_suppliers', JSON.stringify(saved));
+      
+      const supplierName = itemToRemove ? itemToRemove.supplier_name : 'Supplier';
+      showToast(`Removed ${supplierName} from Partners`);
+      renderSavedSuppliers();
+    }
+
+    // Export CSV function
+    window.downloadCSV = function() {
+      const saved = JSON.parse(localStorage.getItem('saved_suppliers') || '[]');
+      if (saved.length === 0) {
+        showToast('No saved suppliers to download');
+        return;
+      }
+      
+      const headers = ['id', 'component', 'supplier_name', 'address', 'distance', 'stock', 'maps_link', 'saved_date'];
+      const rows = saved.map(item => [
+        item.id || '',
+        item.component || '',
+        item.supplier_name || '',
+        item.address || '',
+        item.distance || '',
+        item.stock || '',
+        item.maps_link || '',
+        item.saved_date || ''
+      ]);
+      
+      const csvContent = [
+        headers.join(','),
+        ...rows.map(r => r.map(val => `"${val.replace(/"/g, '""').replace(/\r?\n/g, ' ')}"`).join(','))
+      ].join('\n');
+      
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.setAttribute("href", url);
+      link.setAttribute("download", `saved_suppliers_${new Date().toISOString().slice(0,10)}.csv`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      // Load Suppliers initially
+      renderSavedSuppliers();
+
+      // Check User Auth
+      try {
+        const { data: { user } } = await sb.auth.getUser();
+        if (user) {
+          const navActions = document.querySelector('.nav-actions');
+          if (navActions) {
+            const email = user.email || '';
+            const initial = email ? email.charAt(0).toUpperCase() : '?';
+            navActions.innerHTML = `
+              <div class="user-profile-menu-container" style="position: relative;">
+                <button id="account-btn" class="btn" style="border: 1px solid #dadce0; background-color: #ffffff; color: #3c4043; border-radius: 100px; display: inline-flex; align-items: center; gap: 8px; padding: 4px 12px 4px 16px; cursor: pointer; transition: all 0.2s ease; height: 40px; box-shadow: 0 1px 2px rgba(0,0,0,0.05); text-decoration: none;">
+                  <span style="font-size: 14px; font-weight: 600;">My Account</span>
+                  <div style="background-color: #4285F4; color: #ffffff; border-radius: 50%; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 700; text-transform: uppercase;">${initial}</div>
+                </button>
+                <div id="account-dropdown" style="display: none; position: absolute; right: 0; top: calc(100% + 8px); background-color: #ffffff; border: 1px solid #dadce0; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); width: 220px; z-index: 1000; overflow: hidden; padding: 6px 0; text-align: left;">
+                  <div style="padding: 10px 16px; border-bottom: 1px solid #f1f3f4; margin-bottom: 4px;">
+                     <div style="font-size: 11px; font-weight: 500; color: #70757a; text-transform: uppercase; letter-spacing: 0.5px;">Signed in as</div>
+                     <div style="font-size: 13px; font-weight: 600; color: #202124; text-overflow: ellipsis; overflow: hidden; white-space: nowrap;" title="${email}">${email}</div>
+                  </div>
+                  <a href="profile.html" class="dropdown-item" style="display: block; padding: 10px 16px; font-size: 14px; color: #3c4043; transition: background-color 0.15s ease; text-decoration: none; font-weight: 500;">Profile</a>
+                  <a href="location.html" class="dropdown-item" style="display: block; padding: 10px 16px; font-size: 14px; color: #3c4043; transition: background-color 0.15s ease; text-decoration: none; font-weight: 500;">My Location</a>
+                  <a href="/my-partners" class="dropdown-item" style="display: block; padding: 10px 16px; font-size: 14px; color: #3c4043; transition: background-color 0.15s ease; text-decoration: none; font-weight: 500;">My Partner</a>
+                  <a href="register-company.html" class="dropdown-item" style="display: block; padding: 10px 16px; font-size: 14px; color: #3c4043; transition: background-color 0.15s ease; text-decoration: none; font-weight: 500;">Register Company</a>
+                  <a href="#" id="signout-link" class="dropdown-item" style="display: block; padding: 10px 16px; font-size: 14px; color: #d93025; transition: background-color 0.15s ease; text-decoration: none; font-weight: 600;">Sign Out</a>
+                </div>
+              </div>
+            `;
+
+            const styleNode = document.createElement('style');
+            styleNode.textContent = `
+              .dropdown-item{
+                cursor: pointer;
+              }
+              .dropdown-item:hover {
+                background-color: #f8f9fa !important;
+              }
+            `;
+            document.head.appendChild(styleNode);
+
+            const accountBtn = document.getElementById('account-btn');
+            const dropdown = document.getElementById('account-dropdown');
+            const signOutLink = document.getElementById('signout-link');
+
+            if (accountBtn && dropdown) {
+              accountBtn.addEventListener('click', (e) => {
+                const isOpen = dropdown.style.display === 'block';
+                dropdown.style.display = isOpen ? 'none' : 'block';
+              });
+            }
+
+            if (signOutLink) {
+              signOutLink.addEventListener('click', async (e) => {
+                e.preventDefault();
+                await sb.auth.signOut();
+                window.location.href = 'index.html';
+              });
+            }
+
+            document.addEventListener('click', function(e) {
+              const dropdown = document.getElementById('account-dropdown')
+              const accountBtn = document.getElementById('account-btn')
+              if (dropdown && accountBtn && !dropdown.contains(e.target) && !accountBtn.contains(e.target)) {
+                dropdown.style.display = 'none'
+              }
+            })
+
+            document.addEventListener('keydown', function(e) {
+              if (e.key === 'Escape') {
+                const dropdown = document.getElementById('account-dropdown')
+                if (dropdown) dropdown.style.display = 'none'
+              }
+            })
+          }
+        }
+      } catch (err) {
+        console.error('Navbar Auth Check error:', err);
+      }
+    });
+  </script>
+</body>
+</html>
