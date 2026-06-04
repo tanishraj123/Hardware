@@ -1077,9 +1077,26 @@
       <a href="/register-user" class="btn mobile-nav-getstarted" style="display: none;" aria-label="Get Started">Get Started</a>
     </nav>
     <div class="nav-actions">
-      <!-- Replaced via Auth Check script below -->
-      <a href="/signin" class="btn btn-outline" style="border-radius: 100px;">Sign In</a>
-      <a href="/register-user" class="btn btn-primary" style="border-radius: 100px;">Get Started</a>
+      <div id="unauthNav">
+        <a href="/signin.html" class="btn btn-outline" style="border-radius: 100px">Sign In</a>
+        <a href="/register-user.html" class="btn btn-primary" style="border-radius: 100px">Get Started</a>
+      </div>
+      <div id="authNav" style="display: none; position: relative;">
+        <button id="account-btn" class="btn btn-outline" style="border-radius: 100px;">My Account</button>
+        <div id="accountDropdown" style="display: none; position: absolute; right: 0; top: 100%; margin-top: 8px; background-color: #ffffff; border: 1px solid #e0e0e0; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.15); width: 220px; z-index: 10000; overflow: hidden; padding: 12px 0; text-align: left; opacity: 0; transition: opacity 150ms ease;">
+          <div class="dropdown-header" style="padding: 12px 16px;">
+            <span class="dropdown-label" style="display:block; font-size: 11px; font-weight: 500; color: #70757a; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 2px;">SIGNED IN AS</span>
+            <span id="dropdownEmail" style="display:block; font-size: 13px; font-weight: 600; color: #1a1a1a; text-overflow: ellipsis; overflow: hidden; white-space: nowrap;"></span>
+          </div>
+          <hr style="margin: 4px 0; border: none; border-top: 1px solid #e0e0e0;">
+          <a href="/profile.html" style="padding: 8px 16px; display: block; color: #3c4043; text-decoration: none;">Profile</a>
+          <a href="/location.html" style="padding: 8px 16px; display: block; color: #3c4043; text-decoration: none;">My Location</a>
+          <a href="/my-partners.html" style="padding: 8px 16px; display: block; color: #3c4043; text-decoration: none;">My Partner</a>
+          <a href="/register-company.html" style="padding: 8px 16px; display: block; color: #3c4043; text-decoration: none;">Register Company</a>
+          <hr style="margin: 4px 0; border: none; border-top: 1px solid #e0e0e0;">
+          <a id="signOutBtn" style="padding: 8px 16px; display: block; color: red; font-weight: 600; cursor: pointer; text-decoration: none;">Sign Out</a>
+        </div>
+      </div>
     </div>
   </header>
 
@@ -1160,17 +1177,104 @@
   </footer>
 
   <!-- Script Logic -->
-  <script src="/src/auth.js"></script>
   <script>
-    // Supabase credentials
     const { createClient } = supabase;
     const sb = createClient(
       'https://luumbrsddwupxxujnxlc.supabase.co',
       'sb_publishable_YZot9m514LEeiSGMscXoqw_WfjHOO1i'
     );
 
-    // Initialize Auth
-    initAuth(sb);
+    async function initAuth() {
+      const { data: { session } } = await sb.auth.getSession();
+      if (session) { 
+        await updateNavbar(session.user); 
+      } else {
+        showLoggedOutNavbar();
+      }
+
+      sb.auth.onAuthStateChange(
+        async (event, session) => {
+          if (session) {
+            await updateNavbar(session.user);
+          } else {
+            showLoggedOutNavbar();
+          }
+        }
+      );
+    }
+
+    async function updateNavbar(user) {
+      let plan = 'free';
+      try {
+        const { data } = await sb
+          .from('profiles')
+          .select('plan')
+          .eq('id', user.id)
+          .single();
+        if (data && data.plan) { plan = data.plan; }
+      } catch(e) {}
+      
+      window.userPlan = plan;
+      window.GRABRAW_IS_PLUS = plan.includes('+') || plan.toLowerCase().includes('plus');
+      window.userSession = user;
+      
+      const unauthNav = document.getElementById('unauthNav');
+      const authNav = document.getElementById('authNav');
+      const dropdownEmail = document.getElementById('dropdownEmail');
+      
+      if (unauthNav) unauthNav.style.display = 'none';
+      if (authNav) authNav.style.display = 'block';
+      if (dropdownEmail) dropdownEmail.textContent = user.email;
+    }
+
+    function showLoggedOutNavbar() {
+      window.userPlan = 'free';
+      window.GRABRAW_IS_PLUS = false;
+      window.userSession = null;
+      
+      const unauthNav = document.getElementById('unauthNav');
+      const authNav = document.getElementById('authNav');
+      if (unauthNav) unauthNav.style.display = 'block';
+      if (authNav) authNav.style.display = 'none';
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const accountBtn = document.getElementById('account-btn');
+      const accountDropdown = document.getElementById('accountDropdown');
+      const signOutBtn = document.getElementById('signOutBtn');
+
+      if (accountBtn && accountDropdown) {
+        accountBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          if (accountDropdown.style.display === 'none') {
+            accountDropdown.style.display = 'block';
+            setTimeout(() => accountDropdown.style.opacity = '1', 10);
+          } else {
+            accountDropdown.style.opacity = '0';
+            setTimeout(() => accountDropdown.style.display = 'none', 150);
+          }
+        });
+      }
+
+      document.addEventListener('click', (e) => {
+        if (accountDropdown && accountDropdown.style.display !== 'none') {
+          if (!accountDropdown.contains(e.target) && (!accountBtn || !accountBtn.contains(e.target))) {
+            accountDropdown.style.opacity = '0';
+            setTimeout(() => accountDropdown.style.display = 'none', 150);
+          }
+        }
+      });
+
+      if (signOutBtn) {
+        signOutBtn.addEventListener('click', async (e) => {
+          e.preventDefault();
+          await sb.auth.signOut();
+          window.location.reload();
+        });
+      }
+    });
+
+    initAuth();
 
     let currentUser = null;
     let currentProfileState = null;
