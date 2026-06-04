@@ -1927,26 +1927,27 @@
     </div>
   </footer>
 
-    <script src="/src/auth.js"></script>
-    <script>
-      const { createClient } = supabase;
-      const sb = createClient(
-        'https://luumbrsddwupxxujnxlc.supabase.co',
-        'sb_publishable_YZot9m514LEeiSGMscXoqw_WfjHOO1i'
-      );
+  <!-- Supabase Auth navbar check script -->
+  <script>
+    const { createClient } = supabase;
+    const sb = createClient(
+      'https://luumbrsddwupxxujnxlc.supabase.co',
+      'sb_publishable_YZot9m514LEeiSGMscXoqw_WfjHOO1i'
+    );
 
-      // Initialize Auth
-      initAuth(sb);
-
-      document.addEventListener('DOMContentLoaded', async () => {
-        // Need to wait for initAuth maybe?
-        // Actually, initAuth sets up onAuthStateChange which will handle it.
-        // But for the initial load, initAuth might be async.
-        // Let's add a small check to ensure plus status is loaded before doing page logic.
+    document.addEventListener('DOMContentLoaded', async () => {
+      try {
+        const { data: { session } } = await sb.auth.getSession();
+        const user = session ? session.user : null;
+        window.GRABRAW_IS_PLUS = false;
         
-        // This is tricky as initAuth is async. 
-        // I will assume for now it's fast.
-      });
+        if (user) {
+          try {
+            const { data } = await sb.from('profiles').select('plan').eq('id', user.id).single();
+            if (data && typeof data.plan === 'string' && (data.plan.includes('+') || data.plan.toLowerCase().includes('plus'))) {
+              window.GRABRAW_IS_PLUS = true;
+            }
+          } catch(e) {
             console.error('Plan fetch error', e);
           }
         }
