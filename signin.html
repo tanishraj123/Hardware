@@ -1374,6 +1374,10 @@
       'sb_publishable_YZot9m514LEeiSGMscXoqw_WfjHOO1i'
     );
 
+    sb.auth.getSession().then(({ data: { session } }) => {
+      if (session) window.location.href = '/info'
+    });
+
     // Navbar Auth Check on load
     document.addEventListener('DOMContentLoaded', async () => {
       try {
@@ -1547,10 +1551,10 @@
       googleBtn.addEventListener('click', async () => {
         setButtonLoading(googleBtn, true);
         try {
-          const { error } = await sb.auth.signInWithOAuth({
+          const { data, error } = await sb.auth.signInWithOAuth({
             provider: 'google',
             options: {
-              redirectTo: 'https://hardware-cfw.pages.dev'
+              redirectTo: 'https://hardware-cfw.pages.dev/info'
             }
           });
           if (error) {
