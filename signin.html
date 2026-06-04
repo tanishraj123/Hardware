@@ -856,6 +856,328 @@
       to { opacity: 1; }
     }
   </style>
+
+  <!-- Comprehensive Mobile Responsiveness Overrides -->
+  <style>
+    /* Prevent auto-zoom on iOS/device focus by keeping inputs >= 16px */
+    input, select, textarea {
+      font-size: 16px !important;
+    }
+    
+    /* Ensure body line height is clean & comfortable */
+    body {
+      line-height: 1.6 !important;
+    }
+    
+    /* Strict Mobile-first spacing constraints (< 640px) */
+    @media (max-width: 639.98px) {
+      .container, .hero, section, main {
+        padding-left: 16px !important;
+        padding-right: 16px !important;
+      }
+      .card, .scroller-card, .step-card, .trending-card, .material-card {
+        margin: 12px 0 !important;
+        padding: 16px !important;
+      }
+      
+      /* Horizontal scrolling for suggestions on mobile */
+      .suggestion-row {
+        padding: 0 4px !important;
+        box-sizing: border-box !important;
+        overflow-x: auto !important;
+        justify-content: flex-start !important;
+        -webkit-overflow-scrolling: touch;
+        max-width: 100% !important;
+        scrollbar-width: none; /* Hide scrollbar */
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+      }
+      .suggestion-row::-webkit-scrollbar {
+        display: none;
+      }
+      #suggestion-ticker-container {
+        width: auto !important;
+        max-width: none !important;
+        overflow: visible !important;
+        pointer-events: auto !important;
+      }
+    }
+    
+    /* Disable hovers on touch devices to prevent sticky hover states */
+    @media (hover: none) {
+      button:hover, a:hover, .btn:hover, .scroller-card:hover, .step-card:hover, .trending-card:hover {
+        transform: none !important;
+        box-shadow: none !important;
+      }
+      button:active, a:active, .btn:active {
+        background-color: rgba(0,0,0,0.06) !important;
+      }
+    }
+    
+    /* Mobile-first Nav & Logo constraints (< 640px) */
+    @media (max-width: 639.98px) {
+      .navbar {
+        height: 56px !important;
+        padding: 0 16px !important;
+      }
+      .navbar-logo-image {
+        height: 40px !important;
+        width: auto !important;
+      }
+      .navbar-logo-text {
+        font-size: 18px !important;
+      }
+      
+      /* Full width Account buttons responsive design */
+      #account-btn {
+        width: auto !important;
+      }
+      
+      /* Hamburger menu toggle button style */
+      .hamburger-menu {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        background: none !important;
+        border: none !important;
+        color: #1a1a1a !important;
+        cursor: pointer !important;
+        padding: 8px !important;
+        border-radius: 8px !important;
+        width: 44px !important;
+        height: 44px !important;
+        z-index: 1010 !important;
+        order: -1 !important; /* Positions nicely on mobile headers */
+      }
+      
+      /* Responsive vertical mobile navigation list drawer style */
+      .nav-links {
+        display: none !important;
+        flex-direction: column !important;
+        position: absolute !important;
+        top: 56px !important;
+        left: 0 !important;
+        right: 0 !important;
+        background: #ffffff !important;
+        border-bottom: 1px solid #dadce0 !important;
+        padding: 16px !important;
+        gap: 8px !important;
+        margin-left: 0 !important;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1) !important;
+        z-index: 1000 !important;
+      }
+      .nav-links.active {
+        display: flex !important;
+      }
+      .nav-link {
+        width: 100% !important;
+        font-size: 16px !important;
+        font-weight: 600 !important;
+        padding: 12px 14px !important;
+        white-space: nowrap !important;
+        box-sizing: border-box !important;
+      }
+    }
+    
+    @media (min-width: 640px) {
+      .hamburger-menu {
+        display: none !important;
+      }
+    }
+    
+    /* Sliding Account Bottom Drawer Sheet on Mobile (< 640px) */
+    @media (max-width: 639.98px) {
+      #account-dropdown {
+        position: fixed !important;
+        bottom: 0 !important;
+        top: auto !important;
+        left: 0 !important;
+        right: 0 !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        border-radius: 20px 20px 0 0 !important;
+        border: none !important;
+        border-top: 1px solid #dadce0 !important;
+        box-shadow: 0 -8px 32px rgba(0, 0, 0, 0.15) !important;
+        transform: translateY(100%) !important;
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+        display: block !important;
+        z-index: 1010 !important;
+        padding: 24px 20px 36px 20px !important;
+      }
+      #account-dropdown.active {
+        transform: translateY(0) !important;
+      }
+    }
+    
+    /* Click outside Dimmed Overlay */
+    .drawer-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(0, 0, 0, 0.5);
+      z-index: 1005;
+    }
+    .drawer-overlay.active {
+      display: block !important;
+    }
+    
+    /* Absolute Minimum Touch Target Dimensions (44px) */
+    .btn, button, .btn-row-action, #account-btn {
+      min-height: 44px !important;
+      box-sizing: border-box !important;
+    }
+    
+    /* Touch Target targets for BOM interactive save (+) and expand (↓) controls */
+    .btn-save-supplier, .btn-expand-alternatives {
+      width: 44px !important;
+      height: 44px !important;
+    }
+    
+    /* Truncate long single-line category pill badges */
+    .pill-tag {
+      white-space: nowrap !important;
+      overflow: hidden !important;
+      text-overflow: ellipsis !important;
+      max-width: 150px !important;
+    }
+    
+    /* Vertical Card actions stacking for narrow mobile screens <= 600px */
+    @media (max-width: 600px) {
+      .row-actions {
+        flex-direction: column !important;
+        align-items: stretch !important;
+        width: 100% !important;
+        gap: 8px !important;
+      }
+      .btn-row-action {
+        width: 100% !important;
+        box-sizing: border-box !important;
+        padding: 12px 16px !important;
+        height: 44px !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+      }
+    }
+    
+    /* Hero Search Block constraints on Mobile */
+    @media (max-width: 639.98px) {
+      .search-block {
+        width: 100% !important;
+        padding: 0 16px !important;
+        box-sizing: border-box !important;
+      }
+      .search-box {
+        height: 48px !important;
+        padding: 0 4px 0 12px !important;
+        border-radius: 24px !important;
+      }
+      .btn-search {
+        height: 38px !important;
+        padding: 0 16px !important;
+        font-size: 14px !important;
+      }
+    }
+    
+    /* Media Query Breakpoints Alignment Grid Controls */
+    @media (max-width: 639.98px) {
+      .steps-grid, .trending-grid, .footer-grid, .partners-grid, .form-container-grid {
+        grid-template-columns: 1fr !important;
+      }
+    }
+    @media (min-width: 640px) and (max-width: 1023.98px) {
+      .steps-grid, .trending-grid, .footer-grid, .partners-grid, .form-container-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+      }
+    }
+    @media (min-width: 1024px) {
+      .steps-grid {
+        grid-template-columns: repeat(3, 1fr) !important;
+      }
+      .trending-grid, .footer-grid {
+        grid-template-columns: repeat(4, 1fr) !important;
+      }
+    }
+  </style>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // Setup dynamic Hamburger toggle
+      const navbar = document.querySelector('.navbar');
+      if (navbar) {
+        const navLinks = navbar.querySelector('.nav-links');
+        if (navLinks && !navbar.querySelector('#hamburger-toggle')) {
+          const hamBtn = document.createElement('button');
+          hamBtn.id = 'hamburger-toggle';
+          hamBtn.className = 'hamburger-menu';
+          hamBtn.type = 'button';
+          hamBtn.setAttribute('aria-label', 'Toggle Navigation');
+          hamBtn.innerHTML = `
+            <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="3" y1="12" x2="21" y2="12"></line>
+              <line x1="3" y1="6" x2="21" y2="6"></line>
+              <line x1="3" y1="18" x2="21" y2="18"></line>
+            </svg>
+          `;
+          navbar.insertBefore(hamBtn, navLinks);
+          
+          hamBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            navLinks.classList.toggle('active');
+          });
+        }
+      }
+
+      // Dropdown backdrop behavior
+      function setupOverlayBehavior() {
+        const dropdown = document.getElementById('account-dropdown');
+        if (dropdown) {
+          let overlay = document.getElementById('account-drawer-overlay');
+          if (!overlay) {
+            overlay = document.createElement('div');
+            overlay.id = 'account-drawer-overlay';
+            overlay.className = 'drawer-overlay';
+            document.body.appendChild(overlay);
+            overlay.addEventListener('click', () => {
+              dropdown.classList.remove('active');
+              overlay.classList.remove('active');
+            });
+          }
+          
+          const accountBtn = document.getElementById('account-btn');
+          if (accountBtn) {
+            accountBtn.addEventListener('click', () => {
+              setTimeout(() => {
+                if (dropdown.classList.contains('active')) {
+                  overlay.classList.add('active');
+                } else {
+                  overlay.classList.remove('active');
+                }
+              }, 30);
+            });
+          }
+        }
+      }
+
+      setupOverlayBehavior();
+      setInterval(setupOverlayBehavior, 1000);
+
+      // Global click outside for Navbar Hamburger menu
+      document.addEventListener('click', (e) => {
+        const navLinks = document.querySelector('.nav-links');
+        const hamBtn = document.getElementById('hamburger-toggle');
+        if (navLinks && navLinks.classList.contains('active')) {
+          if (!navLinks.contains(e.target) && (!hamBtn || !hamBtn.contains(e.target))) {
+            navLinks.classList.remove('active');
+          }
+        }
+      });
+    });
+  </script>
 </head>
 <body>
 
