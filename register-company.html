@@ -1286,7 +1286,8 @@
     // MAIN AUTH CHECK AND MOUNT FLOW
     document.addEventListener('DOMContentLoaded', async () => {
       try {
-        const { data: { user } } = await sb.auth.getUser();
+        const { data: { session } } = await sb.auth.getSession();
+        const user = session ? session.user : null;
         
         // If no user → redirect to signin.html
         if (!user) {
@@ -1301,12 +1302,14 @@
         const navActions = document.querySelector('.nav-actions');
         if (navActions) {
           const email = user.email || '';
-          const initial = email ? email.charAt(0).toUpperCase() : '?';
+            const name = user.user_metadata?.full_name || user.user_metadata?.name || user.email || '';
+            const initial = name ? name.charAt(0).toUpperCase() : '?';
+            const avatar = user.user_metadata?.avatar_url;
           navActions.innerHTML = `
             <div class="user-profile-menu-container" style="position: relative;">
                <button id="account-btn" class="btn" style="border: 1px solid #dadce0; background-color: #ffffff; color: #3c4043; border-radius: 100px; display: inline-flex; align-items: center; gap: 8px; padding: 4px 12px 4px 16px; cursor: pointer; transition: all 0.2s ease; height: 40px; box-shadow: 0 1px 2px rgba(0,0,0,0.05); text-decoration: none;">
                 <span style="font-size: 14px; font-weight: 600;">My Account</span>
-                <div style="background-color: #4285F4; color: #ffffff; border-radius: 50%; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 700; text-transform: uppercase;">${initial}</div>
+                ${avatar ? `<img src="${avatar}" style="width: 32px; height: 32px; border-radius: 50%; object-fit: cover;" alt="Avatar" />` : `${avatar ? `<img src="${avatar}" style="width: 32px; height: 32px; border-radius: 50%; object-fit: cover;" alt="Avatar" />` : `<div style="background-color: #4285F4; color: #ffffff; border-radius: 50%; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 700; text-transform: uppercase;">${initial}</div>`}`}
               </button>
               <div id="account-dropdown" style="display: none; position: absolute; right: 0; top: calc(100% + 8px); background-color: #ffffff; border: 1px solid #e0e0e0; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); width: 220px; min-width: 200px; z-index: 1000; overflow: hidden; padding: 12px 0; text-align: left;">
                 <div style="padding: 12px 16px; border-bottom: 1px solid #e0e0e0; margin-bottom: 4px; pointer-events: none; user-select: text;">
