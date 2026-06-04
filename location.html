@@ -642,6 +642,26 @@
       from { opacity: 0; }
       to { opacity: 1; }
     }
+  
+    /* GrabRaw+ CSS */
+    .plus-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 18px;
+      height: 18px;
+      background: #4285F4;
+      border-radius: 50%;
+      color: white;
+      font-size: 10px;
+      font-weight: bold;
+      margin-left: 4px;
+      border: 2px solid white;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+    }
+    .avatar-wrapper { position: relative; display: inline-block; }
+    .avatar-badge { position: absolute; bottom: -2px; right: -2px; }
+
   </style>
 
   <!-- Comprehensive Mobile Responsiveness Overrides -->
@@ -1312,15 +1332,31 @@
           const getBrowserLocationMessage = () => {
             const browser = getBrowserName();
             if (browser === 'Ulaa') {
-              return "Location blocked in Ulaa Browser. To enable:\n1. Open Ulaa Settings → Privacy & Security\n2. Find Location Permissions\n3. Add GrabRaw and set to 'Allow Always'\n4. Refresh page and try again";
+              return "Location blocked in Ulaa Browser. To enable:
+1. Open Ulaa Settings → Privacy & Security
+2. Find Location Permissions
+3. Add GrabRaw and set to 'Allow Always'
+4. Refresh page and try again";
             } else if (browser === 'Safari') {
-              return "Location blocked in Safari. To enable:\n1. Go to Settings → Privacy → Location Services\n2. Find GrabRaw and set to 'Allow'\n3. Try again";
+              return "Location blocked in Safari. To enable:
+1. Go to Settings → Privacy → Location Services
+2. Find GrabRaw and set to 'Allow'
+3. Try again";
             } else if (browser === 'Chrome') {
-              return "Location permission denied. To enable:\n1. Click the lock icon in address bar\n2. Find Location → Allow\n3. Refresh and try again";
+              return "Location permission denied. To enable:
+1. Click the lock icon in address bar
+2. Find Location → Allow
+3. Refresh and try again";
             } else if (browser === 'Firefox') {
-              return "Location permission denied. To enable:\n1. Click the shield icon in address bar\n2. Select Location → Allow\n3. Try again";
+              return "Location permission denied. To enable:
+1. Click the shield icon in address bar
+2. Select Location → Allow
+3. Try again";
             } else if (browser === 'Edge') {
-              return "Location permission denied. To enable:\n1. Click the lock icon in address bar\n2. Find Location → Allow\n3. Refresh and try again";
+              return "Location permission denied. To enable:
+1. Click the lock icon in address bar
+2. Find Location → Allow
+3. Refresh and try again";
             } else {
               return "Location access denied. Please check your browser privacy settings and allow location access for this site.";
             }

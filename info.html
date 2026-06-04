@@ -956,6 +956,26 @@
       from { opacity: 0; }
       to { opacity: 1; }
     }
+  
+    /* GrabRaw+ CSS */
+    .plus-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 18px;
+      height: 18px;
+      background: #4285F4;
+      border-radius: 50%;
+      color: white;
+      font-size: 10px;
+      font-weight: bold;
+      margin-left: 4px;
+      border: 2px solid white;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+    }
+    .avatar-wrapper { position: relative; display: inline-block; }
+    .avatar-badge { position: absolute; bottom: -2px; right: -2px; }
+
   </style>
 
   <!-- SVG Icon Library (Simple Embedded SVG styles) -->
@@ -1933,11 +1953,11 @@
         }
         
         // 1. Upgrade Prompt Banner
-        if (!window.GRABRAW_IS_PLUS) {
-          const navHeaders = document.querySelectorAll('header');
-          const header = navHeaders.length > 0 ? navHeaders[0] : null;
-          if (header) {
-            const banner = document.createElement('div');
+        const navHeaders = document.querySelectorAll('header');
+        const header = navHeaders.length > 0 ? navHeaders[0] : null;
+        if (header) {
+          const banner = document.createElement('div');
+          if (!window.GRABRAW_IS_PLUS) {
             banner.style.backgroundColor = '#e8f0fe';
             banner.style.color = '#1967d2';
             banner.style.padding = '10px 24px';
@@ -1951,8 +1971,19 @@
               <span>✦ You're on the Free plan — some suppliers are hidden. <a href="/plus.html" style="color: #1a73e8; text-decoration: underline; font-weight: 600;">Upgrade to GrabRaw+</a></span>
               <button style="background: none; border: none; color: #1967d2; font-size: 16px; cursor: pointer;" onclick="this.parentElement.remove()">✕</button>
             `;
-            header.parentNode.insertBefore(banner, header.nextSibling);
+          } else {
+            banner.style.backgroundColor = '#e6f4ea';
+            banner.style.color = '#34A853';
+            banner.style.padding = '10px 24px';
+            banner.style.fontSize = '14px';
+            banner.style.fontWeight = '600';
+            banner.style.display = 'flex';
+            banner.style.justifyContent = 'center';
+            banner.style.alignItems = 'center';
+            banner.style.fontFamily = "'Inter', sans-serif";
+            banner.innerHTML = '✦ GrabRaw+ Active — All suppliers unlocked';
           }
+          header.parentNode.insertBefore(banner, header.nextSibling);
         }
         // 2. Blurred supplier card (Every 10th card -> index 9, 19...)
         setTimeout(() => {

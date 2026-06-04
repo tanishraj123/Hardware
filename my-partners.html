@@ -821,6 +821,26 @@
       from { opacity: 0; }
       to { opacity: 1; }
     }
+  
+    /* GrabRaw+ CSS */
+    .plus-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 18px;
+      height: 18px;
+      background: #4285F4;
+      border-radius: 50%;
+      color: white;
+      font-size: 10px;
+      font-weight: bold;
+      margin-left: 4px;
+      border: 2px solid white;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+    }
+    .avatar-wrapper { position: relative; display: inline-block; }
+    .avatar-badge { position: absolute; bottom: -2px; right: -2px; }
+
   </style>
 
   <!-- Comprehensive Mobile Responsiveness Overrides -->
@@ -1464,8 +1484,10 @@
       
       const csvContent = [
         headers.join(','),
-        ...rows.map(r => r.map(val => `"${val.replace(/"/g, '""').replace(/\r?\n/g, ' ')}"`).join(','))
-      ].join('\n');
+        ...rows.map(r => r.map(val => `"${val.replace(/"/g, '""').replace(/\r?
+/g, ' ')}"`).join(','))
+      ].join('
+');
       
       const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
       const url = URL.createObjectURL(blob);
@@ -1487,7 +1509,15 @@
         const user = session ? session.user : null;
         if (user) {
           document.body.classList.add('logged-in');
+          
           const navActions = document.querySelector('.nav-actions');
+          if (isPlus) {
+            const titleEl = document.querySelector('.page-title');
+            if (titleEl && !titleEl.querySelector('.plus-badge')) {
+              titleEl.innerHTML += ' <span class="plus-badge" title="GrabRaw+ Member" style="vertical-align: middle; position: static; box-shadow: none; border: none; font-size: 14px; width: 24px; height: 24px;">✦</span>';
+            }
+          }
+
           if (navActions) {
             const email = user.email || '';
             const name = user.user_metadata?.full_name || user.user_metadata?.name || user.email || '';
