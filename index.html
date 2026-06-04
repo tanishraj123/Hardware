@@ -2260,7 +2260,7 @@
       </div>
     </footer>
 
-    <!-- Supabase Auth navbar check script -->
+    <script src="/src/auth.js"></script>
     <script>
       const { createClient } = supabase;
       const sb = createClient(
@@ -2268,21 +2268,16 @@
         "sb_publishable_YZot9m514LEeiSGMscXoqw_WfjHOO1i",
       );
 
-      // Dynamic auth-check navigation method
+      // Initialize Auth
+      initAuth(sb);
+
+      // Wrapper for existing navigation logic
       async function checkAuthThenNavigate(destination) {
-        try {
-          const {
-            data: { session },
-          } = await sb.auth.getSession();
-          const user = session ? session.user : null;
-          if (user) {
+        // Simple check now uses our global auth state
+        if (window.userSession) {
             window.location.href = destination;
-          } else {
+        } else {
             window.location.href = `signin.html?redirect=${encodeURIComponent(destination)}`;
-          }
-        } catch (err) {
-          console.error("Auth verification flow exception:", err);
-          window.location.href = `signin.html?redirect=${encodeURIComponent(destination)}`;
         }
       }
       window.checkAuthThenNavigate = checkAuthThenNavigate;
