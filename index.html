@@ -1,2453 +1,2081 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>GrabRaw — Search Any Product, Find Every Component</title>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GrabRaw — Search Any Product, Find Every Component</title>
+  
+  <!-- AI Crawler Meta Tags -->
+  <meta name="description" content="GrabRaw is an AI-powered search engine that breaks down any product into its complete Bill of Materials and finds local suppliers near you.">
+  <meta name="keywords" content="component sourcing, raw materials, local suppliers, BOM, bill of materials, product intelligence, grabraw">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://grabraw.com">
+  
+  <!-- Open Graph -->
+  <meta property="og:title" content="GrabRaw — Search Any Product, Find Every Component">
+  <meta property="og:description" content="GrabRaw is an AI-powered search engine that breaks down any product into its complete Bill of Materials and finds local suppliers near you.">
+  <meta property="og:url" content="https://grabraw.com">
+  <meta property="og:type" content="website">
 
-    <!-- AI Crawler Meta Tags -->
-    <meta
-      name="description"
-      content="GrabRaw is an AI-powered search engine that breaks down any product into its complete Bill of Materials and finds local suppliers near you."
-    />
-    <meta
-      name="keywords"
-      content="component sourcing, raw materials, local suppliers, BOM, bill of materials, product intelligence, grabraw"
-    />
-    <meta name="robots" content="index, follow" />
-    <link rel="canonical" href="https://grabraw.com" />
+  <!-- Inter Font -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      let isScrolling = false;
+      window.addEventListener('scroll', function() {
+        if (!isScrolling) {
+          isScrolling = true;
+          requestAnimationFrame(() => {
+            isScrolling = false;
+          });
+        }
+      }, { passive: true });
+    });
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
-    <!-- Open Graph -->
-    <meta
-      property="og:title"
-      content="GrabRaw — Search Any Product, Find Every Component"
-    />
-    <meta
-      property="og:description"
-      content="GrabRaw is an AI-powered search engine that breaks down any product into its complete Bill of Materials and finds local suppliers near you."
-    />
-    <meta property="og:url" content="https://grabraw.com" />
-    <meta property="og:type" content="website" />
+  <!-- Structured Schema for AI Sourcing Crawlers -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "GrabRaw",
+    "url": "https://grabraw.com",
+    "description": "AI-powered platform that breaks down any product into its raw materials and components, then finds local suppliers within 40km.",
+    "foundingDate": "2026",
+    "sameAs": []
+  }
+  </script>
 
-    <!-- Inter Font -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script>
-      document.addEventListener("DOMContentLoaded", function () {
-        let isScrolling = false;
-        window.addEventListener(
-          "scroll",
-          function () {
-            if (!isScrolling) {
-              isScrolling = true;
-              requestAnimationFrame(() => {
-                isScrolling = false;
-              });
-            }
-          },
-          { passive: true },
-        );
-      });
-    </script>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
-      rel="stylesheet"
-    />
+  <style>
+    /* Modern Custom Stylesheet (Google Inspired Clean UI) */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
-    <!-- Structured Schema for AI Sourcing Crawlers -->
-    <script type="application/ld+json">
-      {
-        "@context": "https://schema.org",
-        "@type": "Organization",
-        "name": "GrabRaw",
-        "url": "https://grabraw.com",
-        "description": "AI-powered platform that breaks down any product into its raw materials and components, then finds local suppliers within 40km.",
-        "foundingDate": "2026",
-        "sameAs": []
-      }
-    </script>
+    body {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      background-color: #FFFFFF;
+      color: #1a1a1a;
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
 
-    <style>
-      /* Modern Custom Stylesheet (Google Inspired Clean UI) */
-      *,
-      *::before,
-      *::after {
-        box-sizing: border-box;
-        margin: 0;
-        padding: 0;
-      }
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
 
-      body {
-        font-family:
-          "Inter",
-          system-ui,
-          -apple-system,
-          sans-serif;
-        background-color: #ffffff;
-        color: #1a1a1a;
-        line-height: 1.5;
-        -webkit-font-smoothing: antialiased;
-      }
+    .container {
+      width: 100%;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
 
-      a {
-        text-decoration: none;
-        color: inherit;
-      }
+    /* Headings styling */
+    h1, h2, h3, h4 {
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      color: #1a1a1a;
+    }
 
-      .container {
-        width: 100%;
-        max-width: 1200px;
-        margin: 0 auto;
-        padding: 0 24px;
-      }
+    /* Navbar */
+    .navbar {
+      height: 64px;
+      padding: 12px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(255, 255, 255, 0.75);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px); /* Apple support */
+      border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      font-family: Inter, system-ui, sans-serif;
+      box-sizing: border-box;
+      width: 100%;
+      max-width: 100%;
+      margin: 0;
+    }
 
-      /* Headings styling */
-      h1,
-      h2,
-      h3,
-      h4 {
-        font-weight: 800;
-        letter-spacing: -0.5px;
-        color: #1a1a1a;
-      }
+    .nav-links {
+      display: none;
+      gap: 24px;
+      align-items: center;
+      flex: 1;
+      margin-left: 40px;
+    }
 
-      /* Navbar */
-      .navbar {
-        height: 64px;
-        padding: 12px 24px;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        background: rgba(255, 255, 255, 0.75);
-        backdrop-filter: blur(10px);
-        -webkit-backdrop-filter: blur(10px); /* Apple support */
-        border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-        position: sticky;
-        top: 0;
-        z-index: 100;
-        font-family: Inter, system-ui, sans-serif;
-        box-sizing: border-box;
-        width: 100%;
-        max-width: 100%;
-        margin: 0;
-      }
-
+    @media (min-width: 768px) {
       .nav-links {
-        display: none;
-        gap: 24px;
-        align-items: center;
-        flex: 1;
-        margin-left: 40px;
-      }
-
-      @media (min-width: 768px) {
-        .nav-links {
-          display: flex;
-        }
-      }
-
-      .nav-link {
-        font-size: 14px;
-        color: #1a1a1a;
-        text-decoration: none;
-        font-weight: 500;
-        padding: 8px 12px;
-        border-radius: 8px;
-        transition:
-          background-color 0.2s ease,
-          color 0.2s ease;
-      }
-
-      .nav-link:hover {
-        background-color: #f0f0f0;
-        color: #4285f4;
-      }
-
-      .nav-actions {
         display: flex;
-        gap: 16px;
-        align-items: center;
-        margin-left: auto;
       }
-
-      .nav-actions .btn {
-        transition:
-          background-color 0.3s ease,
-          transform 0.2s ease;
-      }
-
-      .nav-actions .btn:hover {
-        transform: translateY(-2px);
-      }
-
-      @media (max-width: 768px) {
-        .navbar {
-          height: 56px;
-          padding: 8px 16px;
-        }
-
-        .nav-links {
-          gap: 16px;
-          margin-left: 20px;
-        }
-
-        .nav-link {
-          font-size: 13px;
-          padding: 6px 10px;
-        }
-      }
-
-      /* Standardized Buttons */
-      .btn {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 14px;
-        font-weight: 600;
-        padding: 10px 20px;
-        border-radius: 8px;
-        transition: all 0.2s ease;
-        cursor: pointer;
-        border: none;
-        text-align: center;
-      }
-
-      .btn-outline {
-        background-color: transparent;
-        border: 1px solid #dadce0;
-        color: #3c4043;
-      }
-
-      .btn-outline:hover {
-        background-color: #f8f9fa;
-        border-color: #bdc1c6;
-      }
-
-      .btn-primary {
-        background-color: #4285f4;
-        color: #ffffff;
-      }
-
-      .btn-primary:hover {
-        background-color: #2b72eb;
-        box-shadow: 0 2px 6px rgba(66, 133, 244, 0.2);
-      }
-
-      /* Hero Section - Centered centerpiece search like Unsplash */
-      .hero {
-        padding: 80px 0;
-        border-bottom: 1px solid #f1f3f4;
-        background-color: #ffffff;
-        background: #ffffff;
-      }
-
-      .hero-center-wrap {
-        max-width: 800px;
-        margin: 0 auto;
-        text-align: center;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-      }
-
-      .hero-tagline {
-        font-size: 13px;
-        font-weight: 600;
-        color: #5f6368;
-        text-transform: uppercase;
-        letter-spacing: 0.8px;
-        margin-bottom: 16px;
-      }
-
-      .hero-title {
-        font-size: 34px;
-        line-height: 1.15;
-        font-weight: 800;
-        color: #1a1a1a;
-        margin-bottom: 16px;
-        text-align: center;
-      }
-
-      @media (min-width: 576px) {
-        .hero-title {
-          font-size: 44px;
-        }
-      }
-
-      @media (min-width: 992px) {
-        .hero-title {
-          font-size: 52px;
-        }
-      }
-
-      .hero-subtitle {
-        font-size: 16px;
-        line-height: 1.6;
-        color: #5f6368;
-        max-width: 600px;
-        margin-bottom: 32px;
-        text-align: center;
-      }
-
-      @media (min-width: 768px) {
-        .hero-subtitle {
-          font-size: 18px;
-        }
-      }
-
-      /* Search Bar centerpiece */
-      .search-block {
-        width: 100%;
-        max-width: 680px;
-        margin-bottom: 20px;
-      }
-
-      .search-box {
-        display: flex;
-        align-items: center;
-        border: 1px solid #dadce0;
-        border-radius: 100px;
-        padding: 0 8px 0 20px;
-        height: 56px;
-        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15);
-        background-color: #ffffff;
-        transition: all 0.2s ease;
-        width: 100%;
-      }
-
-      .search-box:focus-within {
-        border-color: #4285f4;
-        box-shadow: 0 4px 18px rgba(66, 133, 244, 0.25);
-      }
-
-      .search-icon-left {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin-right: 12px;
-        color: #5f6368;
-      }
-
-      .search-box input {
-        flex: 1;
-        border: none;
-        outline: none;
-        font-size: 16px;
-        color: #202124;
-        background: transparent;
-        width: 100%;
-        height: 100%;
-      }
-
-      .btn-search {
-        background-color: #4285f4;
-        color: #ffffff;
-        border-radius: 100px;
-        height: 42px;
-        padding: 0 28px;
-        font-weight: 700;
-        font-size: 15px;
-        border: none;
-        cursor: pointer;
-        transition: background-color 0.2s ease;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-      }
-
-      .btn-search:hover {
-        background-color: #2b72eb;
-      }
-
-      /* Centered suggestion chips */
-      .suggestion-row {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 8px;
-        margin-bottom: 32px;
-        width: 100%;
-        max-width: 680px;
-        overflow: hidden;
-        flex-wrap: nowrap;
-      }
-
-      .suggestion-label {
-        font-size: 14px;
-        color: #5f6368;
-        font-weight: 600;
-        white-space: nowrap;
-        flex-shrink: 0;
-      }
-
-      .suggestion-chip {
-        font-size: 14px;
-        font-weight: 500;
-        color: #1a1a1a;
-        background-color: #ffffff;
-        border: 1px solid #dadce0;
-        padding: 8px 16px;
-        border-radius: 999px;
-        transition:
-          border-color 0.3s ease,
-          color 0.3s ease,
-          background-color 0.3s ease,
-          opacity 300ms ease,
-          transform 300ms ease,
-          margin 300ms ease,
-          padding 300ms ease,
-          width 300ms ease,
-          max-width 300ms ease;
-        text-decoration: none;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-        box-sizing: border-box;
-        opacity: 1;
-        transform: translateX(0);
-        white-space: nowrap;
-        max-width: 300px;
-        flex-shrink: 0;
-        pointer-events: auto;
-      }
-
-      .suggestion-chip:hover {
-        border-color: #4285f4;
-        color: #4285f4;
-        background-color: #ffffff;
-      }
-
-      .suggestion-chip.entering {
-        opacity: 0;
-        transform: translateX(10px);
-      }
-
-      .suggestion-chip.leaving {
-        opacity: 0;
-        transform: translateX(-10px);
-        width: 0 !important;
-        max-width: 0 !important;
-        padding-left: 0 !important;
-        padding-right: 0 !important;
-        margin-left: 0 !important;
-        margin-right: -10px !important;
-        border-left-width: 0 !important;
-        border-right-width: 0 !important;
-        overflow: hidden;
-        white-space: nowrap;
-        pointer-events: none;
-      }
-
-      /* Centered Single Line Stats */
-      .stats-centered {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        flex-wrap: wrap;
-        gap: 8px;
-        font-size: 14px;
-        color: #5f6368;
-        font-weight: 500;
-      }
-
-      .stat-dot {
-        color: #bdc1c6;
-        margin: 0 6px;
-      }
-
-      .stat-bold {
-        font-weight: 700;
-        color: #4285f4;
-      }
-
-      .sample-bom-card {
-        background-color: #ffffff;
-        border: 1px solid #e8eaed;
-        border-radius: 16px;
-        padding: 24px;
-        width: 100%;
-        max-width: 440px;
-        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
-      }
-
-      .sample-header {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        border-bottom: 1px solid #e8eaed;
-        background-color: #f0f4ff;
-        margin: -24px -24px 16px -24px;
-        padding: 20px 24px 16px 24px;
-        border-top-left-radius: 16px;
-        border-top-right-radius: 16px;
-      }
-
-      .sample-title-block h3 {
-        font-size: 16px;
-        font-weight: 700;
-        color: #1a1a1a;
-      }
-
-      .sample-title-block p {
-        font-size: 11px;
-        color: #5f6368;
-        font-weight: 500;
-      }
-
-      .sample-tag {
-        background-color: #e8f0fe;
-        color: #1a73e8;
-        font-size: 10px;
-        font-weight: 700;
-        padding: 3px 8px;
-        border-radius: 100px;
-        text-transform: uppercase;
-      }
-
-      .sample-item {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        font-size: 13px;
-        padding: 10px 0;
-        border-bottom: 1px dashed #f1f3f4;
-      }
-
-      .sample-item-name {
-        font-weight: 600;
-        color: #202124;
-      }
-
-      .sample-item-qty {
-        font-size: 11px;
-        font-weight: 700;
-        color: #5f6368;
-        background-color: #f1f3f4;
-        padding: 2px 6px;
-        border-radius: 4px;
-      }
-
-      .sample-supplier-block {
-        background-color: #fafbfb;
-        border-radius: 8px;
-        padding: 12px;
-        margin-top: 16px;
-        border: 1px solid #f1f3f4;
-      }
-
-      .sample-supplier-badge {
-        display: inline-flex;
-        align-items: center;
-        gap: 4px;
-        font-size: 10px;
-        font-weight: 700;
-        color: #137333;
-        background-color: #e6f4ea;
-        padding: 2px 6px;
-        border-radius: 100px;
-        margin-bottom: 4px;
-      }
-
-      .sample-supplier-name {
-        font-size: 13px;
-        font-weight: 700;
-        color: #1a1a1a;
-        display: block;
-      }
-
-      .sample-supplier-meta {
-        font-size: 11px;
-        color: #5f6368;
-      }
-
-      /* Popular Categories Section */
-      section.categories-section {
-        padding: 80px 0;
-        border-bottom: 1px solid #f1f3f4;
-        background-color: #ffffff;
-      }
-
-      .section-header {
-        margin-bottom: 32px;
-      }
-
-      .section-title {
-        font-size: 26px;
-        font-weight: 800;
-        margin-bottom: 8px;
-      }
-
-      .scroller {
-        display: flex;
-        gap: 16px;
-        overflow-x: auto;
-        padding-bottom: 24px;
-        scroll-snap-type: x mandatory;
-        -webkit-overflow-scrolling: touch;
-      }
-
-      .scroller::-webkit-scrollbar {
-        height: 6px;
-      }
-
-      .scroller::-webkit-scrollbar-thumb {
-        background-color: #dadce0;
-        border-radius: 100px;
-      }
-
-      .scroller-card {
-        position: relative;
-        flex: 0 0 240px;
-        height: 220px;
-        scroll-snap-align: start;
-        border-radius: 16px;
-        overflow: hidden;
-        display: flex;
-        flex-direction: column;
-        justify-content: flex-end;
-        background-size: cover;
-        background-position: center;
-        transition: all 0.2s ease;
-        border: 1px solid rgba(0, 0, 0, 0.08);
-      }
-
-      .scroller-card::before {
-        content: "";
-        position: absolute;
-        inset: 0;
-        background: linear-gradient(
-          to bottom,
-          rgba(0, 0, 0, 0.1),
-          rgba(0, 0, 0, 0.75)
-        );
-        z-index: 1;
-      }
-
-      .scroller-card:hover {
-        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
-        transform: translateY(-4px);
-      }
-
-      .scroller-img {
-        display: none;
-      }
-
-      .scroller-content {
-        position: relative;
-        z-index: 2;
-        padding: 16px;
-      }
-
-      .scroller-title {
-        font-size: 18px;
-        font-weight: 700;
-        color: #ffffff;
-      }
-
-      .scroller-count {
-        font-size: 13px;
-        color: #d1d5db; /* light grey white */
-        font-weight: 500;
-        margin-top: 4px;
-      }
-
-      /* Popular Categories background images */
-      .card-smartwatch {
-        background-image: url("https://images.unsplash.com/photo-1546868871-7041f2a55e12?w=400");
-      }
-      .card-arduino {
-        background-image: url("https://images.unsplash.com/photo-1608564697071-ddf911d81370?w=400");
-      }
-      .card-raspi {
-        background-image: url("https://images.unsplash.com/photo-1518770660439-4636190af475?w=400");
-      }
-      .card-phone {
-        background-image: url("https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=400");
-      }
-      .card-sensors {
-        background-image: url("https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400");
-      }
-      .card-battery {
-        background-image: url("https://images.unsplash.com/photo-1620288627223-53302f4e8c74?w=400");
-      }
-      .card-shampoo {
-        background-image: url("https://images.unsplash.com/photo-1585435557343-3b092031a831?w=400");
-      }
-      .card-solar {
-        background-image: url("https://images.unsplash.com/photo-1509391366360-2e959784a276?w=400");
-      }
-
-      /* How It Works Section */
-      section.how-it-works {
-        padding: 80px 0;
-        background-color: #f8f9fa;
-        border-bottom: 1px solid #f1f3f4;
-      }
-
-      .steps-grid {
-        display: grid;
-        grid-template-columns: 1fr;
-        gap: 32px;
-        margin-top: 40px;
-      }
-
-      @media (min-width: 768px) {
-        .steps-grid {
-          grid-template-columns: repeat(3, 1fr);
-        }
-      }
-
-      .step-card {
-        background-color: #ffffff;
-        border: 1px solid #e1e3e5;
-        border-radius: 16px;
-        padding: 32px;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
-        text-align: left;
-      }
-
-      .step-num {
-        width: 40px;
-        height: 40px;
-        background-color: #4285f4;
-        color: #ffffff;
-        font-size: 16px;
-        font-weight: 700;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin-bottom: 24px;
-      }
-
-      .step-title {
-        font-size: 20px;
-        font-weight: 700;
-        margin-bottom: 12px;
-        color: #1a1a1a;
-      }
-
-      .step-desc {
-        font-size: 14px;
-        color: #5f6368;
-        line-height: 1.6;
-      }
-
-      /* Trending Searches Section */
-      section.trending {
-        padding: 80px 0;
-        background-color: #ffffff;
-        border-bottom: 1px solid #f1f3f4;
-      }
-
-      .trending-grid {
-        display: grid;
-        grid-template-columns: 1fr;
-        gap: 20px;
-        margin-top: 32px;
-      }
-
-      @media (min-width: 576px) {
-        .trending-grid {
-          grid-template-columns: repeat(2, 1fr);
-        }
-      }
-
-      @media (min-width: 992px) {
-        .trending-grid {
-          grid-template-columns: repeat(4, 1fr);
-        }
-      }
-
-      .trending-card {
-        background-color: #ffffff;
-        border: 1px solid #e8eaed;
-        border-radius: 16px;
-        padding: 24px;
-        display: flex;
-        flex-direction: column;
-        gap: 16px;
-        transition: all 0.2s ease;
-      }
-
-      .trending-card:hover {
-        border-color: #dadce0;
-        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
-      }
-
-      .trending-info {
-        display: flex;
-        flex-direction: column;
-        gap: 4px;
-      }
-
-      .trending-title {
-        font-size: 20px;
-        font-weight: 700;
-        color: #1a1a1a;
-      }
-
-      .trending-desc {
-        font-size: 13px;
-        color: #5f6368;
-      }
-
-      .trending-btn {
-        width: 100%;
-        margin-top: auto;
-        font-size: 13px;
-        padding: 10px 16px;
-        background-color: #4285f4;
-        color: #ffffff;
-        border-radius: 8px;
-        font-weight: 600;
-        text-align: center;
-        transition: all 0.2s ease;
-      }
-
-      .trending-btn:hover {
-        background-color: #2b72eb;
-      }
-
-      /* AI Sourcing Banner component styling */
-      section.ai-banner {
-        padding: 80px 0;
-        background-color: #1a1a2e; /* dark navy */
-        color: #ffffff;
-        border-bottom: 1px solid #1a1a2e;
-      }
-
-      .ai-banner-content {
-        max-width: 650px;
-        margin: 0 auto;
-        text-align: center;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 24px;
-      }
-
-      .ai-banner-content h2 {
-        color: #ffffff;
-        font-size: 32px;
-        font-weight: 800;
-      }
-
-      .ai-banner-content p {
-        color: #94a3b8;
-        font-size: 16px;
-        line-height: 1.6;
-      }
-
-      .btn-ai-cta {
-        background-color: #4285f4;
-        color: #ffffff;
-        font-weight: 700;
-        padding: 12px 32px;
-        border-radius: 100px; /* rounded pill shape */
-        font-size: 15px;
-        transition: all 0.2s ease;
-      }
-
-      .btn-ai-cta:hover {
-        background-color: #2b72eb;
-      }
-
-      /* Supplier Registration Section */
-      section.supplier-reg {
-        padding: 80px 0;
-        text-align: center;
-        background-color: #ffffff;
-        border-bottom: 1px solid #f1f3f4;
-      }
-
-      .supplier-reg-content {
-        max-width: 600px;
-        margin: 0 auto;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 20px;
-      }
-
-      .supplier-reg-title {
-        font-size: 26px;
-        font-weight: 800;
-        color: #1a1a1a;
-      }
-
-      .supplier-reg-desc {
-        font-size: 15px;
-        color: #5f6368;
-        line-height: 1.6;
-      }
-
-      .supplier-actions {
-        display: flex;
-        gap: 12px;
-        margin-top: 8px;
-        justify-content: center;
-      }
-
-      /* Footer Column Styles */
-      footer {
-        background-color: #f8f9fa; /* light grey background */
-        border-top: 1px solid #e1e3e5;
-        padding: 80px 0 0; /* Let footer-bottom touch bottom */
-        position: relative;
-      }
-
-      .footer-grid {
-        display: grid;
-        grid-template-columns: 1fr;
-        gap: 40px;
-        margin-bottom: 40px;
-      }
-
-      @media (min-width: 576px) {
-        .footer-grid {
-          grid-template-columns: repeat(2, 1fr);
-        }
-      }
-
-      @media (min-width: 992px) {
-        .footer-grid {
-          grid-template-columns: repeat(4, 1fr);
-        }
-      }
-
-      .footer-col {
-        display: flex;
-        flex-direction: column;
-        gap: 16px;
-      }
-
-      .footer-title {
-        font-size: 12px; /* uppercase small */
-        font-weight: 700;
-        color: #5f6368; /* grey #5f6368 */
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-      }
-
-      .footer-links {
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-      }
-
-      .footer-link {
-        font-size: 13px;
-        color: #3c4043; /* dark grey #3c4043 */
-        transition: color 0.15s ease;
-      }
-
-      .footer-link:hover {
-        color: #4285f4; /* hover blue */
-      }
-
-      .footer-description {
-        font-size: 13px;
-        color: #5f6368;
-        line-height: 1.6;
-      }
-
-      .footer-bottom {
-        background-color: #ffffff; /* Copyright bar: white background */
-        border-top: 1px solid #e8eaed; /* thin top border */
-        padding: 24px;
-        margin-top: 40px;
-        width: 100vw;
-        margin-left: calc(-50vw + 50%); /* stretch 100vw */
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: space-between;
-        gap: 16px;
-        box-sizing: border-box;
-      }
-
-      @media (min-width: 768px) {
-        .footer-bottom {
-          flex-direction: row;
-        }
-      }
-
-      @media (min-width: 1200px) {
-        .footer-bottom {
-          padding-left: calc((100vw - 1152px) / 2);
-          padding-right: calc((100vw - 1152px) / 2);
-        }
-      }
-
-      .copyright {
-        font-size: 12px;
-        color: #5f6368;
-      }
-
-      .footer-legal-links {
-        display: flex;
-        gap: 20px;
-      }
-
-      .footer-legal-link {
-        font-size: 12px;
-        color: #3c4043; /* dark grey #3c4043 */
-        transition: color 0.15s ease;
-      }
-
-      .footer-legal-link:hover {
-        color: #4285f4;
-      }
-
-      .navbar-logo-wrapper {
-        display: inline-flex;
-        align-items: center;
-        gap: 12px;
-        text-decoration: none;
-        cursor: pointer;
-        transition: opacity 0.3s ease;
-        padding: 8px;
-      }
-
-      .navbar-logo-wrapper:hover {
-        opacity: 0.85;
-      }
-
-      .navbar-logo-image {
-        height: 50px;
-        width: auto;
-        max-width: 100%;
-        object-fit: contain;
-        display: block;
-      }
-
-      .navbar-logo-text {
-        font-size: 24px;
-        font-weight: 700;
-        color: #1a1a1a;
-        font-family: Inter, system-ui, sans-serif;
-        letter-spacing: -0.5px;
-      }
-
-      .footer-logo-wrapper {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        margin-bottom: 16px;
-      }
-
-      .footer-logo-image {
-        height: 40px;
-        width: auto;
-        max-width: 100%;
-        object-fit: contain;
-        display: block;
-      }
-
-      .footer-logo-text {
-        font-size: 18px;
-        font-weight: 700;
-        color: #1a1a1a;
-        font-family: Inter, system-ui, sans-serif;
-      }
-
-      @media (max-width: 1023px) {
-        .navbar-logo-wrapper {
-          gap: 10px;
-          padding: 6px;
-        }
-
-        .navbar-logo-image {
-          height: 45px;
-        }
-
-        .navbar-logo-text {
-          font-size: 22px;
-        }
-
-        .footer-logo-image {
-          height: 38px;
-        }
-
-        .footer-logo-text {
-          font-size: 16px;
-        }
-      }
-
-      @media (max-width: 768px) {
-        .navbar-logo-wrapper {
-          gap: 8px;
-          padding: 4px;
-        }
-
-        .navbar-logo-image {
-          height: 40px;
-        }
-
-        .navbar-logo-text {
-          font-size: 20px;
-        }
-
-        .footer-logo-image {
-          height: 35px;
-        }
-
-        .footer-logo-text {
-          font-size: 14px;
-        }
-      }
-
-      /* ===== SCROLL SMOOTHNESS & HARDWARE PERFORMANCE ===== */
-      html {
-        scroll-behavior: smooth;
-        overflow-y: scroll;
-      }
-
-      body {
-        -webkit-font-smoothing: antialiased;
-        -moz-osx-font-smoothing: grayscale;
-        transform: translate3d(0, 0, 0);
-        will-change: scroll-position;
-      }
-
-      /* ===== HARDWARE ACCELERATION ===== */
-      .navbar,
-      .scroller-card,
-      .step-card,
-      .trending-card,
-      .card,
-      button,
-      a {
-        transform: translate3d(0, 0, 0);
-      }
-
-      /* ===== FAST TRANSITIONS ===== */
-      button,
-      a,
-      input,
-      select,
-      textarea {
-        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
-      }
-
-      button:hover,
-      a:hover {
-        transform: translateY(-2px);
-      }
-
-      /* Smooth nav link hover overrides */
-      .nav-links a {
-        transition:
-          background-color 0.15s ease,
-          color 0.15s ease !important;
-      }
-
-      /* Smooth card hover overrides (Material Design easing) */
-      .scroller-card {
-        transition:
-          transform 0.2s cubic-bezier(0.4, 0, 0.2, 1),
-          box-shadow 0.2s ease !important;
-      }
-      .scroller-card:hover {
-        transform: translateY(-4px) translate3d(0, 0, 0) !important;
-        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1) !important;
-      }
-
-      .step-card {
-        transition:
-          transform 0.2s cubic-bezier(0.4, 0, 0.2, 1),
-          box-shadow 0.2s ease !important;
-      }
-      .step-card:hover {
-        transform: translateY(-4px) translate3d(0, 0, 0) !important;
-        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1) !important;
-      }
-
-      .trending-card {
-        transition:
-          transform 0.2s cubic-bezier(0.4, 0, 0.2, 1),
-          box-shadow 0.2s ease !important;
-      }
-      .trending-card:hover {
-        transform: translateY(-4px) translate3d(0, 0, 0) !important;
-        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1) !important;
-      }
-
-      /* ===== SCROLL CONTAINMENT ===== */
+    }
+
+    .nav-link {
+      font-size: 14px;
+      color: #1a1a1a;
+      text-decoration: none;
+      font-weight: 500;
+      padding: 8px 12px;
+      border-radius: 8px;
+      transition: background-color 0.2s ease, color 0.2s ease;
+    }
+
+    .nav-link:hover {
+      background-color: #f0f0f0;
+      color: #4285F4;
+    }
+
+    .nav-actions {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+      margin-left: auto;
+    }
+
+    .nav-actions .btn {
+      transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+
+    .nav-actions .btn:hover {
+      transform: translateY(-2px);
+    }
+
+    @media (max-width: 768px) {
       .navbar {
-        contain: layout style;
-        overflow: visible !important;
+        height: 56px;
+        padding: 8px 16px;
       }
-
-      main,
-      section {
-        contain: layout style;
+      
+      .nav-links {
+        gap: 16px;
+        margin-left: 20px;
       }
-
-      .scroller-card,
-      .step-card,
-      .trending-card {
-        contain: content;
+      
+      .nav-link {
+        font-size: 13px;
+        padding: 6px 10px;
       }
+    }
 
-      /* ===== FORM PERFORMANCE ===== */
-      input[type="text"],
-      input[type="email"],
-      input[type="password"] {
-        transition: all 0.2s ease !important;
+    /* Standardized Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: 600;
+      padding: 10px 20px;
+      border-radius: 8px;
+      transition: all 0.2s ease;
+      cursor: pointer;
+      border: none;
+      text-align: center;
+    }
+
+    .btn-outline {
+      background-color: transparent;
+      border: 1px solid #dadce0;
+      color: #3c4043;
+    }
+
+    .btn-outline:hover {
+      background-color: #f8f9fa;
+      border-color: #bdc1c6;
+    }
+
+    .btn-primary {
+      background-color: #4285F4;
+      color: #FFFFFF;
+    }
+
+    .btn-primary:hover {
+      background-color: #2b72eb;
+      box-shadow: 0 2px 6px rgba(66, 133, 244, 0.2);
+    }
+
+    /* Hero Section - Centered centerpiece search like Unsplash */
+    .hero {
+      padding: 80px 0;
+      border-bottom: 1px solid #f1f3f4;
+      background-color: #FFFFFF;
+      background: #FFFFFF;
+    }
+
+    .hero-center-wrap {
+      max-width: 800px;
+      margin: 0 auto;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .hero-tagline {
+      font-size: 13px;
+      font-weight: 600;
+      color: #5f6368;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      margin-bottom: 16px;
+    }
+
+    .hero-title {
+      font-size: 34px;
+      line-height: 1.15;
+      font-weight: 800;
+      color: #1a1a1a;
+      margin-bottom: 16px;
+      text-align: center;
+    }
+
+    @media (min-width: 576px) {
+      .hero-title {
+        font-size: 44px;
       }
+    }
 
-      input[type="text"]:focus,
-      input[type="email"]:focus,
-      input[type="password"]:focus {
-        transform: scale(1.01) !important;
-        box-shadow: 0 0 0 3px rgba(66, 133, 244, 0.1) !important;
+    @media (min-width: 992px) {
+      .hero-title {
+        font-size: 52px;
       }
+    }
 
-      input[type="text"]::placeholder,
-      input[type="email"]::placeholder,
-      input[type="password"]::placeholder {
-        transition: color 0.15s ease !important;
+    .hero-subtitle {
+      font-size: 16px;
+      line-height: 1.6;
+      color: #5f6368;
+      max-width: 600px;
+      margin-bottom: 32px;
+      text-align: center;
+    }
+
+    @media (min-width: 768px) {
+      .hero-subtitle {
+        font-size: 18px;
       }
+    }
 
-      /* ===== SCROLL LOCK MODAL/DROPDOWNS ===== */
-      body.modal-open {
-        overflow: hidden;
-        position: fixed;
-        width: 100%;
+    /* Search Bar centerpiece */
+    .search-block {
+      width: 100%;
+      max-width: 680px;
+      margin-bottom: 20px;
+    }
+
+    .search-box {
+      display: flex;
+      align-items: center;
+      border: 1px solid #dadce0;
+      border-radius: 100px;
+      padding: 0 8px 0 20px;
+      height: 56px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.15);
+      background-color: #FFFFFF;
+      transition: all 0.2s ease;
+      width: 100%;
+    }
+
+    .search-box:focus-within {
+      border-color: #4285F4;
+      box-shadow: 0 4px 18px rgba(66, 133, 244, 0.25);
+    }
+
+    .search-icon-left {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 12px;
+      color: #5f6368;
+    }
+
+    .search-box input {
+      flex: 1;
+      border: none;
+      outline: none;
+      font-size: 16px;
+      color: #202124;
+      background: transparent;
+      width: 100%;
+      height: 100%;
+    }
+
+    .btn-search {
+      background-color: #4285F4;
+      color: #FFFFFF;
+      border-radius: 100px;
+      height: 42px;
+      padding: 0 28px;
+      font-weight: 700;
+      font-size: 15px;
+      border: none;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .btn-search:hover {
+      background-color: #2b72eb;
+    }
+
+    /* Centered suggestion chips */
+    .suggestion-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 32px;
+      width: 100%;
+      max-width: 680px;
+      overflow: hidden;
+      flex-wrap: nowrap;
+    }
+
+    .suggestion-label {
+      font-size: 14px;
+      color: #5f6368;
+      font-weight: 600;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .suggestion-chip {
+      font-size: 14px;
+      font-weight: 500;
+      color: #1a1a1a;
+      background-color: #ffffff;
+      border: 1px solid #dadce0;
+      padding: 8px 16px;
+      border-radius: 999px;
+      transition: border-color 0.3s ease, color 0.3s ease, background-color 0.3s ease, opacity 300ms ease, transform 300ms ease, margin 300ms ease, padding 300ms ease, width 300ms ease, max-width 300ms ease;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-sizing: border-box;
+      opacity: 1;
+      transform: translateX(0);
+      white-space: nowrap;
+      max-width: 300px;
+      flex-shrink: 0;
+      pointer-events: auto;
+    }
+
+    .suggestion-chip:hover {
+      border-color: #4285F4;
+      color: #4285F4;
+      background-color: #ffffff;
+    }
+
+    .suggestion-chip.entering {
+      opacity: 0;
+      transform: translateX(10px);
+    }
+
+    .suggestion-chip.leaving {
+      opacity: 0;
+      transform: translateX(-10px);
+      width: 0 !important;
+      max-width: 0 !important;
+      padding-left: 0 !important;
+      padding-right: 0 !important;
+      margin-left: 0 !important;
+      margin-right: -10px !important;
+      border-left-width: 0 !important;
+      border-right-width: 0 !important;
+      overflow: hidden;
+      white-space: nowrap;
+      pointer-events: none;
+    }
+
+    /* Centered Single Line Stats */
+    .stats-centered {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 8px;
+      font-size: 14px;
+      color: #5f6368;
+      font-weight: 500;
+    }
+
+    .stat-dot {
+      color: #bdc1c6;
+      margin: 0 6px;
+    }
+
+    .stat-bold {
+      font-weight: 700;
+      color: #4285F4;
+    }
+
+    .sample-bom-card {
+      background-color: #FFFFFF;
+      border: 1px solid #e8eaed;
+      border-radius: 16px;
+      padding: 24px;
+      width: 100%;
+      max-width: 440px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+    }
+
+    .sample-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid #e8eaed;
+      background-color: #f0f4ff;
+      margin: -24px -24px 16px -24px;
+      padding: 20px 24px 16px 24px;
+      border-top-left-radius: 16px;
+      border-top-right-radius: 16px;
+    }
+
+    .sample-title-block h3 {
+      font-size: 16px;
+      font-weight: 700;
+      color: #1a1a1a;
+    }
+
+    .sample-title-block p {
+      font-size: 11px;
+      color: #5f6368;
+      font-weight: 500;
+    }
+
+    .sample-tag {
+      background-color: #E8F0FE;
+      color: #1a73e8;
+      font-size: 10px;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 100px;
+      text-transform: uppercase;
+    }
+
+    .sample-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 13px;
+      padding: 10px 0;
+      border-bottom: 1px dashed #f1f3f4;
+    }
+
+    .sample-item-name {
+      font-weight: 600;
+      color: #202124;
+    }
+
+    .sample-item-qty {
+      font-size: 11px;
+      font-weight: 700;
+      color: #5f6368;
+      background-color: #f1f3f4;
+      padding: 2px 6px;
+      border-radius: 4px;
+    }
+
+    .sample-supplier-block {
+      background-color: #fafbfb;
+      border-radius: 8px;
+      padding: 12px;
+      margin-top: 16px;
+      border: 1px solid #f1f3f4;
+    }
+
+    .sample-supplier-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 10px;
+      font-weight: 700;
+      color: #137333;
+      background-color: #E6F4EA;
+      padding: 2px 6px;
+      border-radius: 100px;
+      margin-bottom: 4px;
+    }
+
+    .sample-supplier-name {
+      font-size: 13px;
+      font-weight: 700;
+      color: #1a1a1a;
+      display: block;
+    }
+
+    .sample-supplier-meta {
+      font-size: 11px;
+      color: #5f6368;
+    }
+
+    /* Popular Categories Section */
+    section.categories-section {
+      padding: 80px 0;
+      border-bottom: 1px solid #f1f3f4;
+      background-color: #FFFFFF;
+    }
+
+    .section-header {
+      margin-bottom: 32px;
+    }
+
+    .section-title {
+      font-size: 26px;
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+
+    .scroller {
+      display: flex;
+      gap: 16px;
+      overflow-x: auto;
+      padding-bottom: 24px;
+      scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .scroller::-webkit-scrollbar {
+      height: 6px;
+    }
+
+    .scroller::-webkit-scrollbar-thumb {
+      background-color: #dadce0;
+      border-radius: 100px;
+    }
+
+    .scroller-card {
+      position: relative;
+      flex: 0 0 240px;
+      height: 220px;
+      scroll-snap-align: start;
+      border-radius: 16px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      background-size: cover;
+      background-position: center;
+      transition: all 0.2s ease;
+      border: 1px solid rgba(0,0,0,0.08);
+    }
+
+    .scroller-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to bottom, rgba(0,0,0,0.1), rgba(0,0,0,0.75));
+      z-index: 1;
+    }
+
+    .scroller-card:hover {
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+      transform: translateY(-4px);
+    }
+
+    .scroller-img {
+      display: none;
+    }
+
+    .scroller-content {
+      position: relative;
+      z-index: 2;
+      padding: 16px;
+    }
+
+    .scroller-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: #FFFFFF;
+    }
+
+    .scroller-count {
+      font-size: 13px;
+      color: #d1d5db; /* light grey white */
+      font-weight: 500;
+      margin-top: 4px;
+    }
+
+    /* Popular Categories background images */
+    .card-smartwatch {
+      background-image: url('https://images.unsplash.com/photo-1546868871-7041f2a55e12?w=400');
+    }
+    .card-arduino {
+      background-image: url('https://images.unsplash.com/photo-1608564697071-ddf911d81370?w=400');
+    }
+    .card-raspi {
+      background-image: url('https://images.unsplash.com/photo-1518770660439-4636190af475?w=400');
+    }
+    .card-phone {
+      background-image: url('https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=400');
+    }
+    .card-sensors {
+      background-image: url('https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400');
+    }
+    .card-battery {
+      background-image: url('https://images.unsplash.com/photo-1620288627223-53302f4e8c74?w=400');
+    }
+    .card-shampoo {
+      background-image: url('https://images.unsplash.com/photo-1585435557343-3b092031a831?w=400');
+    }
+    .card-solar {
+      background-image: url('https://images.unsplash.com/photo-1509391366360-2e959784a276?w=400');
+    }
+
+    /* How It Works Section */
+    section.how-it-works {
+      padding: 80px 0;
+      background-color: #f8f9fa;
+      border-bottom: 1px solid #f1f3f4;
+    }
+
+    .steps-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 32px;
+      margin-top: 40px;
+    }
+
+    @media (min-width: 768px) {
+      .steps-grid {
+        grid-template-columns: repeat(3, 1fr);
       }
+    }
 
-      .modal-backdrop {
-        animation: fadeIn 0.2s ease;
+    .step-card {
+      background-color: #FFFFFF;
+      border: 1px solid #e1e3e5;
+      border-radius: 16px;
+      padding: 32px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+      text-align: left;
+    }
+
+    .step-num {
+      width: 40px;
+      height: 40px;
+      background-color: #4285F4;
+      color: #FFFFFF;
+      font-size: 16px;
+      font-weight: 700;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 24px;
+    }
+
+    .step-title {
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 12px;
+      color: #1a1a1a;
+    }
+
+    .step-desc {
+      font-size: 14px;
+      color: #5f6368;
+      line-height: 1.6;
+    }
+
+    /* Trending Searches Section */
+    section.trending {
+      padding: 80px 0;
+      background-color: #FFFFFF;
+      border-bottom: 1px solid #f1f3f4;
+    }
+
+    .trending-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 20px;
+      margin-top: 32px;
+    }
+
+    @media (min-width: 576px) {
+      .trending-grid {
+        grid-template-columns: repeat(2, 1fr);
       }
+    }
 
-      @keyframes fadeIn {
-        from {
-          opacity: 0;
-        }
-        to {
-          opacity: 1;
-        }
+    @media (min-width: 992px) {
+      .trending-grid {
+        grid-template-columns: repeat(4, 1fr);
       }
+    }
 
-      /* ===== USER ACCOUNT DROPDOWN STYLING ===== */
-      .user-profile-menu-container {
-        position: relative !important;
-        display: inline-block !important;
-        overflow: visible !important;
+    .trending-card {
+      background-color: #FFFFFF;
+      border: 1px solid #e8eaed;
+      border-radius: 16px;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      transition: all 0.2s ease;
+    }
+
+    .trending-card:hover {
+      border-color: #dadce0;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+    }
+
+    .trending-info {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .trending-title {
+      font-size: 20px;
+      font-weight: 700;
+      color: #1a1a1a;
+    }
+
+    .trending-desc {
+      font-size: 13px;
+      color: #5f6368;
+    }
+
+    .trending-btn {
+      width: 100%;
+      margin-top: auto;
+      font-size: 13px;
+      padding: 10px 16px;
+      background-color: #4285F4;
+      color: #FFFFFF;
+      border-radius: 8px;
+      font-weight: 600;
+      text-align: center;
+      transition: all 0.2s ease;
+    }
+
+    .trending-btn:hover {
+      background-color: #2b72eb;
+    }
+
+    /* AI Sourcing Banner component styling */
+    section.ai-banner {
+      padding: 80px 0;
+      background-color: #1a1a2e; /* dark navy */
+      color: #ffffff;
+      border-bottom: 1px solid #1a1a2e;
+    }
+
+    .ai-banner-content {
+      max-width: 650px;
+      margin: 0 auto;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 24px;
+    }
+
+    .ai-banner-content h2 {
+      color: #FFFFFF;
+      font-size: 32px;
+      font-weight: 800;
+    }
+
+    .ai-banner-content p {
+      color: #94a3b8;
+      font-size: 16px;
+      line-height: 1.6;
+    }
+
+    .btn-ai-cta {
+      background-color: #4285F4;
+      color: #FFFFFF;
+      font-weight: 700;
+      padding: 12px 32px;
+      border-radius: 100px; /* rounded pill shape */
+      font-size: 15px;
+      transition: all 0.2s ease;
+    }
+
+    .btn-ai-cta:hover {
+      background-color: #2b72eb;
+    }
+
+    /* Supplier Registration Section */
+    section.supplier-reg {
+      padding: 80px 0;
+      text-align: center;
+      background-color: #FFFFFF;
+      border-bottom: 1px solid #f1f3f4;
+    }
+
+    .supplier-reg-content {
+      max-width: 600px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .supplier-reg-title {
+      font-size: 26px;
+      font-weight: 800;
+      color: #1a1a1a;
+    }
+
+    .supplier-reg-desc {
+      font-size: 15px;
+      color: #5f6368;
+      line-height: 1.6;
+    }
+
+    .supplier-actions {
+      display: flex;
+      gap: 12px;
+      margin-top: 8px;
+      justify-content: center;
+    }
+
+    /* Footer Column Styles */
+    footer {
+      background-color: #f8f9fa; /* light grey background */
+      border-top: 1px solid #e1e3e5;
+      padding: 80px 0 0; /* Let footer-bottom touch bottom */
+      position: relative;
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 40px;
+      margin-bottom: 40px;
+    }
+
+    @media (min-width: 576px) {
+      .footer-grid {
+        grid-template-columns: repeat(2, 1fr);
       }
+    }
 
-      #account-btn {
-        position: relative !important;
-        z-index: 101 !important;
+    @media (min-width: 992px) {
+      .footer-grid {
+        grid-template-columns: repeat(4, 1fr);
       }
+    }
 
-      #account-dropdown {
-        display: block !important;
-        position: absolute !important;
-        right: 0 !important;
-        top: calc(100% + 8px) !important;
-        background-color: #ffffff !important;
-        border: 1px solid #e0e0e0 !important;
-        border-radius: 12px !important;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
-        width: 220px !important;
-        min-width: 200px !important;
-        z-index: 1000 !important; /* Above all content but no backdrop */
-        padding: 12px 0 !important;
-        opacity: 0 !important;
-        visibility: hidden !important;
-        transform: translateY(-8px) !important;
-        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
-        pointer-events: none !important;
-        text-align: left !important;
+    .footer-col {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .footer-title {
+      font-size: 12px; /* uppercase small */
+      font-weight: 700;
+      color: #5f6368; /* grey #5f6368 */
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .footer-links {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .footer-link {
+      font-size: 13px;
+      color: #3c4043; /* dark grey #3c4043 */
+      transition: color 0.15s ease;
+    }
+
+    .footer-link:hover {
+      color: #4285F4; /* hover blue */
+    }
+
+    .footer-description {
+      font-size: 13px;
+      color: #5f6368;
+      line-height: 1.6;
+    }
+
+    .footer-bottom {
+      background-color: #FFFFFF; /* Copyright bar: white background */
+      border-top: 1px solid #e8eaed; /* thin top border */
+      padding: 24px;
+      margin-top: 40px;
+      width: 100vw;
+      margin-left: calc(-50vw + 50%); /* stretch 100vw */
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      box-sizing: border-box;
+    }
+
+    @media (min-width: 768px) {
+      .footer-bottom {
+        flex-direction: row;
+      }
+    }
+
+    @media (min-width: 1200px) {
+      .footer-bottom {
+        padding-left: calc((100vw - 1152px) / 2);
+        padding-right: calc((100vw - 1152px) / 2);
+      }
+    }
+
+    .copyright {
+      font-size: 12px;
+      color: #5f6368;
+    }
+
+    .footer-legal-links {
+      display: flex;
+      gap: 20px;
+    }
+
+    .footer-legal-link {
+      font-size: 12px;
+      color: #3c4043; /* dark grey #3c4043 */
+      transition: color 0.15s ease;
+    }
+
+    .footer-legal-link:hover {
+      color: #4285F4;
+    }
+
+    .navbar-logo-wrapper {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      cursor: pointer;
+      transition: opacity 0.3s ease;
+      padding: 8px;
+    }
+
+    .navbar-logo-wrapper:hover {
+      opacity: 0.85;
+    }
+
+    .navbar-logo-image {
+      height: 50px;
+      width: auto;
+      max-width: 100%;
+      object-fit: contain;
+      display: block;
+    }
+
+    .navbar-logo-text {
+      font-size: 24px;
+      font-weight: 700;
+      color: #1a1a1a;
+      font-family: Inter, system-ui, sans-serif;
+      letter-spacing: -0.5px;
+    }
+
+    .footer-logo-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .footer-logo-image {
+      height: 40px;
+      width: auto;
+      max-width: 100%;
+      object-fit: contain;
+      display: block;
+    }
+
+    .footer-logo-text {
+      font-size: 18px;
+      font-weight: 700;
+      color: #1a1a1a;
+      font-family: Inter, system-ui, sans-serif;
+    }
+
+    @media (max-width: 1023px) {
+      .navbar-logo-wrapper {
+        gap: 10px;
+        padding: 6px;
+      }
+      
+      .navbar-logo-image {
+        height: 45px;
+      }
+      
+      .navbar-logo-text {
+        font-size: 22px;
+      }
+      
+      .footer-logo-image {
+        height: 38px;
+      }
+      
+      .footer-logo-text {
+        font-size: 16px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .navbar-logo-wrapper {
+        gap: 8px;
+        padding: 4px;
+      }
+      
+      .navbar-logo-image {
+        height: 40px;
+      }
+      
+      .navbar-logo-text {
+        font-size: 20px;
+      }
+      
+      .footer-logo-image {
+        height: 35px;
+      }
+      
+      .footer-logo-text {
+        font-size: 14px;
+      }
+    }
+
+    /* ===== SCROLL SMOOTHNESS & HARDWARE PERFORMANCE ===== */
+    html {
+      scroll-behavior: smooth;
+      overflow-y: scroll;
+    }
+
+    body {
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      transform: translate3d(0, 0, 0);
+      will-change: scroll-position;
+    }
+
+    /* ===== HARDWARE ACCELERATION ===== */
+    .navbar, .scroller-card, .step-card, .trending-card, .card, button, a {
+      transform: translate3d(0, 0, 0);
+    }
+
+    /* ===== FAST TRANSITIONS ===== */
+    button, a, input, select, textarea {
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    }
+
+    button:hover, a:hover {
+      transform: translateY(-2px);
+    }
+
+    /* Smooth nav link hover overrides */
+    .nav-links a {
+      transition: background-color 0.15s ease, color 0.15s ease !important;
+    }
+
+    /* Smooth card hover overrides (Material Design easing) */
+    .scroller-card {
+      transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.2s ease !important;
+    }
+    .scroller-card:hover {
+      transform: translateY(-4px) translate3d(0, 0, 0) !important;
+      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1) !important;
+    }
+
+    .step-card {
+      transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.2s ease !important;
+    }
+    .step-card:hover {
+      transform: translateY(-4px) translate3d(0, 0, 0) !important;
+      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1) !important;
+    }
+
+    .trending-card {
+      transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.2s ease !important;
+    }
+    .trending-card:hover {
+      transform: translateY(-4px) translate3d(0, 0, 0) !important;
+      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1) !important;
+    }
+
+    /* ===== SCROLL CONTAINMENT ===== */
+    .navbar {
+      contain: layout style;
+      overflow: visible !important;
+    }
+
+    main, section {
+      contain: layout style;
+    }
+
+    .scroller-card, .step-card, .trending-card {
+      contain: content;
+    }
+
+    /* ===== FORM PERFORMANCE ===== */
+    input[type="text"], input[type="email"], input[type="password"] {
+      transition: all 0.2s ease !important;
+    }
+
+    input[type="text"]:focus, input[type="email"]:focus, input[type="password"]:focus {
+      transform: scale(1.01) !important;
+      box-shadow: 0 0 0 3px rgba(66, 133, 244, 0.1) !important;
+    }
+
+    input[type="text"]::placeholder, input[type="email"]::placeholder, input[type="password"]::placeholder {
+      transition: color 0.15s ease !important;
+    }
+
+    /* ===== SCROLL LOCK MODAL/DROPDOWNS ===== */
+    body.modal-open {
+      overflow: hidden;
+      position: fixed;
+      width: 100%;
+    }
+
+    .modal-backdrop {
+      animation: fadeIn 0.2s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    /* ===== USER ACCOUNT DROPDOWN STYLING ===== */
+    .user-profile-menu-container {
+      position: relative !important;
+      display: inline-block !important;
+      overflow: visible !important;
+    }
+
+    #account-btn {
+      position: relative !important;
+      z-index: 101 !important;
+    }
+
+    #account-dropdown {
+      display: block !important;
+      position: absolute !important;
+      right: 0 !important;
+      top: calc(100% + 8px) !important;
+      background-color: #ffffff !important;
+      border: 1px solid #e0e0e0 !important;
+      border-radius: 12px !important;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
+      width: 220px !important;
+      min-width: 200px !important;
+      z-index: 1000 !important; /* Above all content but no backdrop */
+      padding: 12px 0 !important;
+      opacity: 0 !important;
+      visibility: hidden !important;
+      transform: translateY(-8px) !important;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+      pointer-events: none !important;
+      text-align: left !important;
+      box-sizing: border-box !important;
+    }
+
+    #account-dropdown.active {
+      opacity: 1 !important;
+      visibility: visible !important;
+      transform: translateY(0) !important;
+      pointer-events: auto !important;
+    }
+
+    #account-dropdown a, 
+    #account-dropdown button,
+    #account-dropdown .dropdown-item {
+      display: block !important;
+      width: 100% !important;
+      padding: 12px 16px !important;
+      font-size: 14px !important;
+      color: #1a1a1a !important;
+      text-decoration: none !important;
+      border: none !important;
+      background: none !important;
+      cursor: pointer !important;
+      font-weight: 500 !important;
+      transition: background-color 0.15s ease, color 0.15s ease !important;
+      font-family: Inter, system-ui, sans-serif !important;
+      box-sizing: border-box !important;
+    }
+
+    #account-dropdown a:hover, 
+    #account-dropdown button:hover,
+    #account-dropdown .dropdown-item:hover {
+      background-color: #f5f5f5 !important;
+      color: #1a1a1a !important;
+    }
+
+    #account-dropdown #signout-link {
+      border-top: 1px solid #e0e0e0 !important;
+      color: #d93025 !important;
+      font-weight: 600 !important;
+      margin-top: 8px !important;
+      padding-top: 12px !important;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+  </style>
+
+  <!-- Inline SVG helper -->
+  <style>
+    .svg-icon {
+      width: 18px;
+      height: 18px;
+      fill: currentColor;
+      display: inline-block;
+      vertical-align: middle;
+    }
+  </style>
+
+  <!-- Comprehensive Mobile Responsiveness Overrides -->
+  <style>
+    /* Prevent auto-zoom on iOS/device focus by keeping inputs >= 16px */
+    input, select, textarea {
+      font-size: 16px !important;
+    }
+    
+    /* Ensure body line height is clean & comfortable */
+    body {
+      line-height: 1.6 !important;
+    }
+    
+    /* Strict Mobile-first spacing constraints (< 640px) */
+    @media (max-width: 639.98px) {
+      .container, .hero, section, main {
+        padding-left: 16px !important;
+        padding-right: 16px !important;
+      }
+      .card, .scroller-card, .step-card, .trending-card, .material-card {
+        margin: 12px 0 !important;
+        padding: 16px !important;
+      }
+      
+      /* Horizontal scrolling for suggestions on mobile */
+      .suggestion-row {
+        padding: 0 4px !important;
         box-sizing: border-box !important;
+        overflow-x: auto !important;
+        justify-content: flex-start !important;
+        -webkit-overflow-scrolling: touch;
+        max-width: 100% !important;
+        scrollbar-width: none; /* Hide scrollbar */
+        margin-left: 0 !important;
+        margin-right: 0 !important;
       }
-
-      #account-dropdown.active {
-        opacity: 1 !important;
-        visibility: visible !important;
-        transform: translateY(0) !important;
+      .suggestion-row::-webkit-scrollbar {
+        display: none;
+      }
+      #suggestion-ticker-container {
+        width: auto !important;
+        max-width: none !important;
+        overflow: visible !important;
         pointer-events: auto !important;
       }
-
-      #account-dropdown a,
-      #account-dropdown button,
-      #account-dropdown .dropdown-item {
-        display: block !important;
-        width: 100% !important;
-        padding: 12px 16px !important;
-        font-size: 14px !important;
-        color: #1a1a1a !important;
-        text-decoration: none !important;
-        border: none !important;
-        background: none !important;
-        cursor: pointer !important;
-        font-weight: 500 !important;
-        transition:
-          background-color 0.15s ease,
-          color 0.15s ease !important;
-        font-family: Inter, system-ui, sans-serif !important;
-        box-sizing: border-box !important;
+    }
+    
+    /* Disable hovers on touch devices to prevent sticky hover states */
+    @media (hover: none) {
+      button:hover, a:hover, .btn:hover, .scroller-card:hover, .step-card:hover, .trending-card:hover {
+        transform: none !important;
+        box-shadow: none !important;
       }
-
-      #account-dropdown a:hover,
-      #account-dropdown button:hover,
-      #account-dropdown .dropdown-item:hover {
-        background-color: #f5f5f5 !important;
-        color: #1a1a1a !important;
+      button:active, a:active, .btn:active {
+        background-color: rgba(0,0,0,0.06) !important;
       }
-
-      #account-dropdown #signout-link {
-        border-top: 1px solid #e0e0e0 !important;
-        color: #d93025 !important;
-        font-weight: 600 !important;
-        margin-top: 8px !important;
-        padding-top: 12px !important;
+    }
+    
+    /* Desktop-first Navbar button overrides */
+    @media (min-width: 640px) {
+      .nav-actions {
+        gap: 12px !important;
       }
-
-      @keyframes fadeIn {
-        from {
-          opacity: 0;
-        }
-        to {
-          opacity: 1;
-        }
-      }
-
-      /* GrabRaw+ CSS */
-      .plus-badge {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        width: 18px;
-        height: 18px;
-        background: #4285f4;
-        border-radius: 50%;
-        color: white;
-        font-size: 10px;
-        font-weight: bold;
-        margin-left: 4px;
-        border: 2px solid white;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
-      }
-      .avatar-wrapper {
-        position: relative;
-        display: inline-block;
-      }
-      .avatar-badge {
-        position: absolute;
-        bottom: -2px;
-        right: -2px;
-      }
-    </style>
-
-    <!-- Inline SVG helper -->
-    <style>
-      .svg-icon {
-        width: 18px;
-        height: 18px;
-        fill: currentColor;
-        display: inline-block;
-        vertical-align: middle;
-      }
-    </style>
-
-    <!-- Comprehensive Mobile Responsiveness Overrides -->
-    <style>
-      /* Prevent auto-zoom on iOS/device focus by keeping inputs >= 16px */
-      input,
-      select,
-      textarea {
-        font-size: 16px !important;
-      }
-
-      /* Ensure body line height is clean & comfortable */
-      body {
-        line-height: 1.6 !important;
-      }
-
-      /* Strict Mobile-first spacing constraints (< 640px) */
-      @media (max-width: 639.98px) {
-        .container,
-        .hero,
-        section,
-        main {
-          padding-left: 16px !important;
-          padding-right: 16px !important;
-        }
-        .card,
-        .scroller-card,
-        .step-card,
-        .trending-card,
-        .material-card {
-          margin: 12px 0 !important;
-          padding: 16px !important;
-        }
-
-        /* Horizontal scrolling for suggestions on mobile */
-        .suggestion-row {
-          padding: 0 4px !important;
-          box-sizing: border-box !important;
-          overflow-x: auto !important;
-          justify-content: flex-start !important;
-          -webkit-overflow-scrolling: touch;
-          max-width: 100% !important;
-          scrollbar-width: none; /* Hide scrollbar */
-          margin-left: 0 !important;
-          margin-right: 0 !important;
-        }
-        .suggestion-row::-webkit-scrollbar {
-          display: none;
-        }
-        #suggestion-ticker-container {
-          width: auto !important;
-          max-width: none !important;
-          overflow: visible !important;
-          pointer-events: auto !important;
-        }
-      }
-
-      /* Disable hovers on touch devices to prevent sticky hover states */
-      @media (hover: none) {
-        button:hover,
-        a:hover,
-        .btn:hover,
-        .scroller-card:hover,
-        .step-card:hover,
-        .trending-card:hover {
-          transform: none !important;
-          box-shadow: none !important;
-        }
-        button:active,
-        a:active,
-        .btn:active {
-          background-color: rgba(0, 0, 0, 0.06) !important;
-        }
-      }
-
-      /* Desktop-first Navbar button overrides */
-      @media (min-width: 640px) {
-        .nav-actions {
-          gap: 12px !important;
-        }
-        .nav-actions .btn-outline,
-        .nav-actions .btn-primary {
-          height: 44px !important;
-          line-height: 1 !important;
-          display: inline-flex !important;
-          align-items: center !important;
-          justify-content: center !important;
-          padding: 0 20px !important;
-          font-weight: 600 !important;
-          font-size: 14px !important;
-          border-radius: 100px !important;
-          box-sizing: border-box !important;
-          transition: all 0.2s ease !important;
-        }
-        .nav-actions .btn-outline {
-          border: 1px solid #dadce0 !important;
-          background-color: transparent !important;
-          color: #3c4043 !important;
-        }
-        .nav-actions .btn-outline:hover {
-          background-color: #f8f9fa !important;
-          border-color: #bdc1c6 !important;
-        }
-        .nav-actions .btn-primary {
-          background-color: #1a73e8 !important; /* solid blue */
-          color: #ffffff !important;
-          border: none !important;
-        }
-        .nav-actions .btn-primary:hover {
-          background-color: #1557b0 !important;
-        }
-      }
-
-      /* Mobile-first Nav & Logo constraints (< 640px) */
-      @media (max-width: 639.98px) {
-        .navbar {
-          height: 56px !important;
-          padding: 0 16px !important;
-        }
-        .navbar-logo-image {
-          height: 40px !important;
-          width: auto !important;
-        }
-        .navbar-logo-text {
-          font-size: 18px !important;
-        }
-
-        /* Full width Account buttons responsive design */
-        #account-btn {
-          width: auto !important;
-        }
-
-        /* Hamburger menu toggle button style */
-        .hamburger-menu {
-          display: flex !important;
-          align-items: center !important;
-          justify-content: center !important;
-          background: none !important;
-          border: none !important;
-          color: #1a1a1a !important;
-          cursor: pointer !important;
-          padding: 8px !important;
-          border-radius: 8px !important;
-          width: 44px !important;
-          height: 44px !important;
-          z-index: 1010 !important;
-          order: -1 !important; /* Positions nicely on mobile headers */
-        }
-
-        /* Responsive vertical mobile navigation list drawer style */
-        .nav-links {
-          display: none !important;
-          flex-direction: column !important;
-          position: absolute !important;
-          top: 56px !important;
-          left: 0 !important;
-          right: 0 !important;
-          background: #ffffff !important;
-          border-bottom: 1px solid #dadce0 !important;
-          padding: 16px !important;
-          gap: 8px !important;
-          margin-left: 0 !important;
-          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
-          z-index: 1000 !important;
-        }
-        .nav-links.active {
-          display: flex !important;
-        }
-        .nav-link {
-          width: 100% !important;
-          font-size: 16px !important;
-          font-weight: 600 !important;
-          padding: 12px 14px !important;
-          white-space: nowrap !important;
-          box-sizing: border-box !important;
-        }
-
-        /* Hide desktop buttons when user is logged out on mobile */
-        .nav-actions .btn-outline,
-        .nav-actions .btn-primary {
-          display: none !important;
-        }
-
-        /* Mobile active navigation links enhancements */
-        .mobile-nav-divider {
-          display: block !important;
-          border: 0 !important;
-          border-top: 1px solid #dadce0 !important;
-          margin: 8px 14px !important;
-        }
-        .mobile-nav-signin {
-          display: block !important;
-          text-align: center !important;
-          padding: 12px 14px !important;
-          font-weight: 600 !important;
-          font-size: 16px !important;
-          color: #1a1a1a !important;
-          text-decoration: none !important;
-        }
-        .mobile-nav-getstarted {
-          display: flex !important;
-          width: calc(100% - 32px) !important;
-          height: 48px !important;
-          font-size: 16px !important;
-          font-weight: bold !important;
-          margin: 12px 16px !important;
-          background-color: #1a73e8 !important;
-          color: #ffffff !important;
-          align-items: center !important;
-          justify-content: center !important;
-          border-radius: 100px !important;
-          box-sizing: border-box !important;
-          border: none !important;
-          box-shadow: 0 2px 6px rgba(26, 115, 232, 0.2) !important;
-          text-decoration: none !important;
-        }
-      }
-
-      /* When logged in, hide registration/signin elements on mobile dropdown menu */
-      body.logged-in .mobile-nav-signin,
-      body.logged-in .mobile-nav-getstarted,
-      body.logged-in .mobile-nav-divider {
-        display: none !important;
-      }
-
-      @media (min-width: 640px) {
-        .hamburger-menu {
-          display: none !important;
-        }
-      }
-
-      /* Click outside Dimmed Overlay - Removed black overlays */
-      .drawer-overlay {
-        display: none !important;
-      }
-
-      /* Absolute Minimum Touch Target Dimensions (44px) */
-      .btn,
-      button,
-      .btn-row-action,
-      #account-btn {
-        min-height: 44px !important;
-        box-sizing: border-box !important;
-      }
-
-      /* Touch Target targets for BOM interactive save (+) and expand (↓) controls */
-      .btn-save-supplier,
-      .btn-expand-alternatives {
-        width: 44px !important;
+      .nav-actions .btn-outline, .nav-actions .btn-primary {
         height: 44px !important;
-        padding: 13px !important;
-        box-sizing: border-box !important;
-        border-radius: 50% !important;
-        border: 1px solid #dadce0 !important;
-        background-color: #f0f0f0 !important;
+        line-height: 1 !important;
         display: inline-flex !important;
         align-items: center !important;
         justify-content: center !important;
-        cursor: pointer !important;
+        padding: 0 20px !important;
+        font-weight: 600 !important;
+        font-size: 14px !important;
+        border-radius: 100px !important;
+        box-sizing: border-box !important;
         transition: all 0.2s ease !important;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05) !important;
       }
-
-      .btn-save-supplier svg,
-      .btn-expand-alternatives svg {
-        width: 18px !important;
-        height: 18px !important;
+      .nav-actions .btn-outline {
+        border: 1px solid #dadce0 !important;
+        background-color: transparent !important;
+        color: #3c4043 !important;
       }
-
-      .btn-save-supplier {
-        color: #1a73e8 !important;
+      .nav-actions .btn-outline:hover {
+        background-color: #f8f9fa !important;
+        border-color: #bdc1c6 !important;
       }
-
-      .btn-save-supplier.saved {
-        background-color: #34a853 !important;
+      .nav-actions .btn-primary {
+        background-color: #1a73e8 !important; /* solid blue */
         color: #ffffff !important;
-        border-color: #34a853 !important;
+        border: none !important;
       }
-
-      .btn-expand-alternatives {
-        color: #5f6368 !important;
+      .nav-actions .btn-primary:hover {
+        background-color: #1557b0 !important;
       }
-
-      .btn-save-supplier:hover,
-      .btn-expand-alternatives:hover {
-        background-color: #e0e0e0 !important;
-        border-color: #dadce0 !important;
+    }
+    
+    /* Mobile-first Nav & Logo constraints (< 640px) */
+    @media (max-width: 639.98px) {
+      .navbar {
+        height: 56px !important;
+        padding: 0 16px !important;
       }
-
-      .btn-save-supplier.saved:hover {
-        background-color: #2b8b45 !important;
-        border-color: #2b8b45 !important;
+      .navbar-logo-image {
+        height: 40px !important;
+        width: auto !important;
       }
-
-      .btn-save-supplier:active,
-      .btn-expand-alternatives:active {
-        background-color: #d0d0d0 !important;
+      .navbar-logo-text {
+        font-size: 18px !important;
       }
-
-      /* Truncate long single-line category pill badges */
-      .pill-tag {
+      
+      /* Full width Account buttons responsive design */
+      #account-btn {
+        width: auto !important;
+      }
+      
+      /* Hamburger menu toggle button style */
+      .hamburger-menu {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        background: none !important;
+        border: none !important;
+        color: #1a1a1a !important;
+        cursor: pointer !important;
+        padding: 8px !important;
+        border-radius: 8px !important;
+        width: 44px !important;
+        height: 44px !important;
+        z-index: 1010 !important;
+        order: -1 !important; /* Positions nicely on mobile headers */
+      }
+      
+      /* Responsive vertical mobile navigation list drawer style */
+      .nav-links {
+        display: none !important;
+        flex-direction: column !important;
+        position: absolute !important;
+        top: 56px !important;
+        left: 0 !important;
+        right: 0 !important;
+        background: #ffffff !important;
+        border-bottom: 1px solid #dadce0 !important;
+        padding: 16px !important;
+        gap: 8px !important;
+        margin-left: 0 !important;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1) !important;
+        z-index: 1000 !important;
+      }
+      .nav-links.active {
+        display: flex !important;
+      }
+      .nav-link {
+        width: 100% !important;
+        font-size: 16px !important;
+        font-weight: 600 !important;
+        padding: 12px 14px !important;
         white-space: nowrap !important;
-        overflow: hidden !important;
-        text-overflow: ellipsis !important;
-        max-width: 150px !important;
+        box-sizing: border-box !important;
       }
+      
+      /* Hide desktop buttons when user is logged out on mobile */
+      .nav-actions .btn-outline, .nav-actions .btn-primary {
+        display: none !important;
+      }
+      
+      /* Mobile active navigation links enhancements */
+      .mobile-nav-divider {
+        display: block !important;
+        border: 0 !important;
+        border-top: 1px solid #dadce0 !important;
+        margin: 8px 14px !important;
+      }
+      .mobile-nav-signin {
+        display: block !important;
+        text-align: center !important;
+        padding: 12px 14px !important;
+        font-weight: 600 !important;
+        font-size: 16px !important;
+        color: #1a1a1a !important;
+        text-decoration: none !important;
+      }
+      .mobile-nav-getstarted {
+        display: flex !important;
+        width: calc(100% - 32px) !important;
+        height: 48px !important;
+        font-size: 16px !important;
+        font-weight: bold !important;
+        margin: 12px 16px !important;
+        background-color: #1a73e8 !important;
+        color: #ffffff !important;
+        align-items: center !important;
+        justify-content: center !important;
+        border-radius: 100px !important;
+        box-sizing: border-box !important;
+        border: none !important;
+        box-shadow: 0 2px 6px rgba(26,115,232,0.2) !important;
+        text-decoration: none !important;
+      }
+    }
+    
+    /* When logged in, hide registration/signin elements on mobile dropdown menu */
+    body.logged-in .mobile-nav-signin,
+    body.logged-in .mobile-nav-getstarted,
+    body.logged-in .mobile-nav-divider {
+      display: none !important;
+    }
+    
+    @media (min-width: 640px) {
+      .hamburger-menu {
+        display: none !important;
+      }
+    }
+    
+    /* Click outside Dimmed Overlay - Removed black overlays */
+    .drawer-overlay {
+      display: none !important;
+    }
+    
+    /* Absolute Minimum Touch Target Dimensions (44px) */
+    .btn, button, .btn-row-action, #account-btn {
+      min-height: 44px !important;
+      box-sizing: border-box !important;
+    }
+    
+    /* Touch Target targets for BOM interactive save (+) and expand (↓) controls */
+    .btn-save-supplier, .btn-expand-alternatives {
+      width: 44px !important;
+      height: 44px !important;
+      padding: 13px !important;
+      box-sizing: border-box !important;
+      border-radius: 50% !important;
+      border: 1px solid #dadce0 !important;
+      background-color: #f0f0f0 !important;
+      display: inline-flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      cursor: pointer !important;
+      transition: all 0.2s ease !important;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05) !important;
+    }
+    
+    .btn-save-supplier svg, .btn-expand-alternatives svg {
+      width: 18px !important;
+      height: 18px !important;
+    }
+    
+    .btn-save-supplier {
+      color: #1a73e8 !important;
+    }
+    
+    .btn-save-supplier.saved {
+      background-color: #34A853 !important;
+      color: #ffffff !important;
+      border-color: #34A853 !important;
+    }
+    
+    .btn-expand-alternatives {
+      color: #5f6368 !important;
+    }
+    
+    .btn-save-supplier:hover, .btn-expand-alternatives:hover {
+      background-color: #e0e0e0 !important;
+      border-color: #dadce0 !important;
+    }
+    
+    .btn-save-supplier.saved:hover {
+      background-color: #2b8b45 !important;
+      border-color: #2b8b45 !important;
+    }
+    
+    .btn-save-supplier:active, .btn-expand-alternatives:active {
+      background-color: #d0d0d0 !important;
+    }
+    
+    /* Truncate long single-line category pill badges */
+    .pill-tag {
+      white-space: nowrap !important;
+      overflow: hidden !important;
+      text-overflow: ellipsis !important;
+      max-width: 150px !important;
+    }
+    
+    /* Vertical Card actions stacking for narrow mobile screens <= 600px */
+    @media (max-width: 600px) {
+      .row-actions {
+        flex-direction: column !important;
+        align-items: stretch !important;
+        width: 100% !important;
+        gap: 8px !important;
+      }
+      .btn-row-action {
+        width: 100% !important;
+        box-sizing: border-box !important;
+        padding: 12px 16px !important;
+        height: 44px !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+      }
+    }
+    
+    /* Hero Search Block constraints on Mobile */
+    @media (max-width: 639.98px) {
+      .search-block {
+        width: 100% !important;
+        padding: 0 16px !important;
+        box-sizing: border-box !important;
+      }
+      .search-box {
+        height: 48px !important;
+        padding: 0 4px 0 12px !important;
+        border-radius: 24px !important;
+      }
+      .btn-search {
+        height: 38px !important;
+        padding: 0 16px !important;
+        font-size: 14px !important;
+      }
+    }
+    
+    /* Media Query Breakpoints Alignment Grid Controls */
+    @media (max-width: 639.98px) {
+      .steps-grid, .trending-grid, .footer-grid, .partners-grid, .form-container-grid {
+        grid-template-columns: 1fr !important;
+      }
+      /* Prevent text overlap with top right absolute actions on mobile */
+      .material-meta-row {
+        padding-right: 104px !important;
+      }
+      .material-name {
+        font-size: 16px !important;
+        margin-right: 4px !important;
+      }
+    }
+    @media (min-width: 640px) and (max-width: 1023.98px) {
+      .steps-grid, .trending-grid, .footer-grid, .partners-grid, .form-container-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+      }
+    }
+    @media (min-width: 1024px) {
+      .steps-grid {
+        grid-template-columns: repeat(3, 1fr) !important;
+      }
+      .trending-grid, .footer-grid {
+        grid-template-columns: repeat(4, 1fr) !important;
+      }
+    }
+  </style>
 
-      /* Vertical Card actions stacking for narrow mobile screens <= 600px */
-      @media (max-width: 600px) {
-        .row-actions {
-          flex-direction: column !important;
-          align-items: stretch !important;
-          width: 100% !important;
-          gap: 8px !important;
-        }
-        .btn-row-action {
-          width: 100% !important;
-          box-sizing: border-box !important;
-          padding: 12px 16px !important;
-          height: 44px !important;
-          display: inline-flex !important;
-          align-items: center !important;
-          justify-content: center !important;
-        }
-      }
-
-      /* Hero Search Block constraints on Mobile */
-      @media (max-width: 639.98px) {
-        .search-block {
-          width: 100% !important;
-          padding: 0 16px !important;
-          box-sizing: border-box !important;
-        }
-        .search-box {
-          height: 48px !important;
-          padding: 0 4px 0 12px !important;
-          border-radius: 24px !important;
-        }
-        .btn-search {
-          height: 38px !important;
-          padding: 0 16px !important;
-          font-size: 14px !important;
-        }
-      }
-
-      /* Media Query Breakpoints Alignment Grid Controls */
-      @media (max-width: 639.98px) {
-        .steps-grid,
-        .trending-grid,
-        .footer-grid,
-        .partners-grid,
-        .form-container-grid {
-          grid-template-columns: 1fr !important;
-        }
-        /* Prevent text overlap with top right absolute actions on mobile */
-        .material-meta-row {
-          padding-right: 104px !important;
-        }
-        .material-name {
-          font-size: 16px !important;
-          margin-right: 4px !important;
-        }
-      }
-      @media (min-width: 640px) and (max-width: 1023.98px) {
-        .steps-grid,
-        .trending-grid,
-        .footer-grid,
-        .partners-grid,
-        .form-container-grid {
-          grid-template-columns: repeat(2, 1fr) !important;
-        }
-      }
-      @media (min-width: 1024px) {
-        .steps-grid {
-          grid-template-columns: repeat(3, 1fr) !important;
-        }
-        .trending-grid,
-        .footer-grid {
-          grid-template-columns: repeat(4, 1fr) !important;
-        }
-      }
-    </style>
-
-    <script>
-      document.addEventListener("DOMContentLoaded", () => {
-        // Setup dynamic Hamburger toggle
-        const navbar = document.querySelector(".navbar");
-        if (navbar) {
-          const navLinks = navbar.querySelector(".nav-links");
-          if (navLinks && !navbar.querySelector("#hamburger-toggle")) {
-            const hamBtn = document.createElement("button");
-            hamBtn.id = "hamburger-toggle";
-            hamBtn.className = "hamburger-menu";
-            hamBtn.type = "button";
-            hamBtn.setAttribute("aria-label", "Toggle Navigation");
-            hamBtn.innerHTML = `
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // Setup dynamic Hamburger toggle
+      const navbar = document.querySelector('.navbar');
+      if (navbar) {
+        const navLinks = navbar.querySelector('.nav-links');
+        if (navLinks && !navbar.querySelector('#hamburger-toggle')) {
+          const hamBtn = document.createElement('button');
+          hamBtn.id = 'hamburger-toggle';
+          hamBtn.className = 'hamburger-menu';
+          hamBtn.type = 'button';
+          hamBtn.setAttribute('aria-label', 'Toggle Navigation');
+          hamBtn.innerHTML = `
             <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
               <line x1="3" y1="12" x2="21" y2="12"></line>
               <line x1="3" y1="6" x2="21" y2="6"></line>
               <line x1="3" y1="18" x2="21" y2="18"></line>
             </svg>
           `;
-            navbar.insertBefore(hamBtn, navLinks);
-
-            hamBtn.addEventListener("click", (e) => {
-              e.stopPropagation();
-              navLinks.classList.toggle("active");
-            });
-          }
-        }
-
-        // Global click outside for Navbar Hamburger menu
-        document.addEventListener("click", (e) => {
-          const navLinks = document.querySelector(".nav-links");
-          const hamBtn = document.getElementById("hamburger-toggle");
-          if (navLinks && navLinks.classList.contains("active")) {
-            if (
-              !navLinks.contains(e.target) &&
-              (!hamBtn || !hamBtn.contains(e.target))
-            ) {
-              navLinks.classList.remove("active");
-            }
-          }
-        });
-      });
-    </script>
-  </head>
-  <body>
-    <!-- Navbar -->
-    <header class="navbar">
-      <a href="/" class="navbar-logo-wrapper">
-        <img
-          src="https://res.cloudinary.com/duh9wvgzu/image/upload/q_auto/f_auto/v1780501537/IMG_5442_r9v9ez.jpg"
-          alt="GrabRaw Logo"
-          class="navbar-logo-image"
-          loading="lazy"
-        />
-        <span class="navbar-logo-text">GrabRaw</span>
-      </a>
-      <nav class="nav-links">
-        <a href="/#categories" class="nav-link">Material</a>
-        <a href="/#suppliers" class="nav-link">Suppliers</a>
-        <a href="/plus.html" class="nav-link">GrabRaw +</a>
-        <a href="/#ask-ai" class="nav-link">Ask AI</a>
-        <hr class="mobile-nav-divider" style="display: none" />
-        <a
-          href="/signin"
-          class="nav-link mobile-nav-signin"
-          style="display: none"
-          >Sign In</a
-        >
-        <a
-          href="/register-user"
-          class="btn mobile-nav-getstarted"
-          style="display: none"
-          aria-label="Get Started"
-          >Get Started</a
-        >
-      </nav>
-      <div class="nav-actions">
-        <a href="/signin" class="btn btn-outline" style="border-radius: 100px"
-          >Sign In</a
-        >
-        <a
-          href="/register-user"
-          class="btn btn-primary"
-          style="border-radius: 100px"
-          >Get Started</a
-        >
-      </div>
-    </header>
-
-    <!-- Hero Section -->
-    <section class="hero">
-      <div class="container hero-center-wrap">
-        <!-- Small tagline text -->
-        <p class="hero-tagline">AI-powered product intelligence</p>
-
-        <!-- Centered headline -->
-        <h1 class="hero-title">Search Any Product.</h1>
-
-        <!-- Center subtitle -->
-        <p class="hero-subtitle">
-          Find every component and raw material. Source it from suppliers near
-          you.
-        </p>
-
-        <!-- Center Search Bar centerpiece -->
-        <div class="search-block">
-          <form action="/info" method="GET" class="search-box">
-            <!-- Magnifying Glass Icon -->
-            <span class="search-icon-left">
-              <svg
-                width="20"
-                height="20"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2.5"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              >
-                <circle cx="11" cy="11" r="8"></circle>
-                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-              </svg>
-            </span>
-            <input
-              type="text"
-              name="q"
-              placeholder="Try: iPhone 15, Herbal Shampoo, Smartwatch..."
-              required
-            />
-            <button type="submit" class="btn-search">Search</button>
-          </form>
-        </div>
-
-        <!-- Suggestion chips centered below search bar -->
-        <div class="suggestion-row">
-          <span class="suggestion-label">Suggestions:</span>
-          <div
-            id="suggestion-ticker-container"
-            style="
-              display: flex;
-              align-items: center;
-              gap: 8px;
-              flex-wrap: nowrap;
-              overflow: hidden;
-              width: 580px;
-              max-width: calc(100% - 100px);
-              pointer-events: none;
-            "
-          >
-            <!-- Populated by JavaScript -->
-          </div>
-        </div>
-
-        <!-- Centered 3 small stats separated by dots -->
-        <div class="stats-centered">
-          <span><strong class="stat-bold">1M+</strong> Products</span>
-          <span class="stat-dot">•</span>
-          <span><strong class="stat-bold">500K+</strong> Components</span>
-          <span class="stat-dot">•</span>
-          <span><strong class="stat-bold">40km</strong> Local Sourcing</span>
-        </div>
-      </div>
-    </section>
-
-    <!-- Popular Search Categories Section -->
-    <section class="categories-section" id="categories">
-      <div class="container">
-        <div class="section-header">
-          <h2 class="section-title">Popular Search Categories</h2>
-        </div>
-
-        <!-- Horizontal Scrollable Container -->
-        <div class="scroller">
-          <!-- Card 1 -->
-          <div class="scroller-card card-smartwatch">
-            <img
-              class="scroller-img"
-              src="https://images.unsplash.com/photo-1546868871-7041f2a55e12?w=400"
-              alt="Smartwatch Kit"
-            />
-            <div class="scroller-content">
-              <h3 class="scroller-title">Smartwatch Kit</h3>
-              <p class="scroller-count">7 Components</p>
-            </div>
-          </div>
-
-          <!-- Card 2 -->
-          <div class="scroller-card card-arduino">
-            <img
-              class="scroller-img"
-              src="https://images.unsplash.com/photo-1608564697071-ddf911d81370?w=400"
-              alt="Arduino Modules"
-            />
-            <div class="scroller-content">
-              <h3 class="scroller-title">Arduino Modules</h3>
-              <p class="scroller-count">5 Components</p>
-            </div>
-          </div>
-
-          <!-- Card 3 -->
-          <div class="scroller-card card-raspi">
-            <img
-              class="scroller-img"
-              src="https://images.unsplash.com/photo-1518770660439-4636190af475?w=400"
-              alt="Raspberry Pi"
-            />
-            <div class="scroller-content">
-              <h3 class="scroller-title">Raspberry Pi</h3>
-              <p class="scroller-count">9 Components</p>
-            </div>
-          </div>
-
-          <!-- Card 4 -->
-          <div class="scroller-card card-phone">
-            <img
-              class="scroller-img"
-              src="https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=400"
-              alt="Phone Components"
-            />
-            <div class="scroller-content">
-              <h3 class="scroller-title">Phone Components</h3>
-              <p class="scroller-count">12 Components</p>
-            </div>
-          </div>
-
-          <!-- Card 5 -->
-          <div class="scroller-card card-sensors">
-            <img
-              class="scroller-img"
-              src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400"
-              alt="IoT Sensors"
-            />
-            <div class="scroller-content">
-              <h3 class="scroller-title">IoT Sensors</h3>
-              <p class="scroller-count">4 Components</p>
-            </div>
-          </div>
-
-          <!-- Card 6 -->
-          <div class="scroller-card card-battery">
-            <img
-              class="scroller-img"
-              src="https://images.unsplash.com/photo-1620288627223-53302f4e8c74?w=400"
-              alt="Battery Packs"
-            />
-            <div class="scroller-content">
-              <h3 class="scroller-title">Battery Packs</h3>
-              <p class="scroller-count">3 Components</p>
-            </div>
-          </div>
-
-          <!-- Card 7 -->
-          <div class="scroller-card card-shampoo">
-            <img
-              class="scroller-img"
-              src="https://images.unsplash.com/photo-1585435557343-3b092031a831?w=400"
-              alt="Shampoo Formula"
-            />
-            <div class="scroller-content">
-              <h3 class="scroller-title">Shampoo Formula</h3>
-              <p class="scroller-count">8 Ingredients</p>
-            </div>
-          </div>
-
-          <!-- Card 8 -->
-          <div class="scroller-card card-solar">
-            <img
-              class="scroller-img"
-              src="https://images.unsplash.com/photo-1509391366360-2e959784a276?w=400"
-              alt="Solar Panel Kit"
-            />
-            <div class="scroller-content">
-              <h3 class="scroller-title">Solar Panel Kit</h3>
-              <p class="scroller-count">6 Components</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- How It Works Section -->
-    <section class="how-it-works" id="blueprints">
-      <div class="container bg-white">
-        <div class="section-header" style="text-align: center">
-          <h2 class="section-title">From Search to Source in 3 Steps</h2>
-        </div>
-
-        <div class="steps-grid">
-          <!-- Step 1 -->
-          <article class="step-card">
-            <div class="step-num">1</div>
-            <h3 class="step-title">Search Any Product</h3>
-            <p class="step-desc">
-              Type any general electronic, household chemical ingredient or
-              mechanical product name to automatically look up its full
-              construction recipe.
-            </p>
-          </article>
-
-          <!-- Step 2 -->
-          <article class="step-card">
-            <div class="step-num">2</div>
-            <h3 class="step-title">AI Maps Every Component</h3>
-            <p class="step-desc">
-              Our intelligent parser breaks down the full Bill Of Materials
-              (BOM) detailing quantities, categories, specifications and
-              alternatives instantly.
-            </p>
-          </article>
-
-          <!-- Step 3 -->
-          <article class="step-card">
-            <div class="step-num">3</div>
-            <h3 class="step-title">Find Local Suppliers</h3>
-            <p class="step-desc">
-              Find closest proximity stock rooms, shops, fabrication structures
-              or distributors within 40km of your exact coordinate radius
-              instantly.
-            </p>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <!-- Trending Product Searches -->
-    <section class="trending">
-      <div class="container">
-        <div class="section-header">
-          <h2 class="section-title">Trending Product Searches</h2>
-        </div>
-
-        <div class="trending-grid">
-          <!-- Trending 1 -->
-          <div class="trending-card">
-            <div class="trending-info">
-              <h3 class="trending-title">iPhone 15</h3>
-              <p class="trending-desc">
-                48 raw materials tracked • 12 verified local suppliers
-              </p>
-            </div>
-            <a href="/info?q=iPhone+15" class="btn btn-primary trending-btn"
-              >View Components</a
-            >
-          </div>
-
-          <!-- Trending 2 -->
-          <div class="trending-card">
-            <div class="trending-info">
-              <h3 class="trending-title">Wireless Earbuds</h3>
-              <p class="trending-desc">
-                12 audio items tracked • 5 verified local suppliers
-              </p>
-            </div>
-            <a
-              href="/info?q=Wireless+Earbuds"
-              class="btn btn-primary trending-btn"
-              >View Components</a
-            >
-          </div>
-
-          <!-- Trending 3 -->
-          <div class="trending-card">
-            <div class="trending-info">
-              <h3 class="trending-title">Herbal Shampoo</h3>
-              <p class="trending-desc">
-                8 active fluids tracked • 4 verified local chemical labs
-              </p>
-            </div>
-            <a
-              href="/info?q=Herbal+Shampoo"
-              class="btn btn-primary trending-btn"
-              >View Components</a
-            >
-          </div>
-
-          <!-- Trending 4 -->
-          <div class="trending-card">
-            <div class="trending-info">
-              <h3 class="trending-title">Solar Inverter</h3>
-              <p class="trending-desc">
-                24 industrial modules • 9 verified local factories
-              </p>
-            </div>
-            <a
-              href="/info?q=Solar+Inverter"
-              class="btn btn-primary trending-btn"
-              >View Components</a
-            >
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- AI Sourcing Help Banner -->
-    <section class="ai-banner" id="ask-ai">
-      <div class="container">
-        <div class="ai-banner-content">
-          <h2>Need Sourcing Help? Our AI is Here</h2>
-          <p>
-            Can't find a specific material or component? Ask our AI for
-            alternatives, substitutions, and nearest verified suppliers
-            instantly.
-          </p>
-          <button
-            class="btn btn-primary btn-ai-cta"
-            onclick="
-              alert(
-                'Redirecting to GrabRaw Sourcing Chat Room. Paste your clipboard BOM specification inside!',
-              )
-            "
-          >
-            Ask the AI Assistant
-          </button>
-        </div>
-      </div>
-    </section>
-
-    <!-- Supplier Joint Sourcing Registration -->
-    <section class="supplier-reg" id="suppliers">
-      <div class="container">
-        <div class="supplier-reg-content">
-          <h2 class="supplier-reg-title">
-            Are You a Supplier or Manufacturer?
-          </h2>
-          <p class="supplier-reg-desc">
-            List your company on GrabRaw and get discovered by builders,
-            manufacturers and businesses searching for your components locally.
-          </p>
-          <div class="supplier-actions">
-            <button
-              class="btn btn-primary"
-              onclick="checkAuthThenNavigate('register-company.html')"
-            >
-              Register Your Company
-            </button>
-            <button
-              class="btn btn-outline"
-              onclick="
-                alert(
-                  'Reading supplier compliance standards and localized distribution agreements.',
-                )
-              "
-            >
-              Learn More
-            </button>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Footer -->
-    <footer>
-      <div class="container footer-grid">
-        <div class="footer-col col-brand">
-          <div class="footer-logo-wrapper">
-            <img
-              src="https://res.cloudinary.com/duh9wvgzu/image/upload/q_auto/f_auto/v1780501537/IMG_5442_r9v9ez.jpg"
-              alt="GrabRaw Logo"
-              class="footer-logo-image"
-              loading="lazy"
-            />
-            <span class="footer-logo-text">GrabRaw</span>
-          </div>
-          <p class="footer-description">
-            GrabRaw is an AI-powered search engine that breaks down any product
-            into its complete Bill of Materials and finds local suppliers near
-            you.
-          </p>
-        </div>
-
-        <div class="footer-col">
-          <h4 class="footer-title">Popular Categories</h4>
-          <div class="footer-links">
-            <a href="#categories" class="footer-link">Microcontrollers</a>
-            <a href="#categories" class="footer-link">Sensors & Dev Kits</a>
-            <a href="#categories" class="footer-link">Batteries & Power</a>
-            <a href="#categories" class="footer-link">Smartwatch Castings</a>
-            <a href="#categories" class="footer-link">PCB Fabrication</a>
-          </div>
-        </div>
-
-        <div class="footer-col">
-          <h4 class="footer-title">Top Searches</h4>
-          <div class="footer-links">
-            <a href="/info?q=iPhone+15" class="footer-link">iPhone 15 BOM</a>
-            <a href="/info?q=Smartwatch" class="footer-link"
-              >Smartwatch Sinks</a
-            >
-            <a href="/info?q=Shampoo" class="footer-link"
-              >Chemical Formula Mixtures</a
-            >
-            <a href="/info?q=Solar+Panel" class="footer-link"
-              >Grid Inverter Stations</a
-            >
-          </div>
-        </div>
-
-        <div class="footer-col">
-          <h4 class="footer-title">About Us</h4>
-          <p class="footer-description">
-            GrabRaw is committed to local, decentralized product prototyping. We
-            empower makers to find local inventory within 40km.
-          </p>
-        </div>
-      </div>
-
-      <div class="container footer-bottom">
-        <div class="copyright">© 2026 GrabRaw Inc. All rights reserved.</div>
-        <div class="footer-legal-links">
-          <a href="privacy-policy.html" class="footer-legal-link"
-            >Privacy Policy</a
-          >
-          <a href="terms-of-service.html" class="footer-legal-link"
-            >Terms of Service</a
-          >
-          <a href="supplier-standards.html" class="footer-legal-link"
-            >Supplier Standards</a
-          >
-        </div>
-      </div>
-    </footer>
-
-    <!-- Supabase Auth navbar check script -->
-    <script>
-      const { createClient } = supabase;
-      const sb = createClient(
-        "https://luumbrsddwupxxujnxlc.supabase.co",
-        "sb_publishable_YZot9m514LEeiSGMscXoqw_WfjHOO1i",
-      );
-
-      // Dynamic auth-check navigation method
-      async function checkAuthThenNavigate(destination) {
-        try {
-          const {
-            data: { session },
-          } = await sb.auth.getSession();
-          const user = session ? session.user : null;
-          if (user) {
-            window.location.href = destination;
-          } else {
-            window.location.href = `signin.html?redirect=${encodeURIComponent(destination)}`;
-          }
-        } catch (err) {
-          console.error("Auth verification flow exception:", err);
-          window.location.href = `signin.html?redirect=${encodeURIComponent(destination)}`;
+          navbar.insertBefore(hamBtn, navLinks);
+          
+          hamBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            navLinks.classList.toggle('active');
+          });
         }
       }
-      window.checkAuthThenNavigate = checkAuthThenNavigate;
 
-      document.addEventListener("DOMContentLoaded", async () => {
-        // Dynamic suggestion ticker initialization
-        const tickerContainer = document.getElementById(
-          "suggestion-ticker-container",
-        );
-        if (tickerContainer) {
-          const allSuggestions = [
-            "iPhone 15",
-            "Herbal Shampoo",
-            "Smartwatch",
-            "Solar Panel",
-            "Laptop",
-            "Arduino Uno",
-            "Raspberry Pi",
-            "Drone",
-            "Wireless Earbuds",
-            "Electric Scooter",
-            "3D Printer",
-            "Smart Home Hub",
-            "Bluetooth Speaker",
-            "Action Camera",
-            "LED Strip Lights",
-            "Solar Inverter",
-            "IoT Sensor Kit",
-            "Furniture Polish",
-            "Baby Monitor",
-            "Robot Vacuum",
-            "Mechanical Keyboard",
-            "Dash Cam",
-            "Power Bank",
-            "Air Purifier",
-            "Smart Watch Band",
-            "Wooden Toy",
-            "Electric Toothbrush",
-            "Fitness Tracker",
-            "Portable Projector",
-            "Mini PC",
-            "Face Cream",
-            "Hair Serum",
-            "Perfume Bottle",
-            "Candle Set",
-            "Soap Bar",
-            "Face Mask",
-            "Hand Sanitizer",
-            "Vitamin Supplements",
-            "Protein Powder",
-            "Yoga Mat",
-          ];
 
-          let nextItemIndex = 5;
 
-          // Function to create a search-chip
-          function createChip(text) {
-            const chip = document.createElement("div");
-            chip.className = "suggestion-chip";
-            chip.textContent = text;
-            chip.addEventListener("click", () => {
-              const searchInput = document.querySelector(
-                '.search-box input[name="q"]',
-              );
-              if (searchInput) {
-                searchInput.value = text;
-                searchInput.focus();
-              }
-            });
-            return chip;
+      // Global click outside for Navbar Hamburger menu
+      document.addEventListener('click', (e) => {
+        const navLinks = document.querySelector('.nav-links');
+        const hamBtn = document.getElementById('hamburger-toggle');
+        if (navLinks && navLinks.classList.contains('active')) {
+          if (!navLinks.contains(e.target) && (!hamBtn || !hamBtn.contains(e.target))) {
+            navLinks.classList.remove('active');
           }
+        }
+      });
+    });
+  </script>
+</head>
+<body>
 
-          // Initialize first 5 chips
-          allSuggestions.slice(0, 5).forEach((text) => {
-            tickerContainer.appendChild(createChip(text));
+  <!-- Navbar -->
+  <header class="navbar">
+    <a href="/" class="navbar-logo-wrapper">
+      <img 
+        src="https://res.cloudinary.com/duh9wvgzu/image/upload/q_auto/f_auto/v1780501537/IMG_5442_r9v9ez.jpg"
+        alt="GrabRaw Logo"
+        class="navbar-logo-image"
+        loading="lazy"
+      />
+      <span class="navbar-logo-text">GrabRaw</span>
+    </a>
+    <nav class="nav-links">
+      <a href="/#categories" class="nav-link">Material</a>
+      <a href="/#suppliers" class="nav-link">Suppliers</a>
+      <a href="/plus.html" class="nav-link">GrabRaw +</a>
+      <a href="/#ask-ai" class="nav-link">Ask AI</a>
+      <hr class="mobile-nav-divider" style="display: none;" />
+      <a href="/signin" class="nav-link mobile-nav-signin" style="display: none;">Sign In</a>
+      <a href="/register-user" class="btn mobile-nav-getstarted" style="display: none;" aria-label="Get Started">Get Started</a>
+    </nav>
+    <div class="nav-actions">
+      <a href="/signin" class="btn btn-outline" style="border-radius: 100px;">Sign In</a>
+      <a href="/register-user" class="btn btn-primary" style="border-radius: 100px;">Get Started</a>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="container hero-center-wrap">
+      
+      <!-- Small tagline text -->
+      <p class="hero-tagline">AI-powered product intelligence</p>
+      
+      <!-- Centered headline -->
+      <h1 class="hero-title">Search Any Product.</h1>
+      
+      <!-- Center subtitle -->
+      <p class="hero-subtitle">
+        Find every component and raw material. Source it from suppliers near you.
+      </p>
+
+      <!-- Center Search Bar centerpiece -->
+      <div class="search-block">
+        <form action="/info" method="GET" class="search-box">
+          <!-- Magnifying Glass Icon -->
+          <span class="search-icon-left">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+          </span>
+          <input type="text" name="q" placeholder="Try: iPhone 15, Herbal Shampoo, Smartwatch..." required>
+          <button type="submit" class="btn-search">Search</button>
+        </form>
+      </div>
+
+      <!-- Suggestion chips centered below search bar -->
+      <div class="suggestion-row">
+        <span class="suggestion-label">Suggestions:</span>
+        <div id="suggestion-ticker-container" style="display: flex; align-items: center; gap: 8px; flex-wrap: nowrap; overflow: hidden; width: 580px; max-width: calc(100% - 100px); pointer-events: none;">
+          <!-- Populated by JavaScript -->
+        </div>
+      </div>
+
+      <!-- Centered 3 small stats separated by dots -->
+      <div class="stats-centered">
+        <span><strong class="stat-bold">1M+</strong> Products</span>
+        <span class="stat-dot">•</span>
+        <span><strong class="stat-bold">500K+</strong> Components</span>
+        <span class="stat-dot">•</span>
+        <span><strong class="stat-bold">40km</strong> Local Sourcing</span>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Popular Search Categories Section -->
+  <section class="categories-section" id="categories">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title">Popular Search Categories</h2>
+      </div>
+      
+      <!-- Horizontal Scrollable Container -->
+      <div class="scroller">
+        
+        <!-- Card 1 -->
+        <div class="scroller-card card-smartwatch">
+          <img class="scroller-img" src="https://images.unsplash.com/photo-1546868871-7041f2a55e12?w=400" alt="Smartwatch Kit">
+          <div class="scroller-content">
+            <h3 class="scroller-title">Smartwatch Kit</h3>
+            <p class="scroller-count">7 Components</p>
+          </div>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="scroller-card card-arduino">
+          <img class="scroller-img" src="https://images.unsplash.com/photo-1608564697071-ddf911d81370?w=400" alt="Arduino Modules">
+          <div class="scroller-content">
+            <h3 class="scroller-title">Arduino Modules</h3>
+            <p class="scroller-count">5 Components</p>
+          </div>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="scroller-card card-raspi">
+          <img class="scroller-img" src="https://images.unsplash.com/photo-1518770660439-4636190af475?w=400" alt="Raspberry Pi">
+          <div class="scroller-content">
+            <h3 class="scroller-title">Raspberry Pi</h3>
+            <p class="scroller-count">9 Components</p>
+          </div>
+        </div>
+
+        <!-- Card 4 -->
+        <div class="scroller-card card-phone">
+          <img class="scroller-img" src="https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=400" alt="Phone Components">
+          <div class="scroller-content">
+            <h3 class="scroller-title">Phone Components</h3>
+            <p class="scroller-count">12 Components</p>
+          </div>
+        </div>
+
+        <!-- Card 5 -->
+        <div class="scroller-card card-sensors">
+          <img class="scroller-img" src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400" alt="IoT Sensors">
+          <div class="scroller-content">
+            <h3 class="scroller-title">IoT Sensors</h3>
+            <p class="scroller-count">4 Components</p>
+          </div>
+        </div>
+
+        <!-- Card 6 -->
+        <div class="scroller-card card-battery">
+          <img class="scroller-img" src="https://images.unsplash.com/photo-1620288627223-53302f4e8c74?w=400" alt="Battery Packs">
+          <div class="scroller-content">
+            <h3 class="scroller-title">Battery Packs</h3>
+            <p class="scroller-count">3 Components</p>
+          </div>
+        </div>
+
+        <!-- Card 7 -->
+        <div class="scroller-card card-shampoo">
+          <img class="scroller-img" src="https://images.unsplash.com/photo-1585435557343-3b092031a831?w=400" alt="Shampoo Formula">
+          <div class="scroller-content">
+            <h3 class="scroller-title">Shampoo Formula</h3>
+            <p class="scroller-count">8 Ingredients</p>
+          </div>
+        </div>
+
+        <!-- Card 8 -->
+        <div class="scroller-card card-solar">
+          <img class="scroller-img" src="https://images.unsplash.com/photo-1509391366360-2e959784a276?w=400" alt="Solar Panel Kit">
+          <div class="scroller-content">
+            <h3 class="scroller-title">Solar Panel Kit</h3>
+            <p class="scroller-count">6 Components</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- How It Works Section -->
+  <section class="how-it-works" id="blueprints">
+    <div class="container bg-white">
+      <div class="section-header" style="text-align: center;">
+        <h2 class="section-title">From Search to Source in 3 Steps</h2>
+      </div>
+      
+      <div class="steps-grid">
+        <!-- Step 1 -->
+        <article class="step-card">
+          <div class="step-num">1</div>
+          <h3 class="step-title">Search Any Product</h3>
+          <p class="step-desc">Type any general electronic, household chemical ingredient or mechanical product name to automatically look up its full construction recipe.</p>
+        </article>
+
+        <!-- Step 2 -->
+        <article class="step-card">
+          <div class="step-num">2</div>
+          <h3 class="step-title">AI Maps Every Component</h3>
+          <p class="step-desc">Our intelligent parser breaks down the full Bill Of Materials (BOM) detailing quantities, categories, specifications and alternatives instantly.</p>
+        </article>
+
+        <!-- Step 3 -->
+        <article class="step-card">
+          <div class="step-num">3</div>
+          <h3 class="step-title">Find Local Suppliers</h3>
+          <p class="step-desc">Find closest proximity stock rooms, shops, fabrication structures or distributors within 40km of your exact coordinate radius instantly.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- Trending Product Searches -->
+  <section class="trending">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title">Trending Product Searches</h2>
+      </div>
+
+      <div class="trending-grid">
+        
+        <!-- Trending 1 -->
+        <div class="trending-card">
+          <div class="trending-info">
+            <h3 class="trending-title">iPhone 15</h3>
+            <p class="trending-desc">48 raw materials tracked • 12 verified local suppliers</p>
+          </div>
+          <a href="/info?q=iPhone+15" class="btn btn-primary trending-btn">View Components</a>
+        </div>
+
+        <!-- Trending 2 -->
+        <div class="trending-card">
+          <div class="trending-info">
+            <h3 class="trending-title">Wireless Earbuds</h3>
+            <p class="trending-desc">12 audio items tracked • 5 verified local suppliers</p>
+          </div>
+          <a href="/info?q=Wireless+Earbuds" class="btn btn-primary trending-btn">View Components</a>
+        </div>
+
+        <!-- Trending 3 -->
+        <div class="trending-card">
+          <div class="trending-info">
+            <h3 class="trending-title">Herbal Shampoo</h3>
+            <p class="trending-desc">8 active fluids tracked • 4 verified local chemical labs</p>
+          </div>
+          <a href="/info?q=Herbal+Shampoo" class="btn btn-primary trending-btn">View Components</a>
+        </div>
+
+        <!-- Trending 4 -->
+        <div class="trending-card">
+          <div class="trending-info">
+            <h3 class="trending-title">Solar Inverter</h3>
+            <p class="trending-desc">24 industrial modules • 9 verified local factories</p>
+          </div>
+          <a href="/info?q=Solar+Inverter" class="btn btn-primary trending-btn">View Components</a>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- AI Sourcing Help Banner -->
+  <section class="ai-banner" id="ask-ai">
+    <div class="container">
+      <div class="ai-banner-content">
+        <h2>Need Sourcing Help? Our AI is Here</h2>
+        <p>Can't find a specific material or component? Ask our AI for alternatives, substitutions, and nearest verified suppliers instantly.</p>
+        <button class="btn btn-primary btn-ai-cta" onclick="alert('Redirecting to GrabRaw Sourcing Chat Room. Paste your clipboard BOM specification inside!')">Ask the AI Assistant</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Supplier Joint Sourcing Registration -->
+  <section class="supplier-reg" id="suppliers">
+    <div class="container">
+      <div class="supplier-reg-content">
+        <h2 class="supplier-reg-title">Are You a Supplier or Manufacturer?</h2>
+        <p class="supplier-reg-desc">List your company on GrabRaw and get discovered by builders, manufacturers and businesses searching for your components locally.</p>
+        <div class="supplier-actions">
+          <button class="btn btn-primary" onclick="checkAuthThenNavigate('register-company.html')">Register Your Company</button>
+          <button class="btn btn-outline" onclick="alert('Reading supplier compliance standards and localized distribution agreements.')">Learn More</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container footer-grid">
+      <div class="footer-col col-brand">
+        <div class="footer-logo-wrapper">
+          <img 
+            src="https://res.cloudinary.com/duh9wvgzu/image/upload/q_auto/f_auto/v1780501537/IMG_5442_r9v9ez.jpg"
+            alt="GrabRaw Logo"
+            class="footer-logo-image"
+            loading="lazy"
+          />
+          <span class="footer-logo-text">GrabRaw</span>
+        </div>
+        <p class="footer-description">
+          GrabRaw is an AI-powered search engine that breaks down any product into its complete Bill of Materials and finds local suppliers near you.
+        </p>
+      </div>
+      
+      <div class="footer-col">
+        <h4 class="footer-title">Popular Categories</h4>
+        <div class="footer-links">
+          <a href="#categories" class="footer-link">Microcontrollers</a>
+          <a href="#categories" class="footer-link">Sensors & Dev Kits</a>
+          <a href="#categories" class="footer-link">Batteries & Power</a>
+          <a href="#categories" class="footer-link">Smartwatch Castings</a>
+          <a href="#categories" class="footer-link">PCB Fabrication</a>
+        </div>
+      </div>
+
+      <div class="footer-col">
+        <h4 class="footer-title">Top Searches</h4>
+        <div class="footer-links">
+          <a href="/info?q=iPhone+15" class="footer-link">iPhone 15 BOM</a>
+          <a href="/info?q=Smartwatch" class="footer-link">Smartwatch Sinks</a>
+          <a href="/info?q=Shampoo" class="footer-link">Chemical Formula Mixtures</a>
+          <a href="/info?q=Solar+Panel" class="footer-link">Grid Inverter Stations</a>
+        </div>
+      </div>
+
+      <div class="footer-col">
+        <h4 class="footer-title">About Us</h4>
+        <p class="footer-description">
+          GrabRaw is committed to local, decentralized product prototyping. We empower makers to find local inventory within 40km.
+        </p>
+      </div>
+    </div>
+
+    <div class="container footer-bottom">
+      <div class="copyright">© 2026 GrabRaw Inc. All rights reserved.</div>
+      <div class="footer-legal-links">
+        <a href="privacy-policy.html" class="footer-legal-link">Privacy Policy</a>
+        <a href="terms-of-service.html" class="footer-legal-link">Terms of Service</a>
+        <a href="supplier-standards.html" class="footer-legal-link">Supplier Standards</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Supabase Auth navbar check script -->
+  <script>
+    const { createClient } = supabase;
+    const sb = createClient(
+      'https://luumbrsddwupxxujnxlc.supabase.co',
+      'sb_publishable_YZot9m514LEeiSGMscXoqw_WfjHOO1i'
+    );
+
+    // Dynamic auth-check navigation method
+    async function checkAuthThenNavigate(destination) {
+      try {
+        const { data: { session } } = await sb.auth.getSession();
+        const user = session ? session.user : null;
+        if (user) {
+          window.location.href = destination;
+        } else {
+          window.location.href = `signin.html?redirect=${encodeURIComponent(destination)}`;
+        }
+      } catch (err) {
+        console.error('Auth verification flow exception:', err);
+        window.location.href = `signin.html?redirect=${encodeURIComponent(destination)}`;
+      }
+    }
+    window.checkAuthThenNavigate = checkAuthThenNavigate;
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      // Dynamic suggestion ticker initialization
+      const tickerContainer = document.getElementById('suggestion-ticker-container');
+      if (tickerContainer) {
+        const allSuggestions = [
+          "iPhone 15", "Herbal Shampoo", "Smartwatch", "Solar Panel", "Laptop", 
+          "Arduino Uno", "Raspberry Pi", "Drone", "Wireless Earbuds", "Electric Scooter", 
+          "3D Printer", "Smart Home Hub", "Bluetooth Speaker", "Action Camera", "LED Strip Lights", 
+          "Solar Inverter", "IoT Sensor Kit", "Furniture Polish", "Baby Monitor", "Robot Vacuum", 
+          "Mechanical Keyboard", "Dash Cam", "Power Bank", "Air Purifier", "Smart Watch Band", 
+          "Wooden Toy", "Electric Toothbrush", "Fitness Tracker", "Portable Projector", "Mini PC", 
+          "Face Cream", "Hair Serum", "Perfume Bottle", "Candle Set", "Soap Bar", 
+          "Face Mask", "Hand Sanitizer", "Vitamin Supplements", "Protein Powder", "Yoga Mat"
+        ];
+
+        let nextItemIndex = 5;
+
+        // Function to create a search-chip
+        function createChip(text) {
+          const chip = document.createElement('div');
+          chip.className = 'suggestion-chip';
+          chip.textContent = text;
+          chip.addEventListener('click', () => {
+            const searchInput = document.querySelector('.search-box input[name="q"]');
+            if (searchInput) {
+              searchInput.value = text;
+              searchInput.focus();
+            }
           });
-
-          // Auto rotation every 2.5s
-          setInterval(() => {
-            const chips = tickerContainer.querySelectorAll(".suggestion-chip");
-            if (chips.length < 5) return;
-
-            const oldFirstChip = chips[0];
-            const nextText = allSuggestions[nextItemIndex];
-            nextItemIndex = (nextItemIndex + 1) % allSuggestions.length;
-
-            const newChip = createChip(nextText);
-            newChip.classList.add("entering");
-            tickerContainer.appendChild(newChip);
-
-            // Stagger the animation:
-            // Immediately make first chip begin leaving (fade & slide-left & shrink-width)
-            oldFirstChip.classList.add("leaving");
-
-            // Slightly stagger entry of the new chip to feel fluid and live
-            setTimeout(() => {
-              newChip.classList.remove("entering");
-            }, 50);
-
-            // Remove the leaving chip after transition completes
-            setTimeout(() => {
-              oldFirstChip.remove();
-            }, 350);
-          }, 2500);
+          return chip;
         }
 
-        try {
-          const {
-            data: { session },
-          } = await sb.auth.getSession();
-          const user = session ? session.user : null;
-          if (user) {
-            let isPlus = false;
-            if (window.GRABRAW_IS_PLUS !== undefined) {
-              isPlus = window.GRABRAW_IS_PLUS;
-            } else {
-              try {
-                const { data } = await sb
-                  .from("profiles")
-                  .select("plan")
-                  .eq("id", user.id)
-                  .single();
-                if (
-                  data &&
-                  typeof data.plan === "string" &&
-                  (data.plan.includes("+") ||
-                    data.plan.toLowerCase().includes("plus"))
-                ) {
-                  isPlus = true;
-                }
-              } catch (e) {}
-              window.GRABRAW_IS_PLUS = isPlus; // Ensure it's globally available
-            }
+        // Initialize first 5 chips
+        allSuggestions.slice(0, 5).forEach(text => {
+          tickerContainer.appendChild(createChip(text));
+        });
 
-            const navActions = document.querySelector(".nav-actions");
-            if (navActions) {
-              const email = user.email || "";
-              const name =
-                user.user_metadata?.full_name ||
-                user.user_metadata?.name ||
-                user.email ||
-                "";
-              const initial = name ? name.charAt(0).toUpperCase() : "?";
-              const avatar = user.user_metadata?.avatar_url;
+        // Auto rotation every 2.5s
+        setInterval(() => {
+          const chips = tickerContainer.querySelectorAll('.suggestion-chip');
+          if (chips.length < 5) return;
 
-              const badgeHtml = isPlus
-                ? '<div class="avatar-badge plus-badge" title="GrabRaw+ Member">✦</div>'
-                : "";
+          const oldFirstChip = chips[0];
+          const nextText = allSuggestions[nextItemIndex];
+          nextItemIndex = (nextItemIndex + 1) % allSuggestions.length;
 
-              navActions.innerHTML = `
+          const newChip = createChip(nextText);
+          newChip.classList.add('entering');
+          tickerContainer.appendChild(newChip);
+
+          // Stagger the animation: 
+          // Immediately make first chip begin leaving (fade & slide-left & shrink-width)
+          oldFirstChip.classList.add('leaving');
+
+          // Slightly stagger entry of the new chip to feel fluid and live
+          setTimeout(() => {
+            newChip.classList.remove('entering');
+          }, 50);
+
+          // Remove the leaving chip after transition completes
+          setTimeout(() => {
+            oldFirstChip.remove();
+          }, 350);
+        }, 2500);
+      }
+
+      try {
+        const { data: { session } } = await sb.auth.getSession();
+        const user = session ? session.user : null;
+        if (user) {
+          const navActions = document.querySelector('.nav-actions');
+          if (navActions) {
+            const email = user.email || '';
+            const name = user.user_metadata?.full_name || user.user_metadata?.name || user.email || '';
+            const initial = name ? name.charAt(0).toUpperCase() : '?';
+            const avatar = user.user_metadata?.avatar_url;
+            navActions.innerHTML = `
               <div class="user-profile-menu-container" style="position: relative;">
                 <button id="account-btn" class="btn" style="border: 1px solid #dadce0; background-color: #ffffff; color: #3c4043; border-radius: 100px; display: inline-flex; align-items: center; gap: 8px; padding: 4px 12px 4px 16px; cursor: pointer; transition: all 0.2s ease; height: 40px; box-shadow: 0 1px 2px rgba(0,0,0,0.05); text-decoration: none;">
                   <span style="font-size: 14px; font-weight: 600;">My Account</span>
-                  <div class="avatar-wrapper">
-                    ${avatar ? `<img src="${avatar}" style="width: 32px; height: 32px; border-radius: 50%; object-fit: cover;" alt="Avatar" />` : `<div style="background-color: #4285F4; color: #ffffff; border-radius: 50%; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 700; text-transform: uppercase;">${initial}</div>`}${badgeHtml}
-                  </div>
+                  ${avatar ? `<img src="${avatar}" style="width: 32px; height: 32px; border-radius: 50%; object-fit: cover;" alt="Avatar" />` : `${avatar ? `<img src="${avatar}" style="width: 32px; height: 32px; border-radius: 50%; object-fit: cover;" alt="Avatar" />` : `<div style="background-color: #4285F4; color: #ffffff; border-radius: 50%; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 700; text-transform: uppercase;">${initial}</div>`}`}
                 </button>
                 <div id="account-dropdown" style="display: none; position: absolute; right: 0; top: calc(100% + 8px); background-color: #ffffff; border: 1px solid #e0e0e0; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); width: 220px; min-width: 200px; z-index: 1000; overflow: hidden; padding: 12px 0; text-align: left;">
                   <div style="padding: 12px 16px; border-bottom: 1px solid #e0e0e0; margin-bottom: 4px; pointer-events: none; user-select: text;">
                     <div style="font-size: 11px; font-weight: 500; color: #70757a; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 2px;">Signed in as</div>
-                    <div style="display: flex; align-items: center;">
-                       <span style="font-size: 13px; font-weight: 600; color: #1a1a1a; text-overflow: ellipsis; overflow: hidden; white-space: nowrap;" title="${email}">${email}</span>
-                       ${isPlus ? '<span class="plus-badge" style="margin-left: 6px; flex-shrink: 0; position: static; box-shadow: none; border: none;" title="GrabRaw+ Member">✦</span>' : ""}
-                    </div>
-                    ${isPlus ? '<div style="font-size: 11px; font-weight: 600; color: #4285F4; margin-top: 4px;">⭐ GrabRaw+ Member</div>' : ""}
+                    <div style="font-size: 13px; font-weight: 600; color: #1a1a1a; text-overflow: ellipsis; overflow: hidden; white-space: nowrap;" title="${email}">${email}</div>
                   </div>
                   <a href="profile.html" class="dropdown-item">Profile</a>
                   <a href="location.html" class="dropdown-item">My Location</a>
@@ -2458,57 +2086,54 @@
               </div>
             `;
 
-              const styleNode = document.createElement("style");
-              styleNode.textContent = `
+            const styleNode = document.createElement('style');
+            styleNode.textContent = `
               .dropdown-item:hover {
                 background-color: #f5f5f5 !important;
               }
             `;
-              document.head.appendChild(styleNode);
+            document.head.appendChild(styleNode);
 
-              const accountBtn = document.getElementById("account-btn");
-              const dropdown = document.getElementById("account-dropdown");
-              const signOutLink = document.getElementById("signout-link");
+            const accountBtn = document.getElementById('account-btn');
+            const dropdown = document.getElementById('account-dropdown');
+            const signOutLink = document.getElementById('signout-link');
 
-              if (accountBtn && dropdown) {
-                accountBtn.addEventListener("click", (e) => {
-                  e.stopPropagation();
-                  dropdown.classList.toggle("active");
-                });
-              }
-
-              if (signOutLink) {
-                signOutLink.addEventListener("click", async (e) => {
-                  e.preventDefault();
-                  await sb.auth.signOut();
-                  window.location.href = "index.html";
-                });
-              }
-
-              document.addEventListener("click", function (e) {
-                const dropdown = document.getElementById("account-dropdown");
-                const accountBtn = document.getElementById("account-btn");
-                if (
-                  dropdown &&
-                  !dropdown.contains(e.target) &&
-                  (!accountBtn || !accountBtn.contains(e.target))
-                ) {
-                  dropdown.classList.remove("active");
-                }
-              });
-
-              document.addEventListener("keydown", function (e) {
-                if (e.key === "Escape") {
-                  const dropdown = document.getElementById("account-dropdown");
-                  if (dropdown) dropdown.classList.remove("active");
-                }
+            if (accountBtn && dropdown) {
+              accountBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                dropdown.classList.toggle('active');
               });
             }
+
+            if (signOutLink) {
+              signOutLink.addEventListener('click', async (e) => {
+                e.preventDefault();
+                await sb.auth.signOut();
+                window.location.href = 'index.html';
+              });
+            }
+
+            document.addEventListener('click', function(e) {
+              const dropdown = document.getElementById('account-dropdown')
+              const accountBtn = document.getElementById('account-btn')
+              if (dropdown && !dropdown.contains(e.target) && (!accountBtn || !accountBtn.contains(e.target))) {
+                dropdown.classList.remove('active');
+              }
+            })
+
+            document.addEventListener('keydown', function(e) {
+              if (e.key === 'Escape') {
+                const dropdown = document.getElementById('account-dropdown')
+                if (dropdown) dropdown.classList.remove('active');
+              }
+            })
           }
-        } catch (err) {
-          console.error("Navbar Auth Check error:", err);
         }
-      });
-    </script>
-  </body>
+      } catch (err) {
+        console.error('Navbar Auth Check error:', err);
+      }
+    });
+  </script>
+
+</body>
 </html>
