@@ -1919,6 +1919,93 @@
       try {
         const { data: { session } } = await sb.auth.getSession();
         const user = session ? session.user : null;
+        window.GRABRAW_IS_PLUS = false;
+        
+        if (user) {
+          try {
+            const { data } = await sb.from('profiles').select('plan').eq('id', user.id).single();
+            if (data && typeof data.plan === 'string' && (data.plan.includes('+') || data.plan.toLowerCase().includes('plus'))) {
+              window.GRABRAW_IS_PLUS = true;
+            }
+          } catch(e) {
+            console.error('Plan fetch error', e);
+          }
+        }
+        
+        // 1. Upgrade Prompt Banner
+        if (!window.GRABRAW_IS_PLUS) {
+          const navHeaders = document.querySelectorAll('header');
+          const header = navHeaders.length > 0 ? navHeaders[0] : null;
+          if (header) {
+            const banner = document.createElement('div');
+            banner.style.backgroundColor = '#e8f0fe';
+            banner.style.color = '#1967d2';
+            banner.style.padding = '10px 24px';
+            banner.style.fontSize = '14px';
+            banner.style.fontWeight = '500';
+            banner.style.display = 'flex';
+            banner.style.justifyContent = 'space-between';
+            banner.style.alignItems = 'center';
+            banner.style.fontFamily = "'Inter', sans-serif";
+            banner.innerHTML = `
+              <span>✦ You're on the Free plan — some suppliers are hidden. <a href="/plus.html" style="color: #1a73e8; text-decoration: underline; font-weight: 600;">Upgrade to GrabRaw+</a></span>
+              <button style="background: none; border: none; color: #1967d2; font-size: 16px; cursor: pointer;" onclick="this.parentElement.remove()">✕</button>
+            `;
+            header.parentNode.insertBefore(banner, header.nextSibling);
+          }
+        }
+        // 2. Blurred supplier card (Every 10th card -> index 9, 19...)
+        setTimeout(() => {
+          if (!window.GRABRAW_IS_PLUS) {
+            const cards = document.querySelectorAll('.material-card');
+            cards.forEach((card, index) => {
+              if ((index + 1) % 10 === 0) {
+                 const metaRow = card.querySelector('.material-meta-row');
+                 const nameH2 = metaRow ? metaRow.querySelector('.material-name') : null;
+                 const supplierLinkWrapper = card.querySelector('.supplier-identity');
+                 if (nameH2) {
+                   nameH2.style.filter = 'blur(6px)';
+                   nameH2.style.userSelect = 'none';
+                 }
+                 if (supplierLinkWrapper) {
+                   supplierLinkWrapper.style.filter = 'blur(6px)';
+                   supplierLinkWrapper.style.userSelect = 'none';
+                 }
+                 const overlay = document.createElement('div');
+                 overlay.style.position = 'absolute';
+                 overlay.style.top = '0';
+                 overlay.style.left = '0';
+                 overlay.style.right = '0';
+                 overlay.style.bottom = '0';
+                 overlay.style.backgroundColor = 'rgba(255, 255, 255, 0.6)';
+                 overlay.style.backdropFilter = 'blur(2px)';
+                 overlay.style.display = 'flex';
+                 overlay.style.alignItems = 'center';
+                 overlay.style.justifyContent = 'center';
+                 overlay.style.zIndex = '10';
+                 overlay.style.borderRadius = '16px'; 
+                 const overlayContent = document.createElement('div');
+                 overlayContent.style.backgroundColor = '#4285F4';
+                 overlayContent.style.color = '#fff';
+                 overlayContent.style.padding = '12px 24px';
+                 overlayContent.style.borderRadius = '100px';
+                 overlayContent.style.fontFamily = "'Inter', sans-serif";
+                 overlayContent.style.fontWeight = '600';
+                 overlayContent.style.fontSize = '14px';
+                 overlayContent.style.boxShadow = '0 4px 12px rgba(66, 133, 244, 0.3)';
+                 overlayContent.style.display = 'flex';
+                 overlayContent.style.alignItems = 'center';
+                 overlayContent.style.gap = '8px';
+                 overlayContent.style.cursor = 'pointer';
+                 overlayContent.innerHTML = '🔒 Unlock with GrabRaw+';
+                 overlayContent.onclick = () => { window.location.href = '/plus.html'; };
+                 overlay.appendChild(overlayContent);
+                 card.style.position = 'relative';
+                 card.appendChild(overlay);
+              }
+            });
+          }
+        }, 100);
         if (user) {
           document.body.classList.add('logged-in');
           const navActions = document.querySelector('.nav-actions');
@@ -2126,6 +2213,72 @@
         }
 
         // Helper to save/toggle supplier
+        function showUpgradeModal() {
+     const modalOverlay = document.createElement('div');
+     modalOverlay.style.position = 'fixed';
+     modalOverlay.style.top = '0';
+     modalOverlay.style.left = '0';
+     modalOverlay.style.right = '0';
+     modalOverlay.style.bottom = '0';
+     modalOverlay.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
+     modalOverlay.style.backdropFilter = 'blur(4px)';
+     modalOverlay.style.zIndex = '99999';
+     modalOverlay.style.display = 'flex';
+     modalOverlay.style.alignItems = 'center';
+     modalOverlay.style.justifyContent = 'center';
+     const modal = document.createElement('div');
+     modal.style.backgroundColor = '#fff';
+     modal.style.borderRadius = '16px';
+     modal.style.padding = '32px';
+     modal.style.maxWidth = '400px';
+     modal.style.textAlign = 'center';
+     modal.style.fontFamily = "'Inter', sans-serif";
+     modal.style.boxShadow = '0 10px 40px rgba(0,0,0,0.1)';
+     const title = document.createElement('h3');
+     title.textContent = 'Limit Reached';
+     title.style.margin = '0 0 16px 0';
+     title.style.fontSize = '20px';
+     title.style.color = '#1a1a1a';
+     const desc = document.createElement('p');
+     desc.textContent = "You've reached the free limit of 5 partners. Upgrade to GrabRaw+ for unlimited.";
+     desc.style.color = '#5f6368';
+     desc.style.lineHeight = '1.5';
+     desc.style.marginBottom = '24px';
+     const btnContainer = document.createElement('div');
+     btnContainer.style.display = 'flex';
+     btnContainer.style.gap = '12px';
+     btnContainer.style.justifyContent = 'center';
+     const cancelBtn = document.createElement('button');
+     cancelBtn.textContent = 'Cancel';
+     cancelBtn.style.padding = '10px 20px';
+     cancelBtn.style.border = '1px solid #dadce0';
+     cancelBtn.style.backgroundColor = '#fff';
+     cancelBtn.style.color = '#3c4043';
+     cancelBtn.style.borderRadius = '100px';
+     cancelBtn.style.cursor = 'pointer';
+     cancelBtn.style.fontWeight = '600';
+     cancelBtn.style.fontSize = '14px';
+     cancelBtn.onclick = () => { modalOverlay.remove(); };
+     const upgradeBtn = document.createElement('button');
+     upgradeBtn.textContent = 'Upgrade Now';
+     upgradeBtn.style.padding = '10px 20px';
+     upgradeBtn.style.border = 'none';
+     upgradeBtn.style.backgroundColor = '#4285F4';
+     upgradeBtn.style.color = '#fff';
+     upgradeBtn.style.borderRadius = '100px';
+     upgradeBtn.style.cursor = 'pointer';
+     upgradeBtn.style.fontWeight = '600';
+     upgradeBtn.style.fontSize = '14px';
+     upgradeBtn.onclick = () => { window.location.href = '/plus.html'; };
+     btnContainer.appendChild(cancelBtn);
+     btnContainer.appendChild(upgradeBtn);
+     modal.appendChild(title);
+     modal.appendChild(desc);
+     modal.appendChild(btnContainer);
+     modalOverlay.appendChild(modal);
+     document.body.appendChild(modalOverlay);
+  }
+
         function toggleSaveSupplier(supData) {
           let saved = JSON.parse(localStorage.getItem('saved_suppliers') || '[]');
           const index = saved.findIndex(item => item.id === supData.id);
@@ -2135,7 +2288,12 @@
             showToast(`Removed ${supData.supplier_name} from Partners`);
             return false;
           } else {
+            if (!window.GRABRAW_IS_PLUS && saved.length >= 5) {
+              showUpgradeModal();
+              return null;
+            }
             saved.push({
+
               ...supData,
               saved_date: new Date().toISOString().slice(0, 10)
             });
@@ -2153,7 +2311,26 @@
           // Sort by distance (nearest first)
           const sorted = [...alts].sort((a,b) => parseFloat(a.distance) - parseFloat(b.distance));
           
-          let rowsHtml = sorted.map(alt => {
+          let rowsHtml = sorted.map((alt, idx) => {
+            if (!window.GRABRAW_IS_PLUS && idx >= 1) {
+              return `
+              <div class="alt-supplier-row" style="position: relative; overflow: hidden;">
+                <div style="filter: blur(4px); user-select: none; display: flex; align-items: center; justify-content: space-between; width: 100%;">
+                    <div class="alt-supplier-info">
+                      <div class="alt-name-line">Premium Supplier</div>
+                      <div class="alt-meta-line">
+                        <span class="alt-distance-pill">~ km away</span>
+                        <span class="alt-stock-indicator">In Stock</span>
+                      </div>
+                      <div class="alt-address-line">Premium address secured</div>
+                    </div>
+                </div>
+                <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; display: flex; align-items: center; justify-content: center; z-index: 5; background-color: rgba(255, 255, 255, 0.2);">
+                   <div style="background-color: #4285F4; color: #fff; padding: 6px 16px; border-radius: 100px; font-size: 13px; font-weight: 600; cursor: pointer; box-shadow: 0 2px 6px rgba(0,0,0,0.1);" onclick="window.location.href='/plus.html'; event.stopPropagation();">🔒 Unlock with GrabRaw+</div>
+                </div>
+              </div>`;
+            }
+
             const isAltSaved = isSupplierSaved(alt.id);
             const stockClass = alt.stock.toLowerCase().includes('low') ? 'low-stock' : 'in-stock';
             return `
@@ -2212,6 +2389,7 @@
                 maps_link: btn.getAttribute('data-maps-link')
               };
               const nowSaved = toggleSaveSupplier(altData);
+              if (nowSaved === null) return;
               if (nowSaved) {
                 btn.classList.add('saved');
                 btn.title = 'Remove from Saved Partners';
@@ -2325,7 +2503,8 @@
               stock: stockText,
               maps_link: mapsLink
             };
-            toggleSaveSupplier(supData);
+            const nowSaved = toggleSaveSupplier(supData);
+            if (nowSaved === null) return;
             updateMainCardStats();
           });
           
