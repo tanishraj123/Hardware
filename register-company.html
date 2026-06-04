@@ -610,22 +610,23 @@
     #account-dropdown {
       display: block !important;
       position: absolute !important;
-      top: 100% !important;
       right: 0 !important;
-      z-index: 10000 !important; /* Above all content */
+      top: calc(100% + 8px) !important;
       background-color: #ffffff !important;
-      border: 1px solid #dadce0 !important;
+      border: 1px solid #e0e0e0 !important;
       border-radius: 12px !important;
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15) !important;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
       width: 220px !important;
+      min-width: 200px !important;
+      z-index: 1000 !important; /* Above all content but no backdrop */
       padding: 12px 0 !important;
-      margin-top: 8px !important;
       opacity: 0 !important;
       visibility: hidden !important;
       transform: translateY(-8px) !important;
       transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
       pointer-events: none !important;
       text-align: left !important;
+      box-sizing: border-box !important;
     }
 
     #account-dropdown.active {
@@ -640,9 +641,9 @@
     #account-dropdown .dropdown-item {
       display: block !important;
       width: 100% !important;
-      padding: 10px 16px !important;
+      padding: 12px 16px !important;
       font-size: 14px !important;
-      color: #3c4043 !important;
+      color: #1a1a1a !important;
       text-decoration: none !important;
       border: none !important;
       background: none !important;
@@ -656,43 +657,16 @@
     #account-dropdown a:hover, 
     #account-dropdown button:hover,
     #account-dropdown .dropdown-item:hover {
-      background-color: #f0f0f0 !important;
-      color: #4285F4 !important;
+      background-color: #f5f5f5 !important;
+      color: #1a1a1a !important;
     }
 
     #account-dropdown #signout-link {
-      border-top: 1px solid #f1f3f4 !important;
-      color: #EA4335 !important;
+      border-top: 1px solid #e0e0e0 !important;
+      color: #d93025 !important;
       font-weight: 600 !important;
-      margin-top: 4px !important;
-      padding-top: 14px !important;
-    }
-
-    @media (max-width: 768px) {
-      #account-dropdown {
-        position: fixed !important;
-        top: auto !important;
-        bottom: 0 !important;
-        left: 0 !important;
-        right: 0 !important;
-        width: 100% !important;
-        border-radius: 16px 16px 0 0 !important;
-        max-height: 60vh !important;
-        overflow-y: auto !important;
-        z-index: 10000 !important;
-        margin-top: 0 !important;
-        transform: translateY(100%) !important;
-        box-shadow: 0 -8px 24px rgba(0, 0, 0, 0.1) !important;
-      }
-
-      #account-dropdown.active {
-        transform: translateY(0) !important;
-      }
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
+      margin-top: 8px !important;
+      padding-top: 12px !important;
     }
 
     @keyframes fadeIn {
@@ -755,6 +729,43 @@
       }
       button:active, a:active, .btn:active {
         background-color: rgba(0,0,0,0.06) !important;
+      }
+    }
+    
+    /* Desktop-first Navbar button overrides */
+    @media (min-width: 640px) {
+      .nav-actions {
+        gap: 12px !important;
+      }
+      .nav-actions .btn-outline, .nav-actions .btn-primary {
+        height: 44px !important;
+        line-height: 1 !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        padding: 0 20px !important;
+        font-weight: 600 !important;
+        font-size: 14px !important;
+        border-radius: 100px !important;
+        box-sizing: border-box !important;
+        transition: all 0.2s ease !important;
+      }
+      .nav-actions .btn-outline {
+        border: 1px solid #dadce0 !important;
+        background-color: transparent !important;
+        color: #3c4043 !important;
+      }
+      .nav-actions .btn-outline:hover {
+        background-color: #f8f9fa !important;
+        border-color: #bdc1c6 !important;
+      }
+      .nav-actions .btn-primary {
+        background-color: #1a73e8 !important; /* solid blue */
+        color: #ffffff !important;
+        border: none !important;
+      }
+      .nav-actions .btn-primary:hover {
+        background-color: #1557b0 !important;
       }
     }
     
@@ -821,6 +832,52 @@
         white-space: nowrap !important;
         box-sizing: border-box !important;
       }
+      
+      /* Hide desktop buttons when user is logged out on mobile */
+      .nav-actions .btn-outline, .nav-actions .btn-primary {
+        display: none !important;
+      }
+      
+      /* Mobile active navigation links enhancements */
+      .mobile-nav-divider {
+        display: block !important;
+        border: 0 !important;
+        border-top: 1px solid #dadce0 !important;
+        margin: 8px 14px !important;
+      }
+      .mobile-nav-signin {
+        display: block !important;
+        text-align: center !important;
+        padding: 12px 14px !important;
+        font-weight: 600 !important;
+        font-size: 16px !important;
+        color: #1a1a1a !important;
+        text-decoration: none !important;
+      }
+      .mobile-nav-getstarted {
+        display: flex !important;
+        width: calc(100% - 32px) !important;
+        height: 48px !important;
+        font-size: 16px !important;
+        font-weight: bold !important;
+        margin: 12px 16px !important;
+        background-color: #1a73e8 !important;
+        color: #ffffff !important;
+        align-items: center !important;
+        justify-content: center !important;
+        border-radius: 100px !important;
+        box-sizing: border-box !important;
+        border: none !important;
+        box-shadow: 0 2px 6px rgba(26,115,232,0.2) !important;
+        text-decoration: none !important;
+      }
+    }
+    
+    /* When logged in, hide registration/signin elements on mobile dropdown menu */
+    body.logged-in .mobile-nav-signin,
+    body.logged-in .mobile-nav-getstarted,
+    body.logged-in .mobile-nav-divider {
+      display: none !important;
     }
     
     @media (min-width: 640px) {
@@ -829,44 +886,9 @@
       }
     }
     
-    /* Sliding Account Bottom Drawer Sheet on Mobile (< 640px) */
-    @media (max-width: 639.98px) {
-      #account-dropdown {
-        position: fixed !important;
-        bottom: 0 !important;
-        top: auto !important;
-        left: 0 !important;
-        right: 0 !important;
-        width: 100% !important;
-        max-width: 100% !important;
-        border-radius: 20px 20px 0 0 !important;
-        border: none !important;
-        border-top: 1px solid #dadce0 !important;
-        box-shadow: 0 -8px 32px rgba(0, 0, 0, 0.15) !important;
-        transform: translateY(100%) !important;
-        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
-        display: block !important;
-        z-index: 1010 !important;
-        padding: 24px 20px 36px 20px !important;
-      }
-      #account-dropdown.active {
-        transform: translateY(0) !important;
-      }
-    }
-    
-    /* Click outside Dimmed Overlay */
+    /* Click outside Dimmed Overlay - Removed black overlays */
     .drawer-overlay {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background-color: rgba(0, 0, 0, 0.5);
-      z-index: 1005;
-    }
-    .drawer-overlay.active {
-      display: block !important;
+      display: none !important;
     }
     
     /* Absolute Minimum Touch Target Dimensions (44px) */
@@ -879,6 +901,50 @@
     .btn-save-supplier, .btn-expand-alternatives {
       width: 44px !important;
       height: 44px !important;
+      padding: 13px !important;
+      box-sizing: border-box !important;
+      border-radius: 50% !important;
+      border: 1px solid #dadce0 !important;
+      background-color: #f0f0f0 !important;
+      display: inline-flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      cursor: pointer !important;
+      transition: all 0.2s ease !important;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05) !important;
+    }
+    
+    .btn-save-supplier svg, .btn-expand-alternatives svg {
+      width: 18px !important;
+      height: 18px !important;
+    }
+    
+    .btn-save-supplier {
+      color: #1a73e8 !important;
+    }
+    
+    .btn-save-supplier.saved {
+      background-color: #34A853 !important;
+      color: #ffffff !important;
+      border-color: #34A853 !important;
+    }
+    
+    .btn-expand-alternatives {
+      color: #5f6368 !important;
+    }
+    
+    .btn-save-supplier:hover, .btn-expand-alternatives:hover {
+      background-color: #e0e0e0 !important;
+      border-color: #dadce0 !important;
+    }
+    
+    .btn-save-supplier.saved:hover {
+      background-color: #2b8b45 !important;
+      border-color: #2b8b45 !important;
+    }
+    
+    .btn-save-supplier:active, .btn-expand-alternatives:active {
+      background-color: #d0d0d0 !important;
     }
     
     /* Truncate long single-line category pill badges */
@@ -932,6 +998,14 @@
       .steps-grid, .trending-grid, .footer-grid, .partners-grid, .form-container-grid {
         grid-template-columns: 1fr !important;
       }
+      /* Prevent text overlap with top right absolute actions on mobile */
+      .material-meta-row {
+        padding-right: 104px !important;
+      }
+      .material-name {
+        font-size: 16px !important;
+        margin-right: 4px !important;
+      }
     }
     @media (min-width: 640px) and (max-width: 1023.98px) {
       .steps-grid, .trending-grid, .footer-grid, .partners-grid, .form-container-grid {
@@ -976,39 +1050,7 @@
         }
       }
 
-      // Dropdown backdrop behavior
-      function setupOverlayBehavior() {
-        const dropdown = document.getElementById('account-dropdown');
-        if (dropdown) {
-          let overlay = document.getElementById('account-drawer-overlay');
-          if (!overlay) {
-            overlay = document.createElement('div');
-            overlay.id = 'account-drawer-overlay';
-            overlay.className = 'drawer-overlay';
-            document.body.appendChild(overlay);
-            overlay.addEventListener('click', () => {
-              dropdown.classList.remove('active');
-              overlay.classList.remove('active');
-            });
-          }
-          
-          const accountBtn = document.getElementById('account-btn');
-          if (accountBtn) {
-            accountBtn.addEventListener('click', () => {
-              setTimeout(() => {
-                if (dropdown.classList.contains('active')) {
-                  overlay.classList.add('active');
-                } else {
-                  overlay.classList.remove('active');
-                }
-              }, 30);
-            });
-          }
-        }
-      }
 
-      setupOverlayBehavior();
-      setInterval(setupOverlayBehavior, 1000);
 
       // Global click outside for Navbar Hamburger menu
       document.addEventListener('click', (e) => {
@@ -1041,6 +1083,9 @@
       <a href="/#suppliers" class="nav-link">Suppliers</a>
       <a href="/info" class="nav-link">GrabRaw +</a>
       <a href="/#ask-ai" class="nav-link">Ask AI</a>
+      <hr class="mobile-nav-divider" style="display: none;" />
+      <a href="/signin" class="nav-link mobile-nav-signin" style="display: none;">Sign In</a>
+      <a href="/register-user" class="btn mobile-nav-getstarted" style="display: none;" aria-label="Get Started">Get Started</a>
     </nav>
     <div class="nav-actions">
       <!-- Replaced via Auth Check script below -->
@@ -1249,6 +1294,7 @@
           return;
         }
 
+        document.body.classList.add('logged-in');
         currentUser = user;
 
         // Render Navbar Account Dropdown seamlessly
@@ -1262,16 +1308,16 @@
                 <span style="font-size: 14px; font-weight: 600;">My Account</span>
                 <div style="background-color: #4285F4; color: #ffffff; border-radius: 50%; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 700; text-transform: uppercase;">${initial}</div>
               </button>
-              <div id="account-dropdown" style="display: none; position: absolute; right: 0; top: calc(100% + 8px); background-color: #ffffff; border: 1px solid #dadce0; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); width: 220px; z-index: 1000; overflow: hidden; padding: 6px 0; text-align: left;">
-                <div style="padding: 10px 16px; border-bottom: 1px solid #f1f3f4; margin-bottom: 4px;">
-                  <div style="font-size: 11px; font-weight: 500; color: #70757a; text-transform: uppercase; letter-spacing: 0.5px;">Signed in as</div>
-                  <div style="font-size: 13px; font-weight: 600; color: #202124; text-overflow: ellipsis; overflow: hidden; white-space: nowrap;" title="${email}">${email}</div>
+              <div id="account-dropdown" style="display: none; position: absolute; right: 0; top: calc(100% + 8px); background-color: #ffffff; border: 1px solid #e0e0e0; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); width: 220px; min-width: 200px; z-index: 1000; overflow: hidden; padding: 12px 0; text-align: left;">
+                <div style="padding: 12px 16px; border-bottom: 1px solid #e0e0e0; margin-bottom: 4px; pointer-events: none; user-select: text;">
+                  <div style="font-size: 11px; font-weight: 500; color: #70757a; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 2px;">Signed in as</div>
+                  <div style="font-size: 13px; font-weight: 600; color: #1a1a1a; text-overflow: ellipsis; overflow: hidden; white-space: nowrap;" title="${email}">${email}</div>
                 </div>
-                <a href="profile.html" class="dropdown-item" style="display: block; padding: 10px 16px; font-size: 14px; color: #3c4043; transition: background-color 0.15s ease; text-decoration: none; font-weight: 500;">Profile</a>
-                <a href="location.html" class="dropdown-item" style="display: block; padding: 10px 16px; font-size: 14px; color: #3c4043; transition: background-color 0.15s ease; text-decoration: none; font-weight: 500;">My Location</a>
-                <a href="/my-partners" class="dropdown-item" style="display: block; padding: 10px 16px; font-size: 14px; color: #3c4043; transition: background-color 0.15s ease; text-decoration: none; font-weight: 500;">My Partner</a>
-                <a href="register-company.html" class="dropdown-item" style="display: block; padding: 10px 16px; font-size: 14px; color: #3c4043; transition: background-color 0.15s ease; text-decoration: none; font-weight: 500;">Register Company</a>
-                <a href="#" id="signout-link" class="dropdown-item" style="display: block; padding: 10px 16px; font-size: 14px; color: #d93025; transition: background-color 0.15s ease; text-decoration: none; font-weight: 600;">Sign Out</a>
+                <a href="profile.html" class="dropdown-item">Profile</a>
+                <a href="location.html" class="dropdown-item">My Location</a>
+                <a href="my-partners.html" class="dropdown-item">My Partner</a>
+                <a href="register-company.html" class="dropdown-item">Register Company</a>
+                <a href="#" id="signout-link" class="dropdown-item" style="color: #d93025 !important; font-weight: 600; border-top: 1px solid #e0e0e0; margin-top: 8px; padding-top: 12px;">Sign Out</a>
               </div>
             </div>
           `;
@@ -1279,7 +1325,7 @@
           const styleNode = document.createElement('style');
           styleNode.textContent = `
             .dropdown-item:hover {
-              background-color: #f8f9fa !important;
+              background-color: #f5f5f5 !important;
             }
           `;
           document.head.appendChild(styleNode);
