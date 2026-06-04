@@ -1386,19 +1386,23 @@
     </div>
   </footer>
 
+  <script src="/src/auth.js"></script>
   <script>
-    // Initialize Supabase Sourcing Auth client
+    // Supabase credentials
     const { createClient } = supabase;
     const sb = createClient(
       'https://luumbrsddwupxxujnxlc.supabase.co',
       'sb_publishable_YZot9m514LEeiSGMscXoqw_WfjHOO1i'
     );
 
+    // Initialize Auth
+    initAuth(sb);
+    
+    // Check if already signed in
     sb.auth.getSession().then(({ data: { session } }) => {
       if (session) window.location.href = '/info'
     });
 
-    // Navbar Auth Check on load
     document.addEventListener('DOMContentLoaded', async () => {
       try {
         const { data: { session } } = await sb.auth.getSession();

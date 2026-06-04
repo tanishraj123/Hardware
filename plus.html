@@ -19,7 +19,18 @@
 
   <!-- Inter Font -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="/src/auth.js"></script>
   <script>
+    // Supabase credentials
+    const { createClient } = supabase;
+    const sb = createClient(
+      'https://luumbrsddwupxxujnxlc.supabase.co',
+      'sb_publishable_YZot9m514LEeiSGMscXoqw_WfjHOO1i'
+    );
+
+    // Initialize Auth
+    initAuth(sb);
+
     document.addEventListener('DOMContentLoaded', function() {
       let isScrolling = false;
       window.addEventListener('scroll', function() {

@@ -1160,6 +1160,7 @@
   </footer>
 
   <!-- Script Logic -->
+  <script src="/src/auth.js"></script>
   <script>
     // Supabase credentials
     const { createClient } = supabase;
@@ -1167,6 +1168,9 @@
       'https://luumbrsddwupxxujnxlc.supabase.co',
       'sb_publishable_YZot9m514LEeiSGMscXoqw_WfjHOO1i'
     );
+
+    // Initialize Auth
+    initAuth(sb);
 
     let currentUser = null;
     let currentProfileState = null;
