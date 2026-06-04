@@ -1998,7 +1998,6 @@
         const fullNameEl = document.getElementById('user-full-name');
         const rolePill = document.getElementById('user-role-badge');
         const avatarContainer = document.getElementById('user-avatar-container');
-        const avatarEl = document.getElementById('user-avatar');
         
         // Metadata & display resolution
         const email = user.email || '';
@@ -2010,29 +2009,14 @@
         const formattedDate = rawDate ? new Date(rawDate).toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' }) : 'Unknown date';
         
         emailEl.textContent = email;
-        fullNameEl.textContent = name;
         joinedDateEl.textContent = `Member since: ${formattedDate}`;
-
-        if (avatar) {
-          avatarContainer.innerHTML = `<img src="${avatar}" class="large-avatar" style="width: 64px; height: 64px; border-radius: 50%; object-fit: cover; border: 2px solid #ffffff; box-shadow: 0 2px 8px rgba(0,0,0,0.15);" alt="Avatar" />`;
-        } else {
-          avatarEl.textContent = initial;
-        }
 
         // Set Account Provider label nicely
         if (provider === 'google') {
-          providerBadge.innerHTML = '<span style="color: #4285F4;">G</span> Google Account';
-          
-          const googleNote = document.createElement('div');
-          googleNote.style.fontSize = '12px';
-          googleNote.style.color = '#70757a';
-          googleNote.style.marginTop = '4px';
-          googleNote.textContent = 'Signed in with Google';
-          fullNameEl.parentNode.insertBefore(googleNote, fullNameEl.nextSibling);
+          providerBadge.textContent = 'Google Account';
         } else {
-          providerBadge.textContent = '✉ Email Account';
+          providerBadge.textContent = 'Email Account';
         }
-
 
         // Fullname resolution
         let fullName = '';
