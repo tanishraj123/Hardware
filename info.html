@@ -43,6 +43,7 @@
 
   <!-- Supabase CDN Client -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="/auth-global.js"></script>
 
   <style>
     /* Clean, Modern Google-Style CSS Reset & Base */
@@ -1972,31 +1973,10 @@
   </footer>
 
     <script>
-      const { createClient } = supabase;
-      const sb = createClient(
-        'https://luumbrsddwupxxujnxlc.supabase.co',
-        'sb_publishable_YZot9m514LEeiSGMscXoqw_WfjHOO1i'
-      );
+      const sb = window.sb;
 
 
-async function initAuth() {
-        const { data: { session } } = await sb.auth.getSession();
-        if (session) { 
-          await updateNavbar(session.user); 
-        } else {
-          showLoggedOutNavbar();
-        }
 
-        sb.auth.onAuthStateChange(
-          async (event, session) => {
-            if (session) {
-              await updateNavbar(session.user);
-            } else {
-              showLoggedOutNavbar();
-            }
-          }
-        );
-      }
 
       async function updateNavbar(user) {
         let plan = 'free';
@@ -2078,7 +2058,7 @@ async function initAuth() {
         }
       });
 
-      initAuth();
+      
 
       document.addEventListener('DOMContentLoaded', async () => {
         // Wait briefly for initAuth (plan)

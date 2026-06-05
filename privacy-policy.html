@@ -7,6 +7,7 @@
   
   <!-- Inter Font -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="/auth-global.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', function() {
       let isScrolling = false;
@@ -1192,13 +1193,9 @@
   </footer>
 
   <!-- Supabase Auth Script -->
-  <script src="/src/auth.js"></script>
+  <script type="module" src="/src/auth.js"></script>
   <script>
-    const { createClient } = supabase;
-    const sb = createClient(
-      'https://luumbrsddwupxxujnxlc.supabase.co',
-      'sb_publishable_YZot9m514LEeiSGMscXoqw_WfjHOO1i'
-    );
+    const sb = window.sb;
 
     // Initialize Auth
     initAuth(sb);

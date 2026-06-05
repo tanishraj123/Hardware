@@ -19,67 +19,14 @@
 
   <!-- Inter Font -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="/auth-global.js"></script>
   <script>
-    const { createClient } = supabase;
-    const sb = createClient(
-      'https://luumbrsddwupxxujnxlc.supabase.co',
-      'sb_publishable_YZot9m514LEeiSGMscXoqw_WfjHOO1i'
-    );
+    const sb = window.sb;
 
 
-async function initAuth() {
-        const { data: { session } } = await sb.auth.getSession();
-        if (session) { 
-          await updateNavbar(session.user); 
-        } else {
-          showLoggedOutNavbar();
-        }
 
-        sb.auth.onAuthStateChange(
-          async (event, session) => {
-            if (session) {
-              await updateNavbar(session.user);
-            } else {
-              showLoggedOutNavbar();
-            }
-          }
-        );
-      }
 
-      async function updateNavbar(user) {
-        let plan = 'free';
-        try {
-          const { data } = await sb
-            .from('profiles')
-            .select('plan')
-            .eq('id', user.id)
-            .single();
-          if (data && data.plan) { plan = data.plan; }
-        } catch(e) {}
-        
-        window.userPlan = plan;
-        window.GRABRAW_IS_PLUS = plan.includes('+') || plan.toLowerCase().includes('plus');
-        window.userSession = user;
-        
-        const unauthNav = document.getElementById('unauthNav');
-        const authNav = document.getElementById('authNav');
-        const dropdownEmail = document.getElementById('dropdownEmail');
-        
-        if (unauthNav) unauthNav.style.display = 'none';
-        if (authNav) authNav.style.display = 'block';
-        if (dropdownEmail) dropdownEmail.textContent = user.email;
-      }
-
-      function showLoggedOutNavbar() {
-        window.userPlan = 'free';
-        window.GRABRAW_IS_PLUS = false;
-        window.userSession = null;
-        
-        const unauthNav = document.getElementById('unauthNav');
-        const authNav = document.getElementById('authNav');
-        if (unauthNav) unauthNav.style.display = 'block';
-        if (authNav) authNav.style.display = 'none';
-      }
+      
 
       document.addEventListener('DOMContentLoaded', () => {
         const accountBtn = document.getElementById('account-btn');
@@ -117,7 +64,7 @@ async function initAuth() {
         }
       });
 
-      initAuth();
+      
 
     document.addEventListener('DOMContentLoaded', function() {
       let isScrolling = false;
@@ -2010,11 +1957,7 @@ async function initAuth() {
 
   <!-- Supabase Auth navbar check script -->
   <script>
-    const { createClient } = supabase;
-    const sb = createClient(
-      'https://luumbrsddwupxxujnxlc.supabase.co',
-      'sb_publishable_YZot9m514LEeiSGMscXoqw_WfjHOO1i'
-    );
+    const sb = window.sb;
 
     // Dynamic auth-check navigation method
     async function checkAuthThenNavigate(destination) {
