@@ -1465,20 +1465,19 @@
     const saveCompanyBtn = document.getElementById('save-company-btn');
     if (saveCompanyBtn) {
       saveCompanyBtn.addEventListener('click', async () => {
-        const { data: userData, error: userError } = await sb.auth.getUser();
-        if (userError || !userData?.user) {
+        const { data: { user }, error: userError } = await window.sb.auth.getUser();
+        if (userError || !user) {
           showToast('Please sign in first', 'error');
           return;
         }
-        const user = userData.user;
 
-        const company_name = document.getElementById('company-name-input').value.trim();
-        const company_website = document.getElementById('company-web-input').value.trim();
-        const company_type = document.getElementById('company-type-input').value;
-        const company_address = document.getElementById('company-address-input').value.trim();
-        const company_products_supplied = document.getElementById('company-products-input').value.trim();
+        const companyName = document.getElementById('company-name-input').value.trim();
+        const companyWebsite = document.getElementById('company-web-input').value.trim();
+        const companyType = document.getElementById('company-type-input').value;
+        const companyAddress = document.getElementById('company-address-input').value.trim();
+        const productsSupplied = document.getElementById('company-products-input').value.trim();
 
-        if (!company_name) {
+        if (!companyName) {
           showToast('Please specify a Company Name.', 'error');
           return;
         }
@@ -1487,38 +1486,30 @@
         saveCompanyBtn.disabled = true;
 
         try {
-          const updateData = {
-            company_name,
-            company_website,
-            company_type,
-            company_address,
-            company_products_supplied,
+          const { error: updateError } = await window.sb.from('profiles').update({
+            company_name: companyName,
+            company_website: companyWebsite,
+            company_type: companyType,
+            company_address: companyAddress,
+            company_products_supplied: productsSupplied,
             role: 'supplier'
-          };
+          }).eq('id', user.id);
 
-          const { error: updateError } = await sb.from('profiles').update(updateData).eq('id', user.id);
-          if (updateError) {
-            // Upsert fallback
-            const { error: upsertErr } = await sb.from('profiles').upsert({
-              id: user.id,
-              ...updateData,
-              full_name: user.user_metadata?.full_name || user.user_metadata?.first_name || 'GrabRaw Builder'
-            });
-            if (upsertErr) throw upsertErr;
+          if (!updateError) {
+             showToast('Company info saved!');
+             if (typeof updateCompanyDisplay === 'function') {
+                const currentProfileState = {
+                  company_name: companyName,
+                  company_website: companyWebsite,
+                  company_type: companyType,
+                  company_address: companyAddress,
+                  company_products_supplied: productsSupplied
+                };
+                updateCompanyDisplay(currentProfileState);
+             }
+          } else {
+             showToast('Failed to save company info.', 'error');
           }
-
-          if (!currentProfileState) {
-            currentProfileState = {};
-          }
-          currentProfileState.company_name = company_name;
-          currentProfileState.company_website = company_website;
-          currentProfileState.company_type = company_type;
-          currentProfileState.company_address = company_address;
-          currentProfileState.company_products_supplied = company_products_supplied;
-
-          showToast('Company info saved! Our team will review and list you as a supplier.');
-          updateCompanyDisplay(currentProfileState);
-
         } catch (err) {
           console.error('Error saving company parameters:', err);
           showToast('Failed to save company info.', 'error');

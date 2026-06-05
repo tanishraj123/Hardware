@@ -1305,8 +1305,12 @@
     }
 
     // Geolocation trigger
-    function detectLocation() {
-      if (!currentUser) return;
+    async function detectLocation() {
+      const { data: { user } } = await window.sb.auth.getUser();
+  if (!user) {
+    showToast("Please sign in or register to set location.", "error");
+    return;
+  }
 
       const btn = document.getElementById('detect-location-btn');
       const originalHTML = btn ? btn.innerHTML : '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon-inline" style="display: inline-block; vertical-align: text-bottom;"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>Detect My Location';
@@ -1356,32 +1360,20 @@
               location_text: locationText 
             };
 
-            const { data: userData, error: userError } = await sb.auth.getUser();
-            if (userError || !userData?.user) throw new Error('Not authenticated');
-            const user = userData.user;
-
-            const { error: updateError } = await sb.from('profiles').update(updateData).eq('id', user.id);
-            if (updateError) {
-              const { error: upsertErr } = await sb.from('profiles').upsert({
-                id: user.id,
-                latitude: lat,
-                longitude: lon,
-                location_text: locationText,
-                full_name: user.user_metadata?.full_name || user.user_metadata?.first_name || 'GrabRaw Builder',
-                role: user.user_metadata?.role || 'builder'
-              });
-              if (upsertErr) throw upsertErr;
+            const { error: updateError } = await window.sb.from('profiles').update({
+              latitude: parseFloat(lat),
+              longitude: parseFloat(lon),
+              location_text: locationText
+            }).eq('id', user.id);
+            if (!updateError) {
+               showToast('Location saved!');
+               if (typeof updateLocationDisplay === 'function') {
+                  const currentProfileState = { latitude: lat, longitude: lon, location_text: locationText };
+                  updateLocationDisplay(currentProfileState);
+               }
+            } else {
+               showToast('Failed to save location.', 'error');
             }
-
-            if (!currentProfileState) {
-              currentProfileState = {};
-            }
-            currentProfileState.latitude = lat;
-            currentProfileState.longitude = lon;
-            currentProfileState.location_text = locationText;
-
-            updateLocationDisplay(currentProfileState);
-            showToast("Location saved! We'll find suppliers near you.");
 
           } catch (err) {
             console.error('Reverse geocode / save error:', err);
@@ -1569,51 +1561,32 @@
       };
     }
 
-    async function saveSelectedLocation(lat, lon, locationText) {
-      if (!currentUser) {
-        showToast("Please sign in or register to set location.", "error");
-        return;
-      }
-      try {
-        const updateData = { 
-          latitude: lat, 
-          longitude: lon, 
-          location_text: locationText 
-        };
-
-        const { data: userData, error: userError } = await sb.auth.getUser();
-        if (userError || !userData?.user) throw new Error('Not authenticated');
-        const user = userData.user;
-
-        const { error: updateError } = await sb.from('profiles').update(updateData).eq('id', user.id);
-        if (updateError) {
-          const { error: upsertErr } = await sb.from('profiles').upsert({
-            id: user.id,
-            latitude: lat,
-            longitude: lon,
-            location_text: locationText,
-            full_name: user.user_metadata?.full_name || user.user_metadata?.first_name || 'GrabRaw Builder',
-            role: user.user_metadata?.role || 'builder'
-          });
-          if (upsertErr) throw upsertErr;
-        }
-
-        if (!currentProfileState) {
-          currentProfileState = {};
-        }
-        currentProfileState.latitude = lat;
-        currentProfileState.longitude = lon;
-        currentProfileState.location_text = locationText;
-
+    async function saveSelectedLocation(lat, lng, locationString) {
+  const { data: { user } } = await window.sb.auth.getUser();
+  if (!user) {
+    showToast("Please sign in or register to set location.", "error");
+    return;
+  }
+  try {
+    const { error: updateError } = await window.sb.from('profiles').update({
+      latitude: parseFloat(lat),
+      longitude: parseFloat(lng),
+      location_text: locationString
+    }).eq('id', user.id);
+    if (!updateError) {
+      showToast('Location saved!');
+      if (typeof updateLocationDisplay === 'function') {
+        const currentProfileState = { latitude: lat, longitude: lng, location_text: locationString };
         updateLocationDisplay(currentProfileState);
-        showToast("Location saved! We'll find suppliers near you.");
-
-      } catch (err) {
-        console.error('Error saving selected location:', err);
-        showToast('Failed to save selected location.', 'error');
       }
+    } else {
+      showToast('Failed to save selected location.', 'error');
     }
-
+  } catch (err) {
+    console.error('Error saving selected location:', err);
+    showToast('Failed to save selected location.', 'error');
+  }
+}
     // Manual location autocomplete search
     const searchInput = document.getElementById('location-search-input');
     const suggestionsDropdown = document.getElementById('location-suggestions-dropdown');

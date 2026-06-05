@@ -1633,23 +1633,18 @@
         >
       </nav>
       <div class="nav-actions">
-        <button id="account-btn" class="btn btn-primary" 
-          style="display:none; align-items:center;" 
-          onclick="toggleDropdown()">
-          My Account
-          <span id="nav-avatar" style="
-            display:inline-flex;align-items:center;
-            justify-content:center;width:32px;height:32px;
-            border-radius:50%;background:#4285F4;
-            color:white;font-size:13px;font-weight:600;
-            margin-left:8px;overflow:hidden;"></span>
-        </button>
-        <a href="/signin.html" id="signin-btn" 
-          class="btn btn-primary">Sign In</a>
-
-        <div id="accountDropdown" style="display: none; position: absolute; right: 24px; top: 60px; background-color: #ffffff; border: 1px solid #e0e0e0; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.15); width: 220px; z-index: 10000; overflow: hidden; padding: 12px 0; text-align: left;">
+        <div id="unauthNav">
+          <a href="/signin.html" id="signin-btn" class="btn btn-outline" style="border-radius: 100px;">Sign In</a>
+          <a href="/register-user.html" class="btn btn-primary" style="display: none; border-radius: 100px;" id="get-started-btn">Get Started</a>
+        </div>
+        <div id="authNav" style="display: none; position: relative;">
+          <button id="account-btn" class="btn btn-outline" style="border-radius: 100px; display:inline-flex; align-items:center;" onclick="toggleDropdown()">
+            My Account
+            <span id="nav-avatar" style="display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:50%;background:#4285F4;color:white;font-size:13px;font-weight:600;margin-left:8px;overflow:hidden;"></span>
+          </button>
+          <div id="accountDropdown" style="display: none; position: absolute; right: 0; top: 100%; margin-top: 8px; background-color: #ffffff; border: 1px solid #e0e0e0; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.15); width: 220px; z-index: 10000; overflow: hidden; padding: 12px 0; text-align: left;">
             <div class="dropdown-header" style="padding: 12px 16px;">
-              <span class="dropdown-label" style="display:block; font-size: 11px; font-weight: 500; color: #70757a; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 2px;">SIGNED IN AS</span>
+              <span class="dropdown-label" style="display:block; font-size: 11px; font-weight: 500; color: #70757a; text-transform: uppercase;">SIGNED IN AS</span>
               <span id="dropdownEmail" style="display:block; font-size: 13px; font-weight: 600; color: #1a1a1a; text-overflow: ellipsis; overflow: hidden; white-space: nowrap;"></span>
             </div>
             <hr style="margin: 4px 0; border: none; border-top: 1px solid #e0e0e0;">
@@ -1659,6 +1654,7 @@
             <a href="/register-company.html" style="padding: 8px 16px; display: block; color: #3c4043; text-decoration: none;">Register Company</a>
             <hr style="margin: 4px 0; border: none; border-top: 1px solid #e0e0e0;">
             <a id="signOutBtn" style="padding: 8px 16px; display: block; color: red; font-weight: 600; cursor: pointer; text-decoration: none;">Sign Out</a>
+          </div>
         </div>
       </div>
   </header>
@@ -1973,61 +1969,6 @@
   </footer>
 
     <script>
-      const sb = window.sb;
-
-
-
-
-      async function updateNavbar(user) {
-        let plan = 'free';
-        try {
-          const { data } = await sb
-            .from('profiles')
-            .select('plan')
-            .eq('id', user.id)
-            .single();
-          if (data && data.plan) { plan = data.plan; }
-        } catch(e) {}
-        
-        window.userPlan = plan;
-        window.GRABRAW_IS_PLUS = plan.includes('+') || plan.toLowerCase().includes('plus');
-        window.userSession = user;
-        
-        const signinBtn = document.getElementById('signin-btn');
-        const accountBtn = document.getElementById('account-btn');
-        const dropdownEmail = document.getElementById('dropdownEmail');
-        const navAvatar = document.getElementById('nav-avatar');
-        
-        if (signinBtn) signinBtn.style.display = 'none';
-        if (accountBtn) accountBtn.style.display = 'flex';
-        
-        if (navAvatar) {
-            let avatarUrl = '';
-            try {
-                const { data } = await sb.from('profiles').select('avatar_url').eq('id', user.id).single();
-                if (data && data.avatar_url) avatarUrl = data.avatar_url;
-            } catch(e) {}
-            
-            if (avatarUrl) {
-                navAvatar.innerHTML = `<img src="${avatarUrl}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">`;
-            } else {
-                navAvatar.textContent = user.email ? user.email.charAt(0).toUpperCase() : '?';
-            }
-        }
-        
-        if (dropdownEmail) dropdownEmail.textContent = user.email;
-        
-        if (plan === 'plus' || plan === 'GrabRaw+') {
-            if (accountBtn && !document.getElementById('plus-badge')) {
-                const badge = document.createElement('span');
-                badge.id = 'plus-badge';
-                badge.textContent = 'PLUS';
-                badge.style.cssText = 'background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); color: white; font-size: 10px; font-weight: 800; padding: 2px 6px; border-radius: 4px; margin-left: 8px; letter-spacing: 0.5px;';
-                accountBtn.appendChild(badge);
-            }
-        }
-      }
-      
       function toggleDropdown() {
         const d = document.getElementById('accountDropdown');
         if (d) {
@@ -2036,37 +1977,25 @@
       }
       
       document.addEventListener('click', function(e) {
-        if (!e.target.closest('#account-btn')) {
+        if (!e.target.closest('#account-btn') && !e.target.closest('#accountDropdown')) {
           const d = document.getElementById('accountDropdown');
           if (d) d.style.display = 'none';
         }
       });
-      
-      document.addEventListener('DOMContentLoaded', () => {
-        const accountBtn = document.getElementById('account-btn');
-        const accountDropdown = document.getElementById('accountDropdown');
-        const signOutBtn = document.getElementById('signOutBtn');
 
-        
+      window.GRABRAW_IS_PLUS = false;
 
-        if (signOutBtn) {
-          signOutBtn.addEventListener('click', async (e) => {
-            e.preventDefault();
-            await sb.auth.signOut();
-            window.location.reload();
-          });
-        }
-      });
+      // Handle custom plus banner & blurring logic
+      function renderInfoContent() {
+        // remove existing banner if any
+        const existingBanner = document.getElementById('info-banner');
+        if (existingBanner) existingBanner.remove();
 
-      
-
-      document.addEventListener('DOMContentLoaded', async () => {
-        // Wait briefly for initAuth (plan)
-        setTimeout(() => {
         const navHeaders = document.querySelectorAll('header');
         const header = navHeaders.length > 0 ? navHeaders[0] : null;
         if (header) {
           const banner = document.createElement('div');
+          banner.id = 'info-banner';
           if (!window.GRABRAW_IS_PLUS) {
             banner.style.backgroundColor = '#e8f0fe';
             banner.style.color = '#1967d2';
@@ -2095,519 +2024,342 @@
           }
           header.parentNode.insertBefore(banner, header.nextSibling);
         }
-        // 2. Blurred supplier card (Every 10th card -> index 9, 19...)
-        setTimeout(() => {
-          if (!window.GRABRAW_IS_PLUS) {
-            const cards = document.querySelectorAll('.material-card');
-            cards.forEach((card, index) => {
-              if ((index + 1) % 10 === 0) {
-                 const metaRow = card.querySelector('.material-meta-row');
-                 const nameH2 = metaRow ? metaRow.querySelector('.material-name') : null;
-                 const supplierLinkWrapper = card.querySelector('.supplier-identity');
-                 if (nameH2) {
-                   nameH2.style.filter = 'blur(6px)';
-                   nameH2.style.userSelect = 'none';
-                 }
-                 if (supplierLinkWrapper) {
-                   supplierLinkWrapper.style.filter = 'blur(6px)';
-                   supplierLinkWrapper.style.userSelect = 'none';
-                 }
-                 const overlay = document.createElement('div');
-                 overlay.style.position = 'absolute';
-                 overlay.style.top = '0';
-                 overlay.style.left = '0';
-                 overlay.style.right = '0';
-                 overlay.style.bottom = '0';
-                 overlay.style.backgroundColor = 'rgba(255, 255, 255, 0.6)';
-                 overlay.style.backdropFilter = 'blur(2px)';
-                 overlay.style.display = 'flex';
-                 overlay.style.alignItems = 'center';
-                 overlay.style.justifyContent = 'center';
-                 overlay.style.zIndex = '10';
-                 overlay.style.borderRadius = '16px'; 
-                 const overlayContent = document.createElement('div');
-                 overlayContent.style.backgroundColor = '#4285F4';
-                 overlayContent.style.color = '#fff';
-                 overlayContent.style.padding = '12px 24px';
-                 overlayContent.style.borderRadius = '100px';
-                 overlayContent.style.fontFamily = "'Inter', sans-serif";
-                 overlayContent.style.fontWeight = '600';
-                 overlayContent.style.fontSize = '14px';
-                 overlayContent.style.boxShadow = '0 4px 12px rgba(66, 133, 244, 0.3)';
-                 overlayContent.style.display = 'flex';
-                 overlayContent.style.alignItems = 'center';
-                 overlayContent.style.gap = '8px';
-                 overlayContent.style.cursor = 'pointer';
-                 overlayContent.innerHTML = '🔒 Unlock with GrabRaw+';
-                 overlayContent.onclick = () => { window.location.href = '/plus.html'; };
-                 overlay.appendChild(overlayContent);
-                 card.style.position = 'relative';
-                 card.appendChild(overlay);
-               }
-            });
-          }
-        }, 100);
 
-      // --- SAVE SUPPLIERS & EXPAND ALTERNATIVES IMPLEMENTATION ---
-      try {
-        const ALTERNATIVES_DATA = {
-          "OLED Display Panel": [
-            {
-              id: "alt-oled-1",
-              supplier_name: "Pioneer Robotics & Dev Kits",
-              distance: "5.1 km",
-              stock: "In Stock",
-              address: "7 Pioneer Circle, Tech Hub",
-              maps_link: "https://maps.google.com/?q=Pioneer+Robotics+Tech+Hub"
-            },
-            {
-              id: "alt-oled-2",
-              supplier_name: "Alpha Circuit Labs",
-              distance: "14.2 km",
-              stock: "In Stock",
-              address: "48 Innovation Parkway, Suite B",
-              maps_link: "https://maps.google.com/?q=Alpha+Circuit+Labs+Parkway"
-            },
-            {
-              id: "alt-oled-3",
-              supplier_name: "Node-X IoT Supplies",
-              distance: "23.7 km",
-              stock: "Low Stock",
-              address: "900 Wireless Boulevard",
-              maps_link: "https://maps.google.com/?q=Node-X+IoT+Supplies"
-            }
-          ],
-          "A17 Bionic Chip": [
-            {
-              id: "alt-bionic-1",
-              supplier_name: "MetroTech Electronics Ltd.",
-              distance: "8.4 km",
-              stock: "Low Stock",
-              address: "102 Technology Drive, Delhi",
-              maps_link: "https://maps.google.com/?q=MetroTech+Electronics+Delhi"
-            },
-            {
-              id: "alt-bionic-2",
-              supplier_name: "Alpha Circuit Labs",
-              distance: "14.2 km",
-              stock: "In Stock",
-              address: "48 Innovation Parkway, Suite B",
-              maps_link: "https://maps.google.com/?q=Alpha+Circuit+Labs+Parkway"
-            }
-          ],
-          "Lithium Battery Cell": [
-            {
-              id: "alt-battery-1",
-              supplier_name: "Pioneer Robotics",
-              distance: "5.1 km",
-              stock: "In Stock",
-              address: "7 Pioneer Circle, Tech Hub",
-              maps_link: "https://maps.google.com/?q=Pioneer+Robotics+Tech+Hub"
-            },
-            {
-              id: "alt-battery-2",
-              supplier_name: "MetroTech Electronics",
-              distance: "8.4 km",
-              stock: "In Stock",
-              address: "102 Technology Drive, Delhi",
-              maps_link: "https://maps.google.com/?q=MetroTech+Electronics+Delhi"
-            }
-          ],
-          "Titanium Frame": [], // 0 alternatives to demonstrate disabled state
-          "Camera Lens Module": [
-            {
-              id: "alt-lens-1",
-              supplier_name: "Summit Hardware Sourcing",
-              distance: "31.1 km",
-              stock: "In Stock",
-              address: "15 Industrial Road",
-              maps_link: "https://maps.google.com/?q=Summit+Hardware+Sourcing+Industrial+Road"
-            }
-          ],
-          "Sapphire Glass Cover": [
-            {
-              id: "alt-glass-1",
-              supplier_name: "Summit Hardware Sourcing",
-              distance: "31.1 km",
-              stock: "In Stock",
-              address: "15 Industrial Road",
-              maps_link: "https://maps.google.com/?q=Summit+Hardware+Sourcing+Industrial+Road"
-            }
-          ],
-          "NFC Antenna Module": [
-            {
-              id: "alt-nfc-1",
-              supplier_name: "Alpha Circuit Labs",
-              distance: "14.2 km",
-              stock: "In Stock",
-              address: "48 Innovation Parkway, Suite B",
-              maps_link: "https://maps.google.com/?q=Alpha+Circuit+Labs+Parkway"
-            },
-            {
-              id: "alt-nfc-2",
-              supplier_name: "Node-X IoT Supplies",
-              distance: "23.7 km",
-              stock: "In Stock",
-              address: "900 Wireless Boulevard",
-              maps_link: "https://maps.google.com/?q=Node-X+IoT+Supplies"
-            }
-          ],
-          "Speaker Mesh Component": [] // 0 alternatives to demonstrate disabled state
-        };
-
-        // Elegant Toast System
-        function showToast(message) {
-          let container = document.getElementById('toast-container');
-          if (!container) {
-            container = document.createElement('div');
-            container.id = 'toast-container';
-            container.className = 'toast-container';
-            document.body.appendChild(container);
-          }
-          const toast = document.createElement('div');
-          toast.className = 'toast';
-          toast.textContent = message;
-          container.appendChild(toast);
-          setTimeout(() => {
-            toast.remove();
-          }, 2000);
+        // Blurred supplier card (Every 10th card -> index 9, 19...)
+        if (!window.GRABRAW_IS_PLUS) {
+          const cards = document.querySelectorAll('.material-card');
+          cards.forEach((card, index) => {
+            if ((index + 1) % 10 === 0) {
+                const metaRow = card.querySelector('.material-meta-row');
+                const nameH2 = metaRow ? metaRow.querySelector('.material-name') : null;
+                const supplierLinkWrapper = card.querySelector('.supplier-identity');
+                if (nameH2) {
+                  nameH2.style.filter = 'blur(6px)';
+                  nameH2.style.userSelect = 'none';
+                }
+                if (supplierLinkWrapper) {
+                  supplierLinkWrapper.style.filter = 'blur(6px)';
+                  supplierLinkWrapper.style.userSelect = 'none';
+                }
+                if (!card.querySelector('.plus-overlay')) {
+                  const overlay = document.createElement('div');
+                  overlay.className = 'plus-overlay';
+                  overlay.style.position = 'absolute';
+                  overlay.style.top = '0';
+                  overlay.style.left = '0';
+                  overlay.style.right = '0';
+                  overlay.style.bottom = '0';
+                  overlay.style.backgroundColor = 'rgba(255, 255, 255, 0.6)';
+                  overlay.style.backdropFilter = 'blur(2px)';
+                  overlay.style.display = 'flex';
+                  overlay.style.alignItems = 'center';
+                  overlay.style.justifyContent = 'center';
+                  overlay.style.zIndex = '10';
+                  overlay.style.borderRadius = '16px'; 
+                  const overlayContent = document.createElement('div');
+                  overlayContent.style.backgroundColor = '#4285F4';
+                  overlayContent.style.color = '#fff';
+                  overlayContent.style.padding = '12px 24px';
+                  overlayContent.style.borderRadius = '100px';
+                  overlayContent.style.fontFamily = "'Inter', sans-serif";
+                  overlayContent.style.fontWeight = '600';
+                  overlayContent.style.fontSize = '14px';
+                  overlayContent.style.boxShadow = '0 4px 12px rgba(66, 133, 244, 0.3)';
+                  overlayContent.style.display = 'flex';
+                  overlayContent.style.alignItems = 'center';
+                  overlayContent.style.gap = '8px';
+                  overlayContent.style.cursor = 'pointer';
+                  overlayContent.innerHTML = '🔒 Unlock with GrabRaw+';
+                  overlayContent.onclick = () => { window.location.href = '/plus.html'; };
+                  overlay.appendChild(overlayContent);
+                  card.style.position = 'relative';
+                  card.appendChild(overlay);
+                }
+             }
+          });
         }
+      }
 
-        // Helper to check if supplier is saved
-        function isSupplierSaved(id) {
-          const saved = JSON.parse(localStorage.getItem('saved_suppliers') || '[]');
-          return saved.some(item => item.id === id);
-        }
-
-        // Helper to save/toggle supplier
-        function showUpgradeModal() {
-     const modalOverlay = document.createElement('div');
-     modalOverlay.style.position = 'fixed';
-     modalOverlay.style.top = '0';
-     modalOverlay.style.left = '0';
-     modalOverlay.style.right = '0';
-     modalOverlay.style.bottom = '0';
-     modalOverlay.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
-     modalOverlay.style.backdropFilter = 'blur(4px)';
-     modalOverlay.style.zIndex = '99999';
-     modalOverlay.style.display = 'flex';
-     modalOverlay.style.alignItems = 'center';
-     modalOverlay.style.justifyContent = 'center';
-     const modal = document.createElement('div');
-     modal.style.backgroundColor = '#fff';
-     modal.style.borderRadius = '16px';
-     modal.style.padding = '32px';
-     modal.style.maxWidth = '400px';
-     modal.style.textAlign = 'center';
-     modal.style.fontFamily = "'Inter', sans-serif";
-     modal.style.boxShadow = '0 10px 40px rgba(0,0,0,0.1)';
-     const title = document.createElement('h3');
-     title.textContent = 'Limit Reached';
-     title.style.margin = '0 0 16px 0';
-     title.style.fontSize = '20px';
-     title.style.color = '#1a1a1a';
-     const desc = document.createElement('p');
-     desc.textContent = "You've reached the free limit of 5 partners. Upgrade to GrabRaw+ for unlimited.";
-     desc.style.color = '#5f6368';
-     desc.style.lineHeight = '1.5';
-     desc.style.marginBottom = '24px';
-     const btnContainer = document.createElement('div');
-     btnContainer.style.display = 'flex';
-     btnContainer.style.gap = '12px';
-     btnContainer.style.justifyContent = 'center';
-     const cancelBtn = document.createElement('button');
-     cancelBtn.textContent = 'Cancel';
-     cancelBtn.style.padding = '10px 20px';
-     cancelBtn.style.border = '1px solid #dadce0';
-     cancelBtn.style.backgroundColor = '#fff';
-     cancelBtn.style.color = '#3c4043';
-     cancelBtn.style.borderRadius = '100px';
-     cancelBtn.style.cursor = 'pointer';
-     cancelBtn.style.fontWeight = '600';
-     cancelBtn.style.fontSize = '14px';
-     cancelBtn.onclick = () => { modalOverlay.remove(); };
-     const upgradeBtn = document.createElement('button');
-     upgradeBtn.textContent = 'Upgrade Now';
-     upgradeBtn.style.padding = '10px 20px';
-     upgradeBtn.style.border = 'none';
-     upgradeBtn.style.backgroundColor = '#4285F4';
-     upgradeBtn.style.color = '#fff';
-     upgradeBtn.style.borderRadius = '100px';
-     upgradeBtn.style.cursor = 'pointer';
-     upgradeBtn.style.fontWeight = '600';
-     upgradeBtn.style.fontSize = '14px';
-     upgradeBtn.onclick = () => { window.location.href = '/plus.html'; };
-     btnContainer.appendChild(cancelBtn);
-     btnContainer.appendChild(upgradeBtn);
-     modal.appendChild(title);
-     modal.appendChild(desc);
-     modal.appendChild(btnContainer);
-     modalOverlay.appendChild(modal);
-     document.body.appendChild(modalOverlay);
-  }
-
-        function toggleSaveSupplier(supData) {
-          let saved = JSON.parse(localStorage.getItem('saved_suppliers') || '[]');
-          const index = saved.findIndex(item => item.id === supData.id);
-          if (index > -1) {
-            saved.splice(index, 1);
-            localStorage.setItem('saved_suppliers', JSON.stringify(saved));
-            showToast(`Removed ${supData.supplier_name} from Partners`);
-            return false;
-          } else {
-            if (!window.GRABRAW_IS_PLUS && saved.length >= 5) {
-              showUpgradeModal();
-              return null;
-            }
-            saved.push({
-
-              ...supData,
-              saved_date: new Date().toISOString().slice(0, 10)
-            });
-            localStorage.setItem('saved_suppliers', JSON.stringify(saved));
-            showToast(`Added ${supData.supplier_name} to My Partners`);
-            return true;
-          }
-        }
-
-        // Render alternative suppliers popup panel list
-        function renderAlternativesPanel(card, mainId, materialName) {
-          const panel = card.querySelector('.alternatives-dropdown-panel');
-          const alts = ALTERNATIVES_DATA[materialName] || [];
+      window.addEventListener('auth-changed', async (e) => {
+        const user = e.detail.session?.user;
+        let plan = 'free';
+        if (user) {
+          try {
+            const { data } = await window.sb.from('profiles').select('plan').eq('id', user.id).single();
+            if (data && data.plan) { plan = data.plan; }
+          } catch(err) {}
           
-          // Sort by distance (nearest first)
-          const sorted = [...alts].sort((a,b) => parseFloat(a.distance) - parseFloat(b.distance));
-          
-          let rowsHtml = sorted.map((alt, idx) => {
-            if (!window.GRABRAW_IS_PLUS && idx >= 1) {
-              return `
-              <div class="alt-supplier-row" style="position: relative; overflow: hidden;">
-                <div style="filter: blur(4px); user-select: none; display: flex; align-items: center; justify-content: space-between; width: 100%;">
-                    <div class="alt-supplier-info">
-                      <div class="alt-name-line">Premium Supplier</div>
-                      <div class="alt-meta-line">
-                        <span class="alt-distance-pill">~ km away</span>
-                        <span class="alt-stock-indicator">In Stock</span>
-                      </div>
-                      <div class="alt-address-line">Premium address secured</div>
-                    </div>
-                </div>
-                <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; display: flex; align-items: center; justify-content: center; z-index: 5; background-color: rgba(255, 255, 255, 0.2);">
-                   <div style="background-color: #4285F4; color: #fff; padding: 6px 16px; border-radius: 100px; font-size: 13px; font-weight: 600; cursor: pointer; box-shadow: 0 2px 6px rgba(0,0,0,0.1);" onclick="window.location.href='/plus.html'; event.stopPropagation();">🔒 Unlock with GrabRaw+</div>
-                </div>
-              </div>`;
+          if (plan === 'plus' || plan === 'GrabRaw+') {
+            const accountBtn = document.getElementById('account-btn');
+            if (accountBtn && !document.getElementById('plus-badge')) {
+                const badge = document.createElement('span');
+                badge.id = 'plus-badge';
+                badge.textContent = 'PLUS';
+                badge.style.cssText = 'background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); color: white; font-size: 10px; font-weight: 800; padding: 2px 6px; border-radius: 4px; margin-left: 8px; letter-spacing: 0.5px;';
+                accountBtn.appendChild(badge);
             }
+          }
+        }
+        window.GRABRAW_IS_PLUS = plan.includes('+') || plan.toLowerCase().includes('plus');
+        renderInfoContent();
+      });
 
-            const isAltSaved = isSupplierSaved(alt.id);
-            const stockClass = alt.stock.toLowerCase().includes('low') ? 'low-stock' : 'in-stock';
+      // Show toast
+      function showToast(message, type = 'success') {
+        let container = document.querySelector('.toast-container');
+        if (!container) {
+          container = document.createElement('div');
+          container.className = 'toast-container';
+          document.body.appendChild(container);
+        }
+        const toast = document.createElement('div');
+        toast.className = 'toast';
+        toast.textContent = message;
+        container.appendChild(toast);
+        setTimeout(() => toast.remove(), 2000);
+      }
+
+      // Check if supplier is saved
+      function isSupplierSaved(id) {
+        const saved = JSON.parse(localStorage.getItem('savedSuppliers') || '[]');
+        return saved.some(item => item.id === id);
+      }
+
+      function showUpgradeModal() {
+         const modalOverlay = document.createElement('div');
+         modalOverlay.style.position = 'fixed';
+         modalOverlay.style.top = '0';
+         modalOverlay.style.left = '0';
+         modalOverlay.style.width = '100vw';
+         modalOverlay.style.height = '100vh';
+         modalOverlay.style.backgroundColor = 'rgba(0,0,0,0.5)';
+         modalOverlay.style.display = 'flex';
+         modalOverlay.style.justifyContent = 'center';
+         modalOverlay.style.alignItems = 'center';
+         modalOverlay.style.zIndex = '99999';
+         const modal = document.createElement('div');
+         modal.style.backgroundColor = '#fff';
+         modal.style.padding = '32px';
+         modal.style.borderRadius = '16px';
+         modal.style.width = '90%';
+         modal.style.maxWidth = '400px';
+         modal.style.textAlign = 'center';
+         modal.style.fontFamily = "'Inter', sans-serif";
+         modal.style.boxShadow = '0 10px 40px rgba(0,0,0,0.1)';
+         const title = document.createElement('h3');
+         title.textContent = 'Limit Reached';
+         title.style.margin = '0 0 16px 0';
+         title.style.fontSize = '20px';
+         title.style.color = '#1a1a1a';
+         const desc = document.createElement('p');
+         desc.textContent = "You've reached the free limit of 5 partners. Upgrade to GrabRaw+ for unlimited.";
+         desc.style.color = '#5f6368';
+         desc.style.lineHeight = '1.5';
+         desc.style.marginBottom = '24px';
+         const btnContainer = document.createElement('div');
+         btnContainer.style.display = 'flex';
+         btnContainer.style.gap = '12px';
+         btnContainer.style.justifyContent = 'center';
+         const cancelBtn = document.createElement('button');
+         cancelBtn.textContent = 'Cancel';
+         cancelBtn.className = 'btn btn-outline';
+         cancelBtn.style.borderRadius = '100px';
+         cancelBtn.onclick = () => { modalOverlay.remove(); };
+         const upgradeBtn = document.createElement('button');
+         upgradeBtn.textContent = 'Upgrade Now';
+         upgradeBtn.className = 'btn btn-primary';
+         upgradeBtn.style.borderRadius = '100px';
+         upgradeBtn.onclick = () => { window.location.href = '/plus.html'; };
+         btnContainer.appendChild(cancelBtn);
+         btnContainer.appendChild(upgradeBtn);
+         modal.appendChild(title);
+         modal.appendChild(desc);
+         modal.appendChild(btnContainer);
+         modalOverlay.appendChild(modal);
+         document.body.appendChild(modalOverlay);
+      }
+
+      function toggleSaveSupplier(supData) {
+        let saved = JSON.parse(localStorage.getItem('savedSuppliers') || '[]');
+        const index = saved.findIndex(item => item.id === supData.id);
+        if (index > -1) {
+          saved.splice(index, 1);
+          localStorage.setItem('savedSuppliers', JSON.stringify(saved));
+          showToast(`Removed ${supData.supplier_name} from Partners`);
+          return false;
+        } else {
+          if (!window.GRABRAW_IS_PLUS && saved.length >= 5) {
+            showUpgradeModal();
+            return null;
+          }
+          saved.push({
+            ...supData,
+            saved_date: new Date().toISOString().slice(0, 10)
+          });
+          localStorage.setItem('savedSuppliers', JSON.stringify(saved));
+          showToast(`Added ${supData.supplier_name} to My Partners`);
+          return true;
+        }
+      }
+
+      function renderAlternativesPanel(card, mainId, materialName) {
+        const panel = card.querySelector('.alternatives-dropdown-panel');
+        const alts = window.ALTERNATIVES_DATA[materialName] || [];
+        const sorted = [...alts].sort((a,b) => parseFloat(a.distance) - parseFloat(b.distance));
+        
+        let rowsHtml = sorted.map((alt, idx) => {
+          if (!window.GRABRAW_IS_PLUS && idx >= 1) {
             return `
-              <div class="alt-supplier-row">
-                <div class="alt-supplier-info">
-                  <div class="alt-name-line">${alt.supplier_name}</div>
-                  <div class="alt-meta-line">
-                    <span class="alt-distance-pill">
-                      <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display-inline-block; vertical-align: middle; margin-right: 2px;"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                      ${alt.distance} away
-                    </span>
-                    <span class="alt-stock-indicator ${stockClass}">
-                      <span class="alt-stock-dot"></span>
-                      ${alt.stock}
-                    </span>
+            <div class="alt-supplier-row" style="position: relative; overflow: hidden;">
+              <div style="filter: blur(4px); user-select: none; display: flex; align-items: center; justify-content: space-between; width: 100%;">
+                  <div class="alt-supplier-info">
+                    <div class="alt-name-line">Premium Supplier</div>
+                    <div class="alt-meta-line">
+                      <span class="alt-distance-pill">~ km away</span>
+                      <span class="alt-stock-indicator">In Stock</span>
+                    </div>
+                    <div class="alt-address-line">Premium address secured</div>
                   </div>
-                  <div class="alt-address-line">${alt.address}</div>
-                </div>
-                <button class="btn-alt-save ${isAltSaved ? 'saved' : ''}" data-id="${alt.id}" data-component="${materialName}" data-supplier-name="${alt.supplier_name}" data-address="${alt.address}" data-distance="${alt.distance}" data-stock="${alt.stock}" data-maps-link="${alt.maps_link}" title="${isAltSaved ? 'Remove from Saved Partners' : 'Save Partner'}">
-                  ${isAltSaved ? `
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-                      <polyline points="20 6 9 17 4 12"></polyline>
-                    </svg>
-                  ` : `
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                      <line x1="12" y1="5" x2="12" y2="19"></line>
-                      <line x1="5" y1="12" x2="19" y2="12"></line>
-                    </svg>
-                  `}
-                </button>
               </div>
-            `;
-          }).join('');
-          
-          panel.innerHTML = `
-            <div class="alt-panel-title">
-              <span>Alternative Sources</span>
-              <span style="font-size: 11px; font-weight: 500; color: #70757a;">${sorted.length} found</span>
-            </div>
-            <div class="alt-suppliers-list">
-              ${rowsHtml}
+              <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; display: flex; align-items: center; justify-content: center; z-index: 5; background-color: rgba(255, 255, 255, 0.2);">
+                 <div style="background-color: #4285F4; color: #fff; padding: 6px 16px; border-radius: 100px; font-size: 13px; font-weight: 600; cursor: pointer; box-shadow: 0 2px 6px rgba(0,0,0,0.1);" onclick="window.location.href='/plus.html'; event.stopPropagation();">🔒 Unlock with GrabRaw+</div>
+              </div>
+            </div>`;
+          }
+
+          const isAltSaved = isSupplierSaved(alt.id);
+          const stockClass = alt.stock.toLowerCase().includes('low') ? 'low-stock' : 'in-stock';
+          return `
+            <div class="alt-supplier-row">
+              <div class="alt-supplier-info">
+                <div class="alt-name-line">${alt.supplier_name}</div>
+                <div class="alt-meta-line">
+                  <span class="alt-distance-pill">${alt.distance} away</span>
+                  <span class="alt-stock-indicator ${stockClass}">${alt.stock}</span>
+                </div>
+                <div class="alt-address-line">${alt.address}</div>
+              </div>
+              <button class="btn-alt-save ${isAltSaved ? 'saved' : ''}" data-id="${alt.id}" data-component="${materialName}" data-supplier-name="${alt.supplier_name}" data-address="${alt.address}" data-distance="${alt.distance}" data-stock="${alt.stock}" data-maps-link="${alt.maps_link}" title="${isAltSaved ? 'Remove' : 'Save'}">
+                ${isAltSaved ? '✔' : '+'}
+              </button>
             </div>
           `;
-          
-          // Attach click handlers inside panel
-          panel.querySelectorAll('.btn-alt-save').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-              e.stopPropagation();
-              const altData = {
-                id: btn.getAttribute('data-id'),
-                component: btn.getAttribute('data-component'),
-                supplier_name: btn.getAttribute('data-supplier-name'),
-                address: btn.getAttribute('data-address'),
-                distance: btn.getAttribute('data-distance'),
-                stock: btn.getAttribute('data-stock'),
-                maps_link: btn.getAttribute('data-maps-link')
-              };
-              const nowSaved = toggleSaveSupplier(altData);
-              if (nowSaved === null) return;
-              if (nowSaved) {
-                btn.classList.add('saved');
-                btn.title = 'Remove from Saved Partners';
-                btn.innerHTML = `
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-                    <polyline points="20 6 9 17 4 12"></polyline>
-                  </svg>
-                `;
-              } else {
-                btn.classList.remove('saved');
-                btn.title = 'Save Partner';
-                btn.innerHTML = `
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                    <line x1="12" y1="5" x2="12" y2="19"></line>
-                    <line x1="5" y1="12" x2="19" y2="12"></line>
-                  </svg>
-                `;
-              }
-              
-              // Sync parent card UI
-              updateMainCardStats();
-            });
-          });
-        }
-
-        // Sync main upper actions
-        function updateMainCardStats() {
-          document.querySelectorAll('.btn-save-supplier').forEach(btn => {
-            const id = btn.getAttribute('data-id');
-            const isSaved = isSupplierSaved(id);
-            if (isSaved) {
+        }).join('');
+        
+        panel.innerHTML = `<div class="alt-panel-title"><span>Alternative Sources</span></div><div class="alt-suppliers-list">${rowsHtml}</div>`;
+        
+        panel.querySelectorAll('.btn-alt-save').forEach(btn => {
+          btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const altData = {
+              id: btn.getAttribute('data-id'),
+              component: btn.getAttribute('data-component'),
+              supplier_name: btn.getAttribute('data-supplier-name'),
+              address: btn.getAttribute('data-address'),
+              distance: btn.getAttribute('data-distance'),
+              stock: btn.getAttribute('data-stock'),
+              maps_link: btn.getAttribute('data-maps-link')
+            };
+            const nowSaved = toggleSaveSupplier(altData);
+            if (nowSaved === null) return;
+            if (nowSaved) {
               btn.classList.add('saved');
-              btn.title = 'Remove from Saved Partners';
-              btn.setAttribute('aria-label', 'Remove from Saved Partners');
-              btn.innerHTML = `
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-                  <polyline points="20 6 9 17 4 12"></polyline>
-                </svg>
-              `;
+              btn.innerHTML = '✔';
             } else {
               btn.classList.remove('saved');
-              btn.title = 'Save Partner';
-              btn.setAttribute('aria-label', 'Add to My Partner');
-              btn.innerHTML = `
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                  <line x1="12" y1="5" x2="12" y2="19"></line>
-                  <line x1="5" y1="12" x2="19" y2="12"></line>
-                </svg>
-              `;
+              btn.innerHTML = '+';
             }
+            updateMainCardStats();
           });
-        }
+        });
+      }
 
-        // Initialize parent cards
+      function updateMainCardStats() {
+        document.querySelectorAll('.btn-save-supplier').forEach(btn => {
+          const id = btn.getAttribute('data-id');
+          const isSaved = isSupplierSaved(id);
+          if (isSaved) {
+            btn.classList.add('saved');
+            btn.innerHTML = '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>';
+          } else {
+            btn.classList.remove('saved');
+            btn.innerHTML = '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>';
+          }
+        });
+      }
+
+      document.addEventListener('DOMContentLoaded', () => {
+        // We define the data
+        window.ALTERNATIVES_DATA = {
+          "OLED Display Panel": [
+            { id: "alt-oled-1", supplier_name: "Pioneer Robotics", distance: "5.1 km", stock: "In Stock", address: "7 Pioneer Circle, Tech Hub", maps_link: "#" },
+            { id: "alt-oled-2", supplier_name: "Alpha Electronics", distance: "8.2 km", stock: "Low Stock", address: "19 Alpha Road, Ind. Area", maps_link: "#" }
+          ],
+          "A17 Bionic Chip": [
+            { id: "alt-chip-1", supplier_name: "MicroFab Circuits", distance: "12.4 km", stock: "In Stock", address: "12 MicroFab Lane", maps_link: "#" }
+          ],
+          "Lithium Battery Cell": [
+            { id: "alt-batt-1", supplier_name: "Volt Energy Solutions", distance: "2.1 km", stock: "In Stock", address: "14 Volt Avenue", maps_link: "#" },
+            { id: "alt-batt-2", supplier_name: "GreenCell Corp", distance: "3.7 km", stock: "In Stock", address: "1 GreenCell Blvd", maps_link: "#" }
+          ]
+        };
+
         const cards = document.querySelectorAll('.material-card');
         cards.forEach((card, index) => {
           const rowNum = index + 1;
           const id = `bom-row-${rowNum}`;
-          
-          // Parse info
-          const materialName = card.querySelector('.material-name').textContent.replace(/^\d+\.\s*/, '').trim();
-          const supplierName = card.querySelector('.supplier-name').textContent.trim();
-          const address = card.querySelector('.supplier-address').textContent.trim();
-          const distanceText = card.querySelector('.distance-badge').textContent.replace('~', '').trim();
-          const stockText = card.querySelector('.stock-indicator').textContent.trim();
-          const mapsLink = card.querySelector('.btn-supplier-maps').href;
-          
-          // Check database alternatives
-          const alts = ALTERNATIVES_DATA[materialName] || [];
+          const materialName = card.querySelector('.material-name')?.textContent.replace(/^\d+\.\s*/, '').trim();
+          const supplierName = card.querySelector('.supplier-name')?.textContent.trim();
+          const address = card.querySelector('.supplier-address')?.textContent.trim();
+          const distanceText = card.querySelector('.distance-badge')?.textContent.replace('~', '').trim();
+          const stockText = card.querySelector('.stock-indicator')?.textContent.trim();
+          const mapsLink = card.querySelector('.btn-supplier-maps')?.href;
+
+          const alts = window.ALTERNATIVES_DATA[materialName] || [];
           const hasAlternatives = alts.length > 0;
-          
-          // Render action container top right
           const isSaved = isSupplierSaved(id);
+
           const actionContainer = document.createElement('div');
           actionContainer.className = 'card-actions-top-right';
           actionContainer.innerHTML = `
-            <button class="btn-save-supplier ${isSaved ? 'saved' : ''}" data-id="${id}" title="${isSaved ? 'Remove from Saved Partners' : 'Save Partner'}" aria-label="${isSaved ? 'Remove from Saved Partners' : 'Add to My Partner'}">
-              ${isSaved ? `
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-                  <polyline points="20 6 9 17 4 12"></polyline>
-                </svg>
-              ` : `
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                  <line x1="12" y1="5" x2="12" y2="19"></line>
-                  <line x1="5" y1="12" x2="19" y2="12"></line>
-                </svg>
-              `}
+            <button class="btn-save-supplier ${isSaved ? 'saved' : ''}" data-id="${id}">
+              ${isSaved ? '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>' : '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>'}
             </button>
-            <button class="btn-expand-alternatives ${!hasAlternatives ? 'disabled' : ''}" data-id="${id}" title="${hasAlternatives ? 'Show Alternative Suppliers' : 'No alternative suppliers available'}" ${!hasAlternatives ? 'disabled' : ''} aria-label="Show Alternatives">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                <polyline points="6 9 12 15 18 9"></polyline>
-              </svg>
+            <button class="btn-expand-alternatives ${!hasAlternatives ? 'disabled' : ''}" data-id="${id}">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
           `;
           card.appendChild(actionContainer);
           
-          // Create Panel element
           const panel = document.createElement('div');
           panel.className = 'alternatives-dropdown-panel';
           card.appendChild(panel);
-          
-          // Add click listener on Save button
+
           actionContainer.querySelector('.btn-save-supplier').addEventListener('click', (e) => {
             e.stopPropagation();
-            const supData = {
-              id: id,
-              component: materialName,
-              supplier_name: supplierName,
-              address: address,
-              distance: distanceText,
-              stock: stockText,
-              maps_link: mapsLink
-            };
-            const nowSaved = toggleSaveSupplier(supData);
+            const nowSaved = toggleSaveSupplier({ id, component: materialName, supplier_name: supplierName, address, distance: distanceText, stock: stockText, maps_link: mapsLink });
             if (nowSaved === null) return;
             updateMainCardStats();
           });
-          
-          // Add click listener on Expand button
+
           actionContainer.querySelector('.btn-expand-alternatives').addEventListener('click', (e) => {
             e.stopPropagation();
             if (!hasAlternatives) return;
-            
-            const isCurrentlyShown = panel.style.display === 'block';
-            
-            // Close all other panels
-            document.querySelectorAll('.alternatives-dropdown-panel').forEach(p => {
-              p.style.display = 'none';
-            });
-            
-            if (!isCurrentlyShown) {
+            const isShown = panel.style.display === 'block';
+            document.querySelectorAll('.alternatives-dropdown-panel').forEach(p => p.style.display = 'none');
+            if (!isShown) {
               panel.style.display = 'block';
               renderAlternativesPanel(card, id, materialName);
             }
           });
         });
-        
-        // Document level click to hide dropdown panels
+
         document.addEventListener('click', (e) => {
           if (!e.target.closest('.material-card')) {
-            document.querySelectorAll('.alternatives-dropdown-panel').forEach(p => {
-              p.style.display = 'none';
-            });
+            document.querySelectorAll('.alternatives-dropdown-panel').forEach(p => p.style.display = 'none');
           }
         });
-        }, 200);
-      } catch (err) {
-        console.error('Interactive Saving features failed to initialize:', err);
-      }
-    });
-  </script>
-
+      });
+    </script>
 </body>
 </html>
