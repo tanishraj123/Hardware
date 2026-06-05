@@ -1,74 +1,68 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>My Saved Suppliers — GrabRaw</title>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Saved Suppliers — GrabRaw</title>
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Supabase -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      let isScrolling = false;
+      window.addEventListener('scroll', function() {
+        if (!isScrolling) {
+          isScrolling = true;
+          requestAnimationFrame(() => {
+            isScrolling = false;
+          });
+        }
+      }, { passive: true });
+    });
+  </script>
+  
+  <style>
+    :root {
+      --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+    }
+    
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    body {
+      font-family: var(--font-sans);
+      background-color: #ffffff;
+      color: #202124;
+      line-height: 1.5;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+    
+    .container {
+      width: 100%;
+      max-width: 1152px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
 
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
-      rel="stylesheet"
-    />
+    .container-slim {
+      width: 100%;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+    
 
-    <!-- Supabase -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script>
-      document.addEventListener("DOMContentLoaded", function () {
-        let isScrolling = false;
-        window.addEventListener(
-          "scroll",
-          function () {
-            if (!isScrolling) {
-              isScrolling = true;
-              requestAnimationFrame(() => {
-                isScrolling = false;
-              });
-            }
-          },
-          { passive: true },
-        );
-      });
-    </script>
-
-    <style>
-      :root {
-        --font-sans: "Inter", system-ui, -apple-system, sans-serif;
-      }
-
-      * {
-        box-sizing: border-box;
-        margin: 0;
-        padding: 0;
-      }
-
-      body {
-        font-family: var(--font-sans);
-        background-color: #ffffff;
-        color: #202124;
-        line-height: 1.5;
-        display: flex;
-        flex-direction: column;
-        min-height: 100vh;
-      }
-
-      .container {
-        width: 100%;
-        max-width: 1152px;
-        margin: 0 auto;
-        padding: 0 24px;
-      }
-
-      .container-slim {
-        width: 100%;
-        max-width: 800px;
-        margin: 0 auto;
-        padding: 0 24px;
-      }
-
-      /* Navbar */
+/* Navbar */
       .navbar {
         height: 64px;
         padding: 12px 24px;
@@ -191,1137 +185,1063 @@
         box-shadow: 0 2px 6px rgba(66, 133, 244, 0.2);
       }
 
-      /* Main Layout */
-      main {
-        flex: 1;
-        padding: 48px 0;
-      }
+    
+    /* Main Layout */
+    main {
+      flex: 1;
+      padding: 48px 0;
+    }
+    
+    .page-header {
+      margin-bottom: 32px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
 
+    @media (min-width: 768px) {
       .page-header {
-        margin-bottom: 32px;
-        display: flex;
-        flex-direction: column;
-        gap: 16px;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: flex-end;
       }
+    }
+    
+    .title-area {
+      flex: 1;
+    }
 
-      @media (min-width: 768px) {
-        .page-header {
-          flex-direction: row;
-          justify-content: space-between;
-          align-items: flex-end;
-        }
-      }
+    .page-title {
+      font-size: 28px;
+      font-weight: 800;
+      color: #1a1a1a;
+      letter-spacing: -0.5px;
+      margin-bottom: 8px;
+    }
+    
+    .page-subtitle {
+      font-size: 15px;
+      color: #5f6368;
+    }
 
-      .title-area {
-        flex: 1;
-      }
+    .btn-export {
+      background-color: #FFFFFF;
+      border: 1px solid #dadce0;
+      color: #3c4043;
+      padding: 10px 18px;
+      font-weight: 600;
+      border-radius: 100px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13.5px;
+    }
 
-      .page-title {
-        font-size: 28px;
-        font-weight: 800;
-        color: #1a1a1a;
-        letter-spacing: -0.5px;
-        margin-bottom: 8px;
-      }
-
-      .page-subtitle {
-        font-size: 15px;
-        color: #5f6368;
-      }
-
-      .btn-export {
-        background-color: #ffffff;
-        border: 1px solid #dadce0;
-        color: #3c4043;
-        padding: 10px 18px;
-        font-weight: 600;
-        border-radius: 100px;
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        font-size: 13.5px;
-      }
-
-      .btn-export:hover {
-        background-color: #f8f9fa;
-        border-color: #bdc1c6;
-      }
-
-      /* Saved Partners List Grid */
+    .btn-export:hover {
+      background-color: #f8f9fa;
+      border-color: #bdc1c6;
+    }
+    
+    /* Saved Partners List Grid */
+    .partners-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+    
+    @media (min-width: 768px) {
       .partners-grid {
-        display: grid;
-        grid-template-columns: 1fr;
-        gap: 20px;
+        grid-template-columns: repeat(2, 1fr);
       }
+    }
+    
+    /* Card Styles matching BOM Results but with Blue left border */
+    .partner-card {
+      border: 1px solid #e0e0e0;
+      border-left: 3px solid #4285F4; /* Blue left border to distinguish */
+      border-radius: 12px;
+      padding: 24px;
+      background-color: #FFFFFF;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+      transition: box-shadow 0.2s ease, border-color 0.2s ease;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 20px;
+      position: relative;
+    }
+    
+    .partner-card:hover {
+      border-color: #dadce0;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.06); /* Subtle shadow increase on hover */
+    }
+    
+    .partner-header {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    
+    .component-name {
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: #5f6368;
+    }
+    
+    .supplier-name {
+      font-size: 20px;
+      font-weight: 700;
+      color: #1a1a1a;
+      letter-spacing: -0.3px;
+    }
+    
+    .partner-meta {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 4px;
+    }
+    
+    .distance-badge {
+      font-size: 11px;
+      font-weight: 600;
+      background-color: #E8F0FE;
+      color: #1A73E8;
+      padding: 3px 8px;
+      border-radius: 100px;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+    
+    .stock-indicator {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+    
+    .stock-indicator.in-stock {
+      color: #137333;
+    }
 
-      @media (min-width: 768px) {
-        .partners-grid {
-          grid-template-columns: repeat(2, 1fr);
-        }
-      }
+    .stock-indicator.low-stock {
+      color: #d93025;
+    }
+    
+    .stock-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+    }
+    
+    .stock-indicator.in-stock .stock-dot {
+      background-color: #137333;
+    }
 
-      /* Card Styles matching BOM Results but with Blue left border */
-      .partner-card {
-        border: 1px solid #e0e0e0;
-        border-left: 3px solid #4285f4; /* Blue left border to distinguish */
-        border-radius: 12px;
-        padding: 24px;
-        background-color: #ffffff;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
-        transition:
-          box-shadow 0.2s ease,
-          border-color 0.2s ease;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        gap: 20px;
-        position: relative;
-      }
-
-      .partner-card:hover {
-        border-color: #dadce0;
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.06); /* Subtle shadow increase on hover */
-      }
-
-      .partner-header {
-        display: flex;
-        flex-direction: column;
-        gap: 8px;
-      }
-
-      .component-name {
-        font-size: 13px;
-        font-weight: 700;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-        color: #5f6368;
-      }
-
-      .supplier-name {
-        font-size: 20px;
-        font-weight: 700;
-        color: #1a1a1a;
-        letter-spacing: -0.3px;
-      }
-
-      .partner-meta {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        flex-wrap: wrap;
-        margin-top: 4px;
-      }
-
-      .distance-badge {
-        font-size: 11px;
-        font-weight: 600;
-        background-color: #e8f0fe;
-        color: #1a73e8;
-        padding: 3px 8px;
-        border-radius: 100px;
-        display: inline-flex;
-        align-items: center;
-        gap: 4px;
-      }
-
-      .stock-indicator {
-        display: inline-flex;
-        align-items: center;
-        gap: 5px;
-        font-size: 12px;
-        font-weight: 600;
-      }
-
-      .stock-indicator.in-stock {
-        color: #137333;
-      }
-
-      .stock-indicator.low-stock {
-        color: #d93025;
-      }
-
-      .stock-dot {
-        width: 6px;
-        height: 6px;
-        border-radius: 50%;
-      }
-
-      .stock-indicator.in-stock .stock-dot {
-        background-color: #137333;
-      }
-
-      .stock-indicator.low-stock .stock-dot {
-        background-color: #d93025;
-      }
-
-      .partner-address {
-        font-size: 13.5px;
-        color: #5f6368;
-        margin-top: 4px;
-      }
-
-      .partner-actions {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 8px;
-        border-top: 1px solid #f1f3f4;
-        padding-top: 16px;
-      }
-
-      .btn-card-action {
-        flex: 1;
-        font-size: 12px;
-        font-weight: 600;
-        padding: 8px 12px;
-        border-radius: 8px;
-        text-align: center;
-        white-space: nowrap;
-        text-decoration: none;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        gap: 4px;
-      }
-
-      .btn-web {
-        background-color: #ffffff;
-        border: 1px solid #dadce0;
-        color: #3c4043;
-      }
-
-      .btn-web:hover {
-        background-color: #f8f9fa;
-      }
-
-      .btn-maps {
-        background-color: #e8f0fe;
-        color: #1a73e8;
-      }
-
-      .btn-maps:hover {
-        background-color: #d2e3fc;
-      }
-
-      .btn-remove {
-        background-color: transparent;
-        color: #ea4335; /* Red #EA4335 text as requested */
-        border: none;
-        font-size: 12px;
-        font-weight: 600;
-        cursor: pointer;
-        display: inline-flex;
-        align-items: center;
-        gap: 4px;
-        padding: 8px 12px;
-        border-radius: 8px;
-        transition: background-color 0.2s;
-      }
-
-      .btn-remove:hover {
-        background-color: #fce8e6;
-      }
-
-      /* Empty State */
-      .empty-state {
-        text-align: center;
-        padding: 64px 24px;
-        background-color: #f8f9fa;
-        border-radius: 16px;
-        border: 1px dashed #dadce0;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        gap: 16px;
-      }
-
-      .empty-icon {
-        background-color: #e8f0fe;
-        color: #4285f4;
-        width: 64px;
-        height: 64px;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      }
-
-      .empty-title {
-        font-size: 18px;
-        font-weight: 700;
-        color: #1a1a1a;
-      }
-
-      .empty-text {
-        font-size: 14px;
-        color: #5f6368;
-        max-width: 400px;
-        line-height: 1.6;
-      }
-
-      /* Footer */
-      footer {
-        background-color: #f8f9fa;
-        border-top: 1px solid #e1e3e5;
-        padding: 60px 0 0;
-      }
-
+    .stock-indicator.low-stock .stock-dot {
+      background-color: #d93025;
+    }
+    
+    .partner-address {
+      font-size: 13.5px;
+      color: #5f6368;
+      margin-top: 4px;
+    }
+    
+    .partner-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      border-top: 1px solid #f1f3f4;
+      padding-top: 16px;
+    }
+    
+    .btn-card-action {
+      flex: 1;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 8px 12px;
+      border-radius: 8px;
+      text-align: center;
+      white-space: nowrap;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+    }
+    
+    .btn-web {
+      background-color: #FFFFFF;
+      border: 1px solid #dadce0;
+      color: #3c4043;
+    }
+    
+    .btn-web:hover {
+      background-color: #f8f9fa;
+    }
+    
+    .btn-maps {
+      background-color: #e8f0fe;
+      color: #1a73e8;
+    }
+    
+    .btn-maps:hover {
+      background-color: #d2e3fc;
+    }
+    
+    .btn-remove {
+      background-color: transparent;
+      color: #EA4335; /* Red #EA4335 text as requested */
+      border: none;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 8px 12px;
+      border-radius: 8px;
+      transition: background-color 0.2s;
+    }
+    
+    .btn-remove:hover {
+      background-color: #fce8e6;
+    }
+    
+    /* Empty State */
+    .empty-state {
+      text-align: center;
+      padding: 64px 24px;
+      background-color: #f8f9fa;
+      border-radius: 16px;
+      border: 1px dashed #dadce0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+    }
+    
+    .empty-icon {
+      background-color: #e8f0fe;
+      color: #4285F4;
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .empty-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: #1a1a1a;
+    }
+    
+    .empty-text {
+      font-size: 14px;
+      color: #5f6368;
+      max-width: 400px;
+      line-height: 1.6;
+    }
+    
+    /* Footer */
+    footer {
+      background-color: #f8f9fa;
+      border-top: 1px solid #e1e3e5;
+      padding: 60px 0 0;
+    }
+    
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 40px;
+      margin-bottom: 40px;
+    }
+    
+    @media (min-width: 768px) {
       .footer-grid {
-        display: grid;
-        grid-template-columns: 1fr;
-        gap: 40px;
-        margin-bottom: 40px;
+        grid-template-columns: repeat(2, 1fr);
       }
-
-      @media (min-width: 768px) {
-        .footer-grid {
-          grid-template-columns: repeat(2, 1fr);
-        }
-      }
-
-      .footer-col {
-        display: flex;
-        flex-direction: column;
-        gap: 16px;
-      }
-
-      .footer-title {
-        font-size: 12px;
-        font-weight: 700;
-        color: #5f6368;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-      }
-
-      .footer-description {
-        font-size: 13px;
-        color: #5f6368;
-        line-height: 1.6;
-      }
-
+    }
+    
+    .footer-col {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    
+    .footer-title {
+      font-size: 12px;
+      font-weight: 700;
+      color: #5f6368;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    
+    .footer-description {
+      font-size: 13px;
+      color: #5f6368;
+      line-height: 1.6;
+    }
+    
+    .footer-bottom {
+      background-color: #FFFFFF;
+      border-top: 1px solid #e8eaed;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+    
+    @media (min-width: 768px) {
       .footer-bottom {
-        background-color: #ffffff;
-        border-top: 1px solid #e8eaed;
-        padding: 24px;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: space-between;
-        gap: 16px;
+        flex-direction: row;
       }
+    }
+    
+    .copyright {
+      font-size: 12px;
+      color: #5f6368;
+    }
+    
+    .footer-legal-links {
+      display: flex;
+      gap: 20px;
+    }
+    
+    .footer-legal-link {
+      font-size: 12px;
+      color: #3c4043;
+      text-decoration: none;
+      transition: color 0.15s ease;
+    }
+    
+    .footer-legal-link:hover {
+      color: #4285F4;
+    }
 
-      @media (min-width: 768px) {
-        .footer-bottom {
-          flex-direction: row;
-        }
-      }
+    .navbar-logo-wrapper {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      cursor: pointer;
+      transition: opacity 0.3s ease;
+      padding: 8px;
+    }
 
-      .copyright {
-        font-size: 12px;
-        color: #5f6368;
-      }
+    .navbar-logo-wrapper:hover {
+      opacity: 0.85;
+    }
 
-      .footer-legal-links {
-        display: flex;
-        gap: 20px;
-      }
+    .navbar-logo-image {
+      height: 50px;
+      width: auto;
+      max-width: 100%;
+      object-fit: contain;
+      display: block;
+    }
 
-      .footer-legal-link {
-        font-size: 12px;
-        color: #3c4043;
-        text-decoration: none;
-        transition: color 0.15s ease;
-      }
+    .navbar-logo-text {
+      font-size: 24px;
+      font-weight: 700;
+      color: #1a1a1a;
+      font-family: Inter, system-ui, sans-serif;
+      letter-spacing: -0.5px;
+    }
 
-      .footer-legal-link:hover {
-        color: #4285f4;
-      }
+    .footer-logo-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
 
+    .footer-logo-image {
+      height: 40px;
+      width: auto;
+      max-width: 100%;
+      object-fit: contain;
+      display: block;
+    }
+
+    .footer-logo-text {
+      font-size: 18px;
+      font-weight: 700;
+      color: #1a1a1a;
+      font-family: Inter, system-ui, sans-serif;
+    }
+
+    @media (max-width: 1023px) {
       .navbar-logo-wrapper {
-        display: inline-flex;
-        align-items: center;
-        gap: 12px;
-        text-decoration: none;
-        cursor: pointer;
-        transition: opacity 0.3s ease;
-        padding: 8px;
+        gap: 10px;
+        padding: 6px;
       }
-
-      .navbar-logo-wrapper:hover {
-        opacity: 0.85;
-      }
-
+      
       .navbar-logo-image {
-        height: 50px;
-        width: auto;
-        max-width: 100%;
-        object-fit: contain;
-        display: block;
+        height: 45px;
       }
-
+      
       .navbar-logo-text {
-        font-size: 24px;
-        font-weight: 700;
-        color: #1a1a1a;
-        font-family: Inter, system-ui, sans-serif;
-        letter-spacing: -0.5px;
+        font-size: 22px;
       }
-
-      .footer-logo-wrapper {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        margin-bottom: 16px;
-      }
-
+      
       .footer-logo-image {
-        height: 40px;
-        width: auto;
-        max-width: 100%;
-        object-fit: contain;
-        display: block;
+        height: 38px;
       }
-
+      
       .footer-logo-text {
-        font-size: 18px;
-        font-weight: 700;
-        color: #1a1a1a;
-        font-family: Inter, system-ui, sans-serif;
+        font-size: 16px;
       }
+    }
 
-      @media (max-width: 1023px) {
-        .navbar-logo-wrapper {
-          gap: 10px;
-          padding: 6px;
-        }
-
-        .navbar-logo-image {
-          height: 45px;
-        }
-
-        .navbar-logo-text {
-          font-size: 22px;
-        }
-
-        .footer-logo-image {
-          height: 38px;
-        }
-
-        .footer-logo-text {
-          font-size: 16px;
-        }
+    @media (max-width: 768px) {
+      .navbar-logo-wrapper {
+        gap: 8px;
+        padding: 4px;
       }
-
-      @media (max-width: 768px) {
-        .navbar-logo-wrapper {
-          gap: 8px;
-          padding: 4px;
-        }
-
-        .navbar-logo-image {
-          height: 40px;
-        }
-
-        .navbar-logo-text {
-          font-size: 20px;
-        }
-
-        .footer-logo-image {
-          height: 35px;
-        }
-
-        .footer-logo-text {
-          font-size: 14px;
-        }
+      
+      .navbar-logo-image {
+        height: 40px;
       }
-
-      /* Toast CSS */
-      .toast-container {
-        position: fixed;
-        bottom: 24px;
-        left: 50%;
-        transform: translateX(-50%);
-        z-index: 9999;
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
+      
+      .navbar-logo-text {
+        font-size: 20px;
       }
-
-      .toast {
-        background-color: #323232;
-        color: #ffffff;
-        padding: 12px 24px;
-        border-radius: 8px;
+      
+      .footer-logo-image {
+        height: 35px;
+      }
+      
+      .footer-logo-text {
         font-size: 14px;
-        font-weight: 500;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-        animation: slideUp 0.25s ease-out forwards;
+      }
+    }
+    
+    /* Toast CSS */
+    .toast-container {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    
+    .toast {
+      background-color: #323232;
+      color: #ffffff;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      animation: slideUp 0.25s ease-out forwards;
+      opacity: 0.95;
+    }
+    
+    @keyframes slideUp {
+      from {
+        transform: translateY(30px);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0);
         opacity: 0.95;
       }
+    }
 
-      @keyframes slideUp {
-        from {
-          transform: translateY(30px);
-          opacity: 0;
-        }
-        to {
-          transform: translateY(0);
-          opacity: 0.95;
-        }
-      }
+    /* ===== SCROLL SMOOTHNESS & HARDWARE PERFORMANCE ===== */
+    html {
+      scroll-behavior: smooth;
+      overflow-y: scroll;
+    }
 
-      /* ===== SCROLL SMOOTHNESS & HARDWARE PERFORMANCE ===== */
-      html {
-        scroll-behavior: smooth;
-        overflow-y: scroll;
-      }
+    body {
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      transform: translate3d(0, 0, 0);
+      will-change: scroll-position;
+    }
 
-      body {
-        -webkit-font-smoothing: antialiased;
-        -moz-osx-font-smoothing: grayscale;
-        transform: translate3d(0, 0, 0);
-        will-change: scroll-position;
-      }
+    /* ===== HARDWARE ACCELERATION ===== */
+    .navbar, .partner-card, .card, button, a {
+      transform: translate3d(0, 0, 0);
+    }
 
-      /* ===== HARDWARE ACCELERATION ===== */
-      .navbar,
-      .partner-card,
-      .card,
-      button,
-      a {
-        transform: translate3d(0, 0, 0);
-      }
+    /* ===== FAST TRANSITIONS ===== */
+    button, a, input, select, textarea {
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    }
 
-      /* ===== FAST TRANSITIONS ===== */
-      button,
-      a,
-      input,
-      select,
-      textarea {
-        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
-      }
+    button:hover, a:hover {
+      transform: translateY(-2px);
+    }
 
-      button:hover,
-      a:hover {
-        transform: translateY(-2px);
-      }
+    /* Smooth nav link hover overrides */
+    .nav-links a {
+      transition: background-color 0.15s ease, color 0.15s ease !important;
+    }
 
-      /* Smooth nav link hover overrides */
-      .nav-links a {
-        transition:
-          background-color 0.15s ease,
-          color 0.15s ease !important;
-      }
+    /* Smooth card hover overrides (Material Design easing) */
+    .partner-card, .card {
+      transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.2s ease !important;
+    }
+    .partner-card:hover, .card:hover {
+      transform: translateY(-4px) translate3d(0, 0, 0) !important;
+      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1) !important;
+    }
 
-      /* Smooth card hover overrides (Material Design easing) */
-      .partner-card,
-      .card {
-        transition:
-          transform 0.2s cubic-bezier(0.4, 0, 0.2, 1),
-          box-shadow 0.2s ease !important;
-      }
-      .partner-card:hover,
-      .card:hover {
-        transform: translateY(-4px) translate3d(0, 0, 0) !important;
-        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1) !important;
-      }
+    /* ===== SCROLL CONTAINMENT ===== */
+    .navbar {
+      contain: layout style;
+      overflow: visible !important;
+    }
 
-      /* ===== SCROLL CONTAINMENT ===== */
-      .navbar {
-        contain: layout style;
-        overflow: visible !important;
-      }
+    main, section {
+      contain: layout style;
+    }
 
-      main,
-      section {
-        contain: layout style;
-      }
+    .partner-card, .card {
+      contain: content;
+    }
 
-      .partner-card,
-      .card {
-        contain: content;
-      }
+    /* ===== FORM PERFORMANCE ===== */
+    input[type="text"], input[type="email"], input[type="password"] {
+      transition: all 0.2s ease !important;
+    }
 
-      /* ===== FORM PERFORMANCE ===== */
-      input[type="text"],
-      input[type="email"],
-      input[type="password"] {
-        transition: all 0.2s ease !important;
-      }
+    input[type="text"]:focus, input[type="email"]:focus, input[type="password"]:focus {
+      transform: scale(1.01) !important;
+      box-shadow: 0 0 0 3px rgba(66, 133, 244, 0.1) !important;
+    }
 
-      input[type="text"]:focus,
-      input[type="email"]:focus,
-      input[type="password"]:focus {
-        transform: scale(1.01) !important;
-        box-shadow: 0 0 0 3px rgba(66, 133, 244, 0.1) !important;
-      }
+    input[type="text"]::placeholder, input[type="email"]::placeholder, input[type="password"]::placeholder {
+      transition: color 0.15s ease !important;
+    }
 
-      input[type="text"]::placeholder,
-      input[type="email"]::placeholder,
-      input[type="password"]::placeholder {
-        transition: color 0.15s ease !important;
-      }
+    /* ===== SCROLL LOCK MODAL/DROPDOWNS ===== */
+    body.modal-open {
+      overflow: hidden;
+      position: fixed;
+      width: 100%;
+    }
 
-      /* ===== SCROLL LOCK MODAL/DROPDOWNS ===== */
-      body.modal-open {
-        overflow: hidden;
-        position: fixed;
-        width: 100%;
-      }
+    .modal-backdrop {
+      animation: fadeIn 0.2s ease;
+    }
 
-      .modal-backdrop {
-        animation: fadeIn 0.2s ease;
-      }
+    /* ===== USER ACCOUNT DROPDOWN STYLING ===== */
+    .user-profile-menu-container {
+      position: relative !important;
+      display: inline-block !important;
+      overflow: visible !important;
+    }
 
-      /* ===== USER ACCOUNT DROPDOWN STYLING ===== */
-      .user-profile-menu-container {
-        position: relative !important;
-        display: inline-block !important;
-        overflow: visible !important;
-      }
+    #account-btn {
+      position: relative !important;
+      z-index: 101 !important;
+    }
 
-      #account-btn {
-        position: relative !important;
-        z-index: 101 !important;
-      }
+    #account-dropdown {
+      display: block !important;
+      position: absolute !important;
+      right: 0 !important;
+      top: calc(100% + 8px) !important;
+      background-color: #ffffff !important;
+      border: 1px solid #e0e0e0 !important;
+      border-radius: 12px !important;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
+      width: 220px !important;
+      min-width: 200px !important;
+      z-index: 1000 !important; /* Above all content but no backdrop */
+      padding: 12px 0 !important;
+      opacity: 0 !important;
+      visibility: hidden !important;
+      transform: translateY(-8px) !important;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+      pointer-events: none !important;
+      text-align: left !important;
+      box-sizing: border-box !important;
+    }
 
-      #account-dropdown {
-        display: block !important;
-        position: absolute !important;
-        right: 0 !important;
-        top: calc(100% + 8px) !important;
-        background-color: #ffffff !important;
-        border: 1px solid #e0e0e0 !important;
-        border-radius: 12px !important;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
-        width: 220px !important;
-        min-width: 200px !important;
-        z-index: 1000 !important; /* Above all content but no backdrop */
-        padding: 12px 0 !important;
-        opacity: 0 !important;
-        visibility: hidden !important;
-        transform: translateY(-8px) !important;
-        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
-        pointer-events: none !important;
-        text-align: left !important;
+    #account-dropdown.active {
+      opacity: 1 !important;
+      visibility: visible !important;
+      transform: translateY(0) !important;
+      pointer-events: auto !important;
+    }
+
+    #account-dropdown a, 
+    #account-dropdown button,
+    #account-dropdown .dropdown-item {
+      display: block !important;
+      width: 100% !important;
+      padding: 12px 16px !important;
+      font-size: 14px !important;
+      color: #1a1a1a !important;
+      text-decoration: none !important;
+      border: none !important;
+      background: none !important;
+      cursor: pointer !important;
+      font-weight: 500 !important;
+      transition: background-color 0.15s ease, color 0.15s ease !important;
+      font-family: Inter, system-ui, sans-serif !important;
+      box-sizing: border-box !important;
+    }
+
+    #account-dropdown a:hover, 
+    #account-dropdown button:hover,
+    #account-dropdown .dropdown-item:hover {
+      background-color: #f5f5f5 !important;
+      color: #1a1a1a !important;
+    }
+
+    #account-dropdown #signout-link {
+      border-top: 1px solid #e0e0e0 !important;
+      color: #d93025 !important;
+      font-weight: 600 !important;
+      margin-top: 8px !important;
+      padding-top: 12px !important;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+  
+    /* GrabRaw+ CSS */
+    .plus-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 18px;
+      height: 18px;
+      background: #4285F4;
+      border-radius: 50%;
+      color: white;
+      font-size: 10px;
+      font-weight: bold;
+      margin-left: 4px;
+      border: 2px solid white;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+    }
+    .avatar-wrapper { position: relative; display: inline-block; }
+    .avatar-badge { position: absolute; bottom: -2px; right: -2px; }
+
+  </style>
+
+  <!-- Comprehensive Mobile Responsiveness Overrides -->
+  <style>
+    /* Prevent auto-zoom on iOS/device focus by keeping inputs >= 16px */
+    input, select, textarea {
+      font-size: 16px !important;
+    }
+    
+    /* Ensure body line height is clean & comfortable */
+    body {
+      line-height: 1.6 !important;
+    }
+    
+    /* Strict Mobile-first spacing constraints (< 640px) */
+    @media (max-width: 639.98px) {
+      .container, .hero, section, main {
+        padding-left: 16px !important;
+        padding-right: 16px !important;
+      }
+      .card, .scroller-card, .step-card, .trending-card, .material-card {
+        margin: 12px 0 !important;
+        padding: 16px !important;
+      }
+      
+      /* Horizontal scrolling for suggestions on mobile */
+      .suggestion-row {
+        padding: 0 4px !important;
         box-sizing: border-box !important;
+        overflow-x: auto !important;
+        justify-content: flex-start !important;
+        -webkit-overflow-scrolling: touch;
+        max-width: 100% !important;
+        scrollbar-width: none; /* Hide scrollbar */
+        margin-left: 0 !important;
+        margin-right: 0 !important;
       }
-
-      #account-dropdown.active {
-        opacity: 1 !important;
-        visibility: visible !important;
-        transform: translateY(0) !important;
+      .suggestion-row::-webkit-scrollbar {
+        display: none;
+      }
+      #suggestion-ticker-container {
+        width: auto !important;
+        max-width: none !important;
+        overflow: visible !important;
         pointer-events: auto !important;
       }
-
-      #account-dropdown a,
-      #account-dropdown button,
-      #account-dropdown .dropdown-item {
-        display: block !important;
-        width: 100% !important;
-        padding: 12px 16px !important;
-        font-size: 14px !important;
-        color: #1a1a1a !important;
-        text-decoration: none !important;
-        border: none !important;
-        background: none !important;
-        cursor: pointer !important;
-        font-weight: 500 !important;
-        transition:
-          background-color 0.15s ease,
-          color 0.15s ease !important;
-        font-family: Inter, system-ui, sans-serif !important;
-        box-sizing: border-box !important;
+    }
+    
+    /* Disable hovers on touch devices to prevent sticky hover states */
+    @media (hover: none) {
+      button:hover, a:hover, .btn:hover, .scroller-card:hover, .step-card:hover, .trending-card:hover {
+        transform: none !important;
+        box-shadow: none !important;
       }
-
-      #account-dropdown a:hover,
-      #account-dropdown button:hover,
-      #account-dropdown .dropdown-item:hover {
-        background-color: #f5f5f5 !important;
-        color: #1a1a1a !important;
+      button:active, a:active, .btn:active {
+        background-color: rgba(0,0,0,0.06) !important;
       }
-
-      #account-dropdown #signout-link {
-        border-top: 1px solid #e0e0e0 !important;
-        color: #d93025 !important;
-        font-weight: 600 !important;
-        margin-top: 8px !important;
-        padding-top: 12px !important;
+    }
+    
+    /* Desktop-first Navbar button overrides */
+    @media (min-width: 640px) {
+      .nav-actions {
+        gap: 12px !important;
       }
-
-      @keyframes fadeIn {
-        from {
-          opacity: 0;
-        }
-        to {
-          opacity: 1;
-        }
-      }
-
-      @keyframes fadeIn {
-        from {
-          opacity: 0;
-        }
-        to {
-          opacity: 1;
-        }
-      }
-
-      /* GrabRaw+ CSS */
-      .plus-badge {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        width: 18px;
-        height: 18px;
-        background: #4285f4;
-        border-radius: 50%;
-        color: white;
-        font-size: 10px;
-        font-weight: bold;
-        margin-left: 4px;
-        border: 2px solid white;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
-      }
-      .avatar-wrapper {
-        position: relative;
-        display: inline-block;
-      }
-      .avatar-badge {
-        position: absolute;
-        bottom: -2px;
-        right: -2px;
-      }
-    </style>
-
-    <!-- Comprehensive Mobile Responsiveness Overrides -->
-    <style>
-      /* Prevent auto-zoom on iOS/device focus by keeping inputs >= 16px */
-      input,
-      select,
-      textarea {
-        font-size: 16px !important;
-      }
-
-      /* Ensure body line height is clean & comfortable */
-      body {
-        line-height: 1.6 !important;
-      }
-
-      /* Strict Mobile-first spacing constraints (< 640px) */
-      @media (max-width: 639.98px) {
-        .container,
-        .hero,
-        section,
-        main {
-          padding-left: 16px !important;
-          padding-right: 16px !important;
-        }
-        .card,
-        .scroller-card,
-        .step-card,
-        .trending-card,
-        .material-card {
-          margin: 12px 0 !important;
-          padding: 16px !important;
-        }
-
-        /* Horizontal scrolling for suggestions on mobile */
-        .suggestion-row {
-          padding: 0 4px !important;
-          box-sizing: border-box !important;
-          overflow-x: auto !important;
-          justify-content: flex-start !important;
-          -webkit-overflow-scrolling: touch;
-          max-width: 100% !important;
-          scrollbar-width: none; /* Hide scrollbar */
-          margin-left: 0 !important;
-          margin-right: 0 !important;
-        }
-        .suggestion-row::-webkit-scrollbar {
-          display: none;
-        }
-        #suggestion-ticker-container {
-          width: auto !important;
-          max-width: none !important;
-          overflow: visible !important;
-          pointer-events: auto !important;
-        }
-      }
-
-      /* Disable hovers on touch devices to prevent sticky hover states */
-      @media (hover: none) {
-        button:hover,
-        a:hover,
-        .btn:hover,
-        .scroller-card:hover,
-        .step-card:hover,
-        .trending-card:hover {
-          transform: none !important;
-          box-shadow: none !important;
-        }
-        button:active,
-        a:active,
-        .btn:active {
-          background-color: rgba(0, 0, 0, 0.06) !important;
-        }
-      }
-
-      /* Desktop-first Navbar button overrides */
-      @media (min-width: 640px) {
-        .nav-actions {
-          gap: 12px !important;
-        }
-        .nav-actions .btn-outline,
-        .nav-actions .btn-primary {
-          height: 44px !important;
-          line-height: 1 !important;
-          display: inline-flex !important;
-          align-items: center !important;
-          justify-content: center !important;
-          padding: 0 20px !important;
-          font-weight: 600 !important;
-          font-size: 14px !important;
-          border-radius: 100px !important;
-          box-sizing: border-box !important;
-          transition: all 0.2s ease !important;
-        }
-        .nav-actions .btn-outline {
-          border: 1px solid #dadce0 !important;
-          background-color: transparent !important;
-          color: #3c4043 !important;
-        }
-        .nav-actions .btn-outline:hover {
-          background-color: #f8f9fa !important;
-          border-color: #bdc1c6 !important;
-        }
-        .nav-actions .btn-primary {
-          background-color: #1a73e8 !important; /* solid blue */
-          color: #ffffff !important;
-          border: none !important;
-        }
-        .nav-actions .btn-primary:hover {
-          background-color: #1557b0 !important;
-        }
-      }
-
-      /* Mobile-first Nav & Logo constraints (< 640px) */
-      @media (max-width: 639.98px) {
-        .navbar {
-          height: 56px !important;
-          padding: 0 16px !important;
-        }
-        .navbar-logo-image {
-          height: 40px !important;
-          width: auto !important;
-        }
-        .navbar-logo-text {
-          font-size: 18px !important;
-        }
-
-        /* Full width Account buttons responsive design */
-        #account-btn {
-          width: auto !important;
-        }
-
-        /* Hamburger menu toggle button style */
-        .hamburger-menu {
-          display: flex !important;
-          align-items: center !important;
-          justify-content: center !important;
-          background: none !important;
-          border: none !important;
-          color: #1a1a1a !important;
-          cursor: pointer !important;
-          padding: 8px !important;
-          border-radius: 8px !important;
-          width: 44px !important;
-          height: 44px !important;
-          z-index: 1010 !important;
-          order: -1 !important; /* Positions nicely on mobile headers */
-        }
-
-        /* Responsive vertical mobile navigation list drawer style */
-        .nav-links {
-          display: none !important;
-          flex-direction: column !important;
-          position: absolute !important;
-          top: 56px !important;
-          left: 0 !important;
-          right: 0 !important;
-          background: #ffffff !important;
-          border-bottom: 1px solid #dadce0 !important;
-          padding: 16px !important;
-          gap: 8px !important;
-          margin-left: 0 !important;
-          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
-          z-index: 1000 !important;
-        }
-        .nav-links.active {
-          display: flex !important;
-        }
-        .nav-link {
-          width: 100% !important;
-          font-size: 16px !important;
-          font-weight: 600 !important;
-          padding: 12px 14px !important;
-          white-space: nowrap !important;
-          box-sizing: border-box !important;
-        }
-
-        /* Hide desktop buttons when user is logged out on mobile */
-        .nav-actions .btn-outline,
-        .nav-actions .btn-primary {
-          display: none !important;
-        }
-
-        /* Mobile active navigation links enhancements */
-        .mobile-nav-divider {
-          display: block !important;
-          border: 0 !important;
-          border-top: 1px solid #dadce0 !important;
-          margin: 8px 14px !important;
-        }
-        .mobile-nav-signin {
-          display: block !important;
-          text-align: center !important;
-          padding: 12px 14px !important;
-          font-weight: 600 !important;
-          font-size: 16px !important;
-          color: #1a1a1a !important;
-          text-decoration: none !important;
-        }
-        .mobile-nav-getstarted {
-          display: flex !important;
-          width: calc(100% - 32px) !important;
-          height: 48px !important;
-          font-size: 16px !important;
-          font-weight: bold !important;
-          margin: 12px 16px !important;
-          background-color: #1a73e8 !important;
-          color: #ffffff !important;
-          align-items: center !important;
-          justify-content: center !important;
-          border-radius: 100px !important;
-          box-sizing: border-box !important;
-          border: none !important;
-          box-shadow: 0 2px 6px rgba(26, 115, 232, 0.2) !important;
-          text-decoration: none !important;
-        }
-      }
-
-      /* When logged in, hide registration/signin elements on mobile dropdown menu */
-      body.logged-in .mobile-nav-signin,
-      body.logged-in .mobile-nav-getstarted,
-      body.logged-in .mobile-nav-divider {
-        display: none !important;
-      }
-
-      @media (min-width: 640px) {
-        .hamburger-menu {
-          display: none !important;
-        }
-      }
-
-      /* Click outside Dimmed Overlay - Removed black overlays */
-      .drawer-overlay {
-        display: none !important;
-      }
-
-      /* Absolute Minimum Touch Target Dimensions (44px) */
-      .btn,
-      button,
-      .btn-row-action,
-      #account-btn {
-        min-height: 44px !important;
-        box-sizing: border-box !important;
-      }
-
-      /* Touch Target targets for BOM interactive save (+) and expand (↓) controls */
-      .btn-save-supplier,
-      .btn-expand-alternatives {
-        width: 44px !important;
+      .nav-actions .btn-outline, .nav-actions .btn-primary {
         height: 44px !important;
-        padding: 13px !important;
-        box-sizing: border-box !important;
-        border-radius: 50% !important;
-        border: 1px solid #dadce0 !important;
-        background-color: #f0f0f0 !important;
+        line-height: 1 !important;
         display: inline-flex !important;
         align-items: center !important;
         justify-content: center !important;
-        cursor: pointer !important;
+        padding: 0 20px !important;
+        font-weight: 600 !important;
+        font-size: 14px !important;
+        border-radius: 100px !important;
+        box-sizing: border-box !important;
         transition: all 0.2s ease !important;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05) !important;
       }
-
-      .btn-save-supplier svg,
-      .btn-expand-alternatives svg {
-        width: 18px !important;
-        height: 18px !important;
+      .nav-actions .btn-outline {
+        border: 1px solid #dadce0 !important;
+        background-color: transparent !important;
+        color: #3c4043 !important;
       }
-
-      .btn-save-supplier {
-        color: #1a73e8 !important;
+      .nav-actions .btn-outline:hover {
+        background-color: #f8f9fa !important;
+        border-color: #bdc1c6 !important;
       }
-
-      .btn-save-supplier.saved {
-        background-color: #34a853 !important;
+      .nav-actions .btn-primary {
+        background-color: #1a73e8 !important; /* solid blue */
         color: #ffffff !important;
-        border-color: #34a853 !important;
+        border: none !important;
       }
-
-      .btn-expand-alternatives {
-        color: #5f6368 !important;
+      .nav-actions .btn-primary:hover {
+        background-color: #1557b0 !important;
       }
-
-      .btn-save-supplier:hover,
-      .btn-expand-alternatives:hover {
-        background-color: #e0e0e0 !important;
-        border-color: #dadce0 !important;
+    }
+    
+    /* Mobile-first Nav & Logo constraints (< 640px) */
+    @media (max-width: 639.98px) {
+      .navbar {
+        height: 56px !important;
+        padding: 0 16px !important;
       }
-
-      .btn-save-supplier.saved:hover {
-        background-color: #2b8b45 !important;
-        border-color: #2b8b45 !important;
+      .navbar-logo-image {
+        height: 40px !important;
+        width: auto !important;
       }
-
-      .btn-save-supplier:active,
-      .btn-expand-alternatives:active {
-        background-color: #d0d0d0 !important;
+      .navbar-logo-text {
+        font-size: 18px !important;
       }
-
-      /* Truncate long single-line category pill badges */
-      .pill-tag {
+      
+      /* Full width Account buttons responsive design */
+      #account-btn {
+        width: auto !important;
+      }
+      
+      /* Hamburger menu toggle button style */
+      .hamburger-menu {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        background: none !important;
+        border: none !important;
+        color: #1a1a1a !important;
+        cursor: pointer !important;
+        padding: 8px !important;
+        border-radius: 8px !important;
+        width: 44px !important;
+        height: 44px !important;
+        z-index: 1010 !important;
+        order: -1 !important; /* Positions nicely on mobile headers */
+      }
+      
+      /* Responsive vertical mobile navigation list drawer style */
+      .nav-links {
+        display: none !important;
+        flex-direction: column !important;
+        position: absolute !important;
+        top: 56px !important;
+        left: 0 !important;
+        right: 0 !important;
+        background: #ffffff !important;
+        border-bottom: 1px solid #dadce0 !important;
+        padding: 16px !important;
+        gap: 8px !important;
+        margin-left: 0 !important;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1) !important;
+        z-index: 1000 !important;
+      }
+      .nav-links.active {
+        display: flex !important;
+      }
+      .nav-link {
+        width: 100% !important;
+        font-size: 16px !important;
+        font-weight: 600 !important;
+        padding: 12px 14px !important;
         white-space: nowrap !important;
-        overflow: hidden !important;
-        text-overflow: ellipsis !important;
-        max-width: 150px !important;
+        box-sizing: border-box !important;
       }
+      
+      /* Hide desktop buttons when user is logged out on mobile */
+      .nav-actions .btn-outline, .nav-actions .btn-primary {
+        display: none !important;
+      }
+      
+      /* Mobile active navigation links enhancements */
+      .mobile-nav-divider {
+        display: block !important;
+        border: 0 !important;
+        border-top: 1px solid #dadce0 !important;
+        margin: 8px 14px !important;
+      }
+      .mobile-nav-signin {
+        display: block !important;
+        text-align: center !important;
+        padding: 12px 14px !important;
+        font-weight: 600 !important;
+        font-size: 16px !important;
+        color: #1a1a1a !important;
+        text-decoration: none !important;
+      }
+      .mobile-nav-getstarted {
+        display: flex !important;
+        width: calc(100% - 32px) !important;
+        height: 48px !important;
+        font-size: 16px !important;
+        font-weight: bold !important;
+        margin: 12px 16px !important;
+        background-color: #1a73e8 !important;
+        color: #ffffff !important;
+        align-items: center !important;
+        justify-content: center !important;
+        border-radius: 100px !important;
+        box-sizing: border-box !important;
+        border: none !important;
+        box-shadow: 0 2px 6px rgba(26,115,232,0.2) !important;
+        text-decoration: none !important;
+      }
+    }
+    
+    /* When logged in, hide registration/signin elements on mobile dropdown menu */
+    body.logged-in .mobile-nav-signin,
+    body.logged-in .mobile-nav-getstarted,
+    body.logged-in .mobile-nav-divider {
+      display: none !important;
+    }
+    
+    @media (min-width: 640px) {
+      .hamburger-menu {
+        display: none !important;
+      }
+    }
+    
+    /* Click outside Dimmed Overlay - Removed black overlays */
+    .drawer-overlay {
+      display: none !important;
+    }
+    
+    /* Absolute Minimum Touch Target Dimensions (44px) */
+    .btn, button, .btn-row-action, #account-btn {
+      min-height: 44px !important;
+      box-sizing: border-box !important;
+    }
+    
+    /* Touch Target targets for BOM interactive save (+) and expand (↓) controls */
+    .btn-save-supplier, .btn-expand-alternatives {
+      width: 44px !important;
+      height: 44px !important;
+      padding: 13px !important;
+      box-sizing: border-box !important;
+      border-radius: 50% !important;
+      border: 1px solid #dadce0 !important;
+      background-color: #f0f0f0 !important;
+      display: inline-flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      cursor: pointer !important;
+      transition: all 0.2s ease !important;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05) !important;
+    }
+    
+    .btn-save-supplier svg, .btn-expand-alternatives svg {
+      width: 18px !important;
+      height: 18px !important;
+    }
+    
+    .btn-save-supplier {
+      color: #1a73e8 !important;
+    }
+    
+    .btn-save-supplier.saved {
+      background-color: #34A853 !important;
+      color: #ffffff !important;
+      border-color: #34A853 !important;
+    }
+    
+    .btn-expand-alternatives {
+      color: #5f6368 !important;
+    }
+    
+    .btn-save-supplier:hover, .btn-expand-alternatives:hover {
+      background-color: #e0e0e0 !important;
+      border-color: #dadce0 !important;
+    }
+    
+    .btn-save-supplier.saved:hover {
+      background-color: #2b8b45 !important;
+      border-color: #2b8b45 !important;
+    }
+    
+    .btn-save-supplier:active, .btn-expand-alternatives:active {
+      background-color: #d0d0d0 !important;
+    }
+    
+    /* Truncate long single-line category pill badges */
+    .pill-tag {
+      white-space: nowrap !important;
+      overflow: hidden !important;
+      text-overflow: ellipsis !important;
+      max-width: 150px !important;
+    }
+    
+    /* Vertical Card actions stacking for narrow mobile screens <= 600px */
+    @media (max-width: 600px) {
+      .row-actions {
+        flex-direction: column !important;
+        align-items: stretch !important;
+        width: 100% !important;
+        gap: 8px !important;
+      }
+      .btn-row-action {
+        width: 100% !important;
+        box-sizing: border-box !important;
+        padding: 12px 16px !important;
+        height: 44px !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+      }
+    }
+    
+    /* Hero Search Block constraints on Mobile */
+    @media (max-width: 639.98px) {
+      .search-block {
+        width: 100% !important;
+        padding: 0 16px !important;
+        box-sizing: border-box !important;
+      }
+      .search-box {
+        height: 48px !important;
+        padding: 0 4px 0 12px !important;
+        border-radius: 24px !important;
+      }
+      .btn-search {
+        height: 38px !important;
+        padding: 0 16px !important;
+        font-size: 14px !important;
+      }
+    }
+    
+    /* Media Query Breakpoints Alignment Grid Controls */
+    @media (max-width: 639.98px) {
+      .steps-grid, .trending-grid, .footer-grid, .partners-grid, .form-container-grid {
+        grid-template-columns: 1fr !important;
+      }
+      /* Prevent text overlap with top right absolute actions on mobile */
+      .material-meta-row {
+        padding-right: 104px !important;
+      }
+      .material-name {
+        font-size: 16px !important;
+        margin-right: 4px !important;
+      }
+    }
+    @media (min-width: 640px) and (max-width: 1023.98px) {
+      .steps-grid, .trending-grid, .footer-grid, .partners-grid, .form-container-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+      }
+    }
+    @media (min-width: 1024px) {
+      .steps-grid {
+        grid-template-columns: repeat(3, 1fr) !important;
+      }
+      .trending-grid, .footer-grid {
+        grid-template-columns: repeat(4, 1fr) !important;
+      }
+    }
+  </style>
 
-      /* Vertical Card actions stacking for narrow mobile screens <= 600px */
-      @media (max-width: 600px) {
-        .row-actions {
-          flex-direction: column !important;
-          align-items: stretch !important;
-          width: 100% !important;
-          gap: 8px !important;
-        }
-        .btn-row-action {
-          width: 100% !important;
-          box-sizing: border-box !important;
-          padding: 12px 16px !important;
-          height: 44px !important;
-          display: inline-flex !important;
-          align-items: center !important;
-          justify-content: center !important;
-        }
-      }
-
-      /* Hero Search Block constraints on Mobile */
-      @media (max-width: 639.98px) {
-        .search-block {
-          width: 100% !important;
-          padding: 0 16px !important;
-          box-sizing: border-box !important;
-        }
-        .search-box {
-          height: 48px !important;
-          padding: 0 4px 0 12px !important;
-          border-radius: 24px !important;
-        }
-        .btn-search {
-          height: 38px !important;
-          padding: 0 16px !important;
-          font-size: 14px !important;
-        }
-      }
-
-      /* Media Query Breakpoints Alignment Grid Controls */
-      @media (max-width: 639.98px) {
-        .steps-grid,
-        .trending-grid,
-        .footer-grid,
-        .partners-grid,
-        .form-container-grid {
-          grid-template-columns: 1fr !important;
-        }
-        /* Prevent text overlap with top right absolute actions on mobile */
-        .material-meta-row {
-          padding-right: 104px !important;
-        }
-        .material-name {
-          font-size: 16px !important;
-          margin-right: 4px !important;
-        }
-      }
-      @media (min-width: 640px) and (max-width: 1023.98px) {
-        .steps-grid,
-        .trending-grid,
-        .footer-grid,
-        .partners-grid,
-        .form-container-grid {
-          grid-template-columns: repeat(2, 1fr) !important;
-        }
-      }
-      @media (min-width: 1024px) {
-        .steps-grid {
-          grid-template-columns: repeat(3, 1fr) !important;
-        }
-        .trending-grid,
-        .footer-grid {
-          grid-template-columns: repeat(4, 1fr) !important;
-        }
-      }
-    </style>
-
-    <script>
-      document.addEventListener("DOMContentLoaded", () => {
-        // Setup dynamic Hamburger toggle
-        const navbar = document.querySelector(".navbar");
-        if (navbar) {
-          const navLinks = navbar.querySelector(".nav-links");
-          if (navLinks && !navbar.querySelector("#hamburger-toggle")) {
-            const hamBtn = document.createElement("button");
-            hamBtn.id = "hamburger-toggle";
-            hamBtn.className = "hamburger-menu";
-            hamBtn.type = "button";
-            hamBtn.setAttribute("aria-label", "Toggle Navigation");
-            hamBtn.innerHTML = `
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // Setup dynamic Hamburger toggle
+      const navbar = document.querySelector('.navbar');
+      if (navbar) {
+        const navLinks = navbar.querySelector('.nav-links');
+        if (navLinks && !navbar.querySelector('#hamburger-toggle')) {
+          const hamBtn = document.createElement('button');
+          hamBtn.id = 'hamburger-toggle';
+          hamBtn.className = 'hamburger-menu';
+          hamBtn.type = 'button';
+          hamBtn.setAttribute('aria-label', 'Toggle Navigation');
+          hamBtn.innerHTML = `
             <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
               <line x1="3" y1="12" x2="21" y2="12"></line>
               <line x1="3" y1="6" x2="21" y2="6"></line>
               <line x1="3" y1="18" x2="21" y2="18"></line>
             </svg>
           `;
-            navbar.insertBefore(hamBtn, navLinks);
+          navbar.insertBefore(hamBtn, navLinks);
+          
+          hamBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            navLinks.classList.toggle('active');
+          });
+        }
+      }
 
-            hamBtn.addEventListener("click", (e) => {
-              e.stopPropagation();
-              navLinks.classList.toggle("active");
-            });
+
+
+      // Global click outside for Navbar Hamburger menu
+      document.addEventListener('click', (e) => {
+        const navLinks = document.querySelector('.nav-links');
+        const hamBtn = document.getElementById('hamburger-toggle');
+        if (navLinks && navLinks.classList.contains('active')) {
+          if (!navLinks.contains(e.target) && (!hamBtn || !hamBtn.contains(e.target))) {
+            navLinks.classList.remove('active');
           }
         }
-
-        // Global click outside for Navbar Hamburger menu
-        document.addEventListener("click", (e) => {
-          const navLinks = document.querySelector(".nav-links");
-          const hamBtn = document.getElementById("hamburger-toggle");
-          if (navLinks && navLinks.classList.contains("active")) {
-            if (
-              !navLinks.contains(e.target) &&
-              (!hamBtn || !hamBtn.contains(e.target))
-            ) {
-              navLinks.classList.remove("active");
-            }
-          }
-        });
       });
-    </script>
-  </head>
-  <body>
-    <!-- Navbar -->
-    <header class="navbar">
+    });
+  </script>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <header class="navbar">
       <a href="/" class="navbar-logo-wrapper">
         <img
           src="https://res.cloudinary.com/duh9wvgzu/image/upload/q_auto/f_auto/v1780501537/IMG_5442_r9v9ez.jpg"
@@ -1338,13 +1258,13 @@
         <a href="/#ask-ai" class="nav-link">Ask AI</a>
         <hr class="mobile-nav-divider" style="display: none" />
         <a
-          href="/signin.html"
+          href="/signin"
           class="nav-link mobile-nav-signin"
           style="display: none"
           >Sign In</a
         >
         <a
-          href="/register-user.html"
+          href="/register-user"
           class="btn mobile-nav-getstarted"
           style="display: none"
           aria-label="Get Started"
@@ -1353,548 +1273,452 @@
       </nav>
       <div class="nav-actions">
         <div id="unauthNav">
-          <a
-            href="/signin.html"
-            class="btn btn-outline"
-            style="border-radius: 100px"
-            >Sign In</a
-          >
-          <a
-            href="/register-user.html"
-            class="btn btn-primary"
-            style="border-radius: 100px"
-            >Get Started</a
-          >
+          <a href="/signin.html" class="btn btn-outline" style="border-radius: 100px">Sign In</a>
+          <a href="/register-user.html" class="btn btn-primary" style="border-radius: 100px">Get Started</a>
         </div>
-        <div id="authNav" style="display: none; position: relative">
-          <button
-            id="account-btn"
-            class="btn btn-outline"
-            style="
-              border-radius: 100px;
-              display: inline-flex;
-              align-items: center;
-            "
-            onclick="toggleDropdown()"
-          >
-            My Account
-            <span
-              id="nav-avatar"
-              style="
-                display: inline-flex;
-                align-items: center;
-                justify-content: center;
-                width: 24px;
-                height: 24px;
-                border-radius: 50%;
-                background: #4285f4;
-                color: white;
-                font-size: 11px;
-                font-weight: 600;
-                margin-left: 8px;
-                overflow: hidden;
-              "
-            ></span>
-          </button>
-          <div
-            id="accountDropdown"
-            style="
-              display: none;
-              position: absolute;
-              right: 0;
-              top: 100%;
-              margin-top: 8px;
-              background-color: #ffffff;
-              border: 1px solid #e0e0e0;
-              border-radius: 12px;
-              box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-              width: 220px;
-              z-index: 10000;
-              overflow: hidden;
-              padding: 12px 0;
-              text-align: left;
-              opacity: 1;
-            "
-          >
-            <div class="dropdown-header" style="padding: 12px 16px">
-              <span
-                class="dropdown-label"
-                style="
-                  display: block;
-                  font-size: 11px;
-                  font-weight: 500;
-                  color: #70757a;
-                  text-transform: uppercase;
-                  letter-spacing: 0.5px;
-                  margin-bottom: 2px;
-                "
-                >SIGNED IN AS</span
-              >
-              <span
-                id="dropdownEmail"
-                style="
-                  display: block;
-                  font-size: 13px;
-                  font-weight: 600;
-                  color: #1a1a1a;
-                  text-overflow: ellipsis;
-                  overflow: hidden;
-                  white-space: nowrap;
-                "
-              ></span>
+        <div id="authNav" style="display: none; position: relative;">
+          <button id="account-btn" class="btn btn-outline" style="border-radius: 100px;">My Account</button>
+          <div id="accountDropdown" style="display: none; position: absolute; right: 0; top: 100%; margin-top: 8px; background-color: #ffffff; border: 1px solid #e0e0e0; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.15); width: 220px; z-index: 10000; overflow: hidden; padding: 12px 0; text-align: left; opacity: 0; transition: opacity 150ms ease;">
+            <div class="dropdown-header" style="padding: 12px 16px;">
+              <span class="dropdown-label" style="display:block; font-size: 11px; font-weight: 500; color: #70757a; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 2px;">SIGNED IN AS</span>
+              <span id="dropdownEmail" style="display:block; font-size: 13px; font-weight: 600; color: #1a1a1a; text-overflow: ellipsis; overflow: hidden; white-space: nowrap;"></span>
             </div>
-            <hr
-              style="margin: 4px 0; border: none; border-top: 1px solid #e0e0e0"
-            />
-            <a
-              href="/profile.html"
-              style="
-                padding: 8px 16px;
-                display: block;
-                color: #3c4043;
-                text-decoration: none;
-              "
-              >Profile</a
-            >
-            <a
-              href="/location.html"
-              style="
-                padding: 8px 16px;
-                display: block;
-                color: #3c4043;
-                text-decoration: none;
-              "
-              >My Location</a
-            >
-            <a
-              href="/my-partners.html"
-              style="
-                padding: 8px 16px;
-                display: block;
-                color: #3c4043;
-                text-decoration: none;
-              "
-              >My Partner</a
-            >
-            <a
-              href="/register-company.html"
-              style="
-                padding: 8px 16px;
-                display: block;
-                color: #3c4043;
-                text-decoration: none;
-              "
-              >Register Company</a
-            >
-            <hr
-              style="margin: 4px 0; border: none; border-top: 1px solid #e0e0e0"
-            />
-            <a
-              id="signOutBtn"
-              style="
-                padding: 8px 16px;
-                display: block;
-                color: red;
-                font-weight: 600;
-                cursor: pointer;
-                text-decoration: none;
-              "
-              >Sign Out</a
-            >
+            <hr style="margin: 4px 0; border: none; border-top: 1px solid #e0e0e0;">
+            <a href="/profile.html" style="padding: 8px 16px; display: block; color: #3c4043; text-decoration: none;">Profile</a>
+            <a href="/location.html" style="padding: 8px 16px; display: block; color: #3c4043; text-decoration: none;">My Location</a>
+            <a href="/my-partners.html" style="padding: 8px 16px; display: block; color: #3c4043; text-decoration: none;">My Partner</a>
+            <a href="/register-company.html" style="padding: 8px 16px; display: block; color: #3c4043; text-decoration: none;">Register Company</a>
+            <hr style="margin: 4px 0; border: none; border-top: 1px solid #e0e0e0;">
+            <a id="signOutBtn" style="padding: 8px 16px; display: block; color: red; font-weight: 600; cursor: pointer; text-decoration: none;">Sign Out</a>
           </div>
         </div>
       </div>
     </header>
 
-    <!-- Main Content Area -->
-    <main>
-      <div class="container">
-        <!-- Page Header -->
-        <div class="page-header">
-          <div class="title-area">
-            <h1 class="page-title">My Saved Suppliers</h1>
-            <p class="page-subtitle">
-              All suppliers you've saved, sorted by nearest distance
-            </p>
-          </div>
-          <div class="action-area" id="export-container" style="display: none">
-            <button class="btn-export" onclick="downloadCSV()">
-              <svg
-                width="16"
-                height="16"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              >
-                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                <polyline points="7 10 12 15 17 10"></polyline>
-                <line x1="12" y1="15" x2="12" y2="3"></line>
-              </svg>
-              Download My Suppliers as CSV
-            </button>
-          </div>
+  <!-- Main Content Area -->
+  <main>
+    <div class="container">
+      
+      <!-- Page Header -->
+      <div class="page-header">
+        <div class="title-area">
+          <h1 class="page-title">My Saved Suppliers</h1>
+          <p class="page-subtitle">All suppliers you've saved, sorted by nearest distance</p>
         </div>
-
-        <!-- Suppliers Container -->
-        <div id="partners-container">
-          <!-- Will be populated dynamically via JavaScript -->
-          <div style="text-align: center; padding: 40px">
-            <p style="color: #5f6368; font-style: italic">
-              Loading saved suppliers...
-            </p>
-          </div>
+        <div class="action-area" id="export-container" style="display: none;">
+          <button class="btn-export" onclick="downloadCSV()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="7 10 12 15 17 10"></polyline>
+              <line x1="12" y1="15" x2="12" y2="3"></line>
+            </svg>
+            Download My Suppliers as CSV
+          </button>
         </div>
       </div>
-    </main>
-
-    <!-- Toast system container -->
-    <div class="toast-container" id="toast-container"></div>
-
-    <!-- Footer -->
-    <footer>
-      <div class="container footer-grid">
-        <div class="footer-col">
-          <div class="footer-logo-wrapper">
-            <img
-              src="https://res.cloudinary.com/duh9wvgzu/image/upload/q_auto/f_auto/v1780501537/IMG_5442_r9v9ez.jpg"
-              alt="GrabRaw Logo"
-              class="footer-logo-image"
-              loading="lazy"
-            />
-            <span class="footer-logo-text">GrabRaw</span>
-          </div>
-          <p class="footer-description">
-            GrabRaw is an AI-powered search engine that breaks down any product
-            into its complete Bill of Materials and finds local suppliers near
-            you.
-          </p>
-        </div>
-        <div class="footer-col" style="text-align: right">
-          <h4 class="footer-title">Supplier Standards</h4>
-          <p class="footer-description">
-            Helping local electronics retail and logistics hubs digitize
-            instantly.
-          </p>
+      
+      <!-- Suppliers Container -->
+      <div id="partners-container">
+        <!-- Will be populated dynamically via JavaScript -->
+        <div style="text-align: center; padding: 40px;">
+          <p style="color: #5f6368; font-style: italic;">Loading saved suppliers...</p>
         </div>
       </div>
-      <div class="container footer-bottom">
-        <div class="copyright">© 2026 GrabRaw Inc. All rights reserved.</div>
-        <div class="footer-legal-links">
-          <a href="privacy-policy.html" class="footer-legal-link"
-            >Privacy Policy</a
-          >
-          <a href="terms-of-service.html" class="footer-legal-link"
-            >Terms of Service</a
-          >
-          <a href="supplier-standards.html" class="footer-legal-link"
-            >Supplier Standards</a
-          >
+      
+    </div>
+  </main>
+
+  <!-- Toast system container -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container footer-grid">
+      <div class="footer-col">
+        <div class="footer-logo-wrapper">
+          <img 
+            src="https://res.cloudinary.com/duh9wvgzu/image/upload/q_auto/f_auto/v1780501537/IMG_5442_r9v9ez.jpg"
+            alt="GrabRaw Logo"
+            class="footer-logo-image"
+            loading="lazy"
+          />
+          <span class="footer-logo-text">GrabRaw</span>
         </div>
+        <p class="footer-description">GrabRaw is an AI-powered search engine that breaks down any product into its complete Bill of Materials and finds local suppliers near you.</p>
       </div>
-    </footer>
+      <div class="footer-col" style="text-align: right;">
+        <h4 class="footer-title">Supplier Standards</h4>
+        <p class="footer-description">Helping local electronics retail and logistics hubs digitize instantly.</p>
+      </div>
+    </div>
+    <div class="container footer-bottom">
+      <div class="copyright">© 2026 GrabRaw Inc. All rights reserved.</div>
+      <div class="footer-legal-links">
+        <a href="privacy-policy.html" class="footer-legal-link">Privacy Policy</a>
+        <a href="terms-of-service.html" class="footer-legal-link">Terms of Service</a>
+        <a href="supplier-standards.html" class="footer-legal-link">Supplier Standards</a>
+      </div>
+    </div>
+  </footer>
 
-    <!-- Script Logic -->
-    <script>
-          const { createClient } = supabase;
-          const sb = createClient(
-            'https://luumbrsddwupxxujnxlc.supabase.co',
-            'sb_publishable_YZot9m514LEeiSGMscXoqw_WfjHOO1i'
-          );
+  <!-- Script Logic -->
+  <script>
+    const { createClient } = supabase;
+    const sb = createClient(
+      'https://luumbrsddwupxxujnxlc.supabase.co',
+      'sb_publishable_YZot9m514LEeiSGMscXoqw_WfjHOO1i'
+    );
 
 
-      async function initAuth() {
-              const { data: { session } } = await sb.auth.getSession();
-              if (session) {
-                await updateNavbar(session.user);
-              } else {
-                showLoggedOutNavbar();
-              }
+async function initAuth() {
+        const { data: { session } } = await sb.auth.getSession();
+        if (session) { 
+          await updateNavbar(session.user); 
+        } else {
+          showLoggedOutNavbar();
+        }
 
-              sb.auth.onAuthStateChange(
-                async (event, session) => {
-                  if (session) {
-                    await updateNavbar(session.user);
-                  } else {
-                    showLoggedOutNavbar();
-                  }
-                }
-              );
+        sb.auth.onAuthStateChange(
+          async (event, session) => {
+            if (session) {
+              await updateNavbar(session.user);
+            } else {
+              showLoggedOutNavbar();
             }
-
-            async function updateNavbar(user) {
-              let plan = 'free';
-              try {
-                const { data } = await sb
-                  .from('profiles')
-                  .select('plan')
-                  .eq('id', user.id)
-                  .single();
-                if (data && data.plan) { plan = data.plan; }
-              } catch(e) {}
-
-              window.userPlan = plan;
-              window.GRABRAW_IS_PLUS = plan.includes('+') || plan.toLowerCase().includes('plus');
-              window.userSession = user;
-
-              const unauthNav = document.getElementById('unauthNav');
-              const authNav = document.getElementById('authNav');
-              const dropdownEmail = document.getElementById('dropdownEmail');
-
-              if (unauthNav) unauthNav.style.display = 'none';
-              if (authNav) authNav.style.display = 'block';
-              if (dropdownEmail) dropdownEmail.textContent = user.email;
-
-              // Avatar logic
-              const navAvatar = document.getElementById('nav-avatar');
-              if (navAvatar) {
-                  let avatarUrl = '';
-                  try {
-                      const { data } = await sb.from('profiles').select('avatar_url').eq('id', user.id).single();
-                      if (data && data.avatar_url) avatarUrl = data.avatar_url;
-                  } catch(e) {}
-
-                  if (avatarUrl) {
-                      navAvatar.innerHTML = '<img src="' + avatarUrl + '" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">';
-                  } else {
-                      navAvatar.textContent = user.email ? user.email.charAt(0).toUpperCase() : '?';
-                  }
-              }
-            }
-
-            function showLoggedOutNavbar() {
-              window.userPlan = 'free';
-              window.GRABRAW_IS_PLUS = false;
-              window.userSession = null;
-
-              const unauthNav = document.getElementById('unauthNav');
-              const authNav = document.getElementById('authNav');
-              if (unauthNav) unauthNav.style.display = 'block';
-              if (authNav) authNav.style.display = 'none';
-            }
-
-            function toggleDropdown() {
-              const d = document.getElementById('accountDropdown');
-              if (d) d.style.display = d.style.display === 'block' ? 'none' : 'block';
-            }
-
-            document.addEventListener('click', (e) => {
-                if (!e.target.closest('#account-btn') && !e.target.closest('#accountDropdown')) {
-                    const d = document.getElementById('accountDropdown');
-                    if (d) d.style.display = 'none';
-                }
-            });
-              window.userPlan = 'free';
-              window.GRABRAW_IS_PLUS = false;
-              window.userSession = null;
-
-              const unauthNav = document.getElementById('unauthNav');
-              const authNav = document.getElementById('authNav');
-              if (unauthNav) unauthNav.style.display = 'block';
-              if (authNav) authNav.style.display = 'none';
-            }
-
-            document.addEventListener('DOMContentLoaded', () => {
-
-              const signOutBtn = document.getElementById('signOutBtn');
-
-
-
-              if (signOutBtn) {
-                signOutBtn.addEventListener('click', async (e) => {
-                  e.preventDefault();
-                  await sb.auth.signOut();
-                  window.location.reload();
-                });
-              }
-            });
-
-            initAuth();
-
-          // Toast System
-          function showToast(message) {
-            const container = document.getElementById('toast-container');
-            if (!container) return;
-            const toast = document.createElement('div');
-            toast.className = 'toast';
-            toast.textContent = message;
-            container.appendChild(toast);
-            setTimeout(() => {
-              toast.remove();
-            }, 2500);
           }
+        );
+      }
 
-          // Parse Distance for numeric sorting
-          function parseDistance(distStr) {
-            if (!distStr) return 9999;
-            // Extract numeric part like "8.2 km" -> 8.2 or "~8.2 km" -> 8.2
-            const match = distStr.replace(/[^0-9.]/g, '');
-            const parsed = parseFloat(match);
-            return isNaN(parsed) ? 9999 : parsed;
-          }
+      async function updateNavbar(user) {
+        let plan = 'free';
+        try {
+          const { data } = await sb
+            .from('profiles')
+            .select('plan')
+            .eq('id', user.id)
+            .single();
+          if (data && data.plan) { plan = data.plan; }
+        } catch(e) {}
+        
+        window.userPlan = plan;
+        window.GRABRAW_IS_PLUS = plan.includes('+') || plan.toLowerCase().includes('plus');
+        window.userSession = user;
+        
+        const unauthNav = document.getElementById('unauthNav');
+        const authNav = document.getElementById('authNav');
+        const dropdownEmail = document.getElementById('dropdownEmail');
+        
+        if (unauthNav) unauthNav.style.display = 'none';
+        if (authNav) authNav.style.display = 'block';
+        if (dropdownEmail) dropdownEmail.textContent = user.email;
+      }
 
-          // Render Saved Suppliers
-          function renderSavedSuppliers(user) {
-            const partnersContainer = document.getElementById('partners-container');
-            const exportContainer = document.getElementById('export-container');
+      function showLoggedOutNavbar() {
+        window.userPlan = 'free';
+        window.GRABRAW_IS_PLUS = false;
+        window.userSession = null;
+        
+        const unauthNav = document.getElementById('unauthNav');
+        const authNav = document.getElementById('authNav');
+        if (unauthNav) unauthNav.style.display = 'block';
+        if (authNav) authNav.style.display = 'none';
+      }
 
-            if (!user) {
-              exportContainer.style.display = 'none';
-              partnersContainer.innerHTML = `
-                <div class="empty-state">
-                  <h3 class="empty-title">Sign in to view your saved suppliers</h3>
-                  <a href="/signin.html" class="btn btn-primary" style="border-radius: 100px; margin-top: 16px;">Sign In</a>
-                </div>
-              `;
-              return;
+      document.addEventListener('DOMContentLoaded', () => {
+        const accountBtn = document.getElementById('account-btn');
+        const accountDropdown = document.getElementById('accountDropdown');
+        const signOutBtn = document.getElementById('signOutBtn');
+
+        if (accountBtn && accountDropdown) {
+          accountBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            if (accountDropdown.style.display === 'none') {
+              accountDropdown.style.display = 'block';
+              setTimeout(() => accountDropdown.style.opacity = '1', 10);
+            } else {
+              accountDropdown.style.opacity = '0';
+              setTimeout(() => accountDropdown.style.display = 'none', 150);
             }
-
-            const saved = JSON.parse(localStorage.getItem('saved_suppliers') || '[]');
-
-            if (saved.length === 0) {
-              exportContainer.style.display = 'none';
-              partnersContainer.innerHTML = `
-                <div class="empty-state">
-                  <h3 class="empty-title">No saved suppliers yet</h3>
-                  <p class="empty-text">Search a product and tap + to save suppliers.</p>
-                  <a href="/#categories" class="btn btn-primary" style="border-radius: 100px; margin-top: 16px;">Explore Materials</a>
-                </div>
-              `;
-              return;
-            }
-
-            // Show export button
-            exportContainer.style.display = 'block';
-
-            // Sort saved suppliers by distance (nearest first)
-            const sorted = [...saved].sort((a, b) => parseDistance(a.distance) - parseDistance(b.distance));
-
-            let html = '<div class="partners-grid">';
-
-            sorted.forEach(sup => {
-              const mapsLink = sup.maps_link || `https://maps.google.com/?q=${encodeURIComponent(sup.supplier_name + ' ' + sup.address)}`;
-              const websiteLink = sup.website || '#';
-              const stockStatus = sup.stock || 'In Stock';
-              const stockClass = stockStatus.toLowerCase().includes('low') ? 'low-stock' : 'in-stock';
-
-              html += `
-                <div class="partner-card" id="partner-card-${sup.id}">
-                  <div class="partner-header">
-                    <div class="component-name">${sup.component || 'General Material'}</div>
-                    <div class="supplier-name">${sup.supplier_name}</div>
-                    <div class="partner-meta">
-                      <span class="distance-badge">
-                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                          <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
-                          <circle cx="12" cy="10" r="3"></circle>
-                        </svg>
-                        ${sup.distance} away ⭐
-                      </span>
-                      <span class="stock-indicator ${stockClass}">
-                        <span class="stock-dot"></span>
-                        ${stockStatus}
-                      </span>
-                    </div>
-                    <div class="partner-address">${sup.address}</div>
-                  </div>
-                  <div class="partner-actions">
-                    <a href="#" class="btn-card-action btn-web" onclick="event.preventDefault(); alert('Navigating to ${sup.supplier_name} Official Website...')">
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <circle cx="12" cy="12" r="10"></circle>
-                        <line x1="2" y1="12" x2="22" y2="12"></line>
-                        <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
-                      </svg>
-                      Website
-                    </a>
-                    <a href="${mapsLink}" target="_blank" rel="noopener noreferrer" class="btn-card-action btn-maps">
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
-                        <circle cx="12" cy="10" r="3"></circle>
-                      </svg>
-                      Google Maps
-                    </a>
-                    <button class="btn-remove" onclick="removeSupplier('${sup.id}')">
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <line x1="18" y1="6" x2="6" y2="18"></line>
-                        <line x1="6" y1="6" x2="18" y2="18"></line>
-                      </svg>
-                      Remove ✕
-                    </button>
-                  </div>
-                </div>
-              `;
-            });
-
-            html += '</div>';
-            partnersContainer.innerHTML = html;
-          }
-
-          // Remove Supplier
-          window.removeSupplier = function(id) {
-            let saved = JSON.parse(localStorage.getItem('saved_suppliers') || '[]');
-            const itemToRemove = saved.find(item => item.id === id);
-            saved = saved.filter(item => item.id !== id);
-            localStorage.setItem('saved_suppliers', JSON.stringify(saved));
-
-            const supplierName = itemToRemove ? itemToRemove.supplier_name : 'Supplier';
-            showToast(`Removed ${supplierName} from Partners`);
-            renderSavedSuppliers(window.userSession);
-          }
-
-          // Export CSV function
-          window.downloadCSV = function() {
-            const saved = JSON.parse(localStorage.getItem('saved_suppliers') || '[]');
-            if (saved.length === 0) {
-              showToast('No saved suppliers to download');
-              return;
-            }
-
-            const headers = ['id', 'component', 'supplier_name', 'address', 'distance', 'stock', 'maps_link', 'saved_date'];
-            const rows = saved.map(item => [
-              item.id || '',
-              item.component || '',
-              item.supplier_name || '',
-              item.address || '',
-              item.distance || '',
-              item.stock || '',
-              item.maps_link || '',
-              item.saved_date || ''
-            ]);
-
-            const csvContent = [
-              headers.join(','),
-              ...rows.map(r => r.map(val => `"${val.replace(/"/g, '""').replace(/\r?
-      /g, ' ')}"`).join(','))
-            ].join('
-      ');
-
-            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-            const url = URL.createObjectURL(blob);
-            const link = document.createElement("a");
-            link.setAttribute("href", url);
-            link.setAttribute("download", `saved_suppliers_${new Date().toISOString().slice(0,10)}.csv`);
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-          }
-
-          document.addEventListener('DOMContentLoaded', async () => {
-            // Check User Auth
-            let user = null;
-            try {
-              const { data: { session } } = await sb.auth.getSession();
-              user = session ? session.user : null;
-              if (user) {
-                document.body.classList.add('logged-in');
-              }
-            } catch (err) {
-              console.error('Navbar Auth Check error:', err);
-            }
-            // Load Suppliers initially passing user
-            renderSavedSuppliers(user);
           });
-    </script>
-  </body>
+        }
+
+        document.addEventListener('click', (e) => {
+          if (accountDropdown && accountDropdown.style.display !== 'none') {
+            if (!accountDropdown.contains(e.target) && (!accountBtn || !accountBtn.contains(e.target))) {
+              accountDropdown.style.opacity = '0';
+              setTimeout(() => accountDropdown.style.display = 'none', 150);
+            }
+          }
+        });
+
+        if (signOutBtn) {
+          signOutBtn.addEventListener('click', async (e) => {
+            e.preventDefault();
+            await sb.auth.signOut();
+            window.location.reload();
+          });
+        }
+      });
+
+      initAuth();
+
+    // Toast System
+    function showToast(message) {
+      const container = document.getElementById('toast-container');
+      if (!container) return;
+      const toast = document.createElement('div');
+      toast.className = 'toast';
+      toast.textContent = message;
+      container.appendChild(toast);
+      setTimeout(() => {
+        toast.remove();
+      }, 2500);
+    }
+
+    // Parse Distance for numeric sorting
+    function parseDistance(distStr) {
+      if (!distStr) return 9999;
+      // Extract numeric part like "8.2 km" -> 8.2 or "~8.2 km" -> 8.2
+      const match = distStr.replace(/[^0-9.]/g, '');
+      const parsed = parseFloat(match);
+      return isNaN(parsed) ? 9999 : parsed;
+    }
+
+    // Render Saved Suppliers
+    function renderSavedSuppliers() {
+      const partnersContainer = document.getElementById('partners-container');
+      const exportContainer = document.getElementById('export-container');
+      const saved = JSON.parse(localStorage.getItem('saved_suppliers') || '[]');
+      
+      if (saved.length === 0) {
+        exportContainer.style.display = 'none';
+        partnersContainer.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-icon">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                <circle cx="9" cy="7" r="4"></circle>
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+              </svg>
+            </div>
+            <h3 class="empty-title">No Saved Suppliers Yet</h3>
+            <p class="empty-text">No suppliers saved yet. Click the + icon on any supplier to add them here.</p>
+            <a href="/info" class="btn btn-primary" style="border-radius: 100px; margin-top: 8px;">Explore Supplier BOMs</a>
+          </div>
+        `;
+        return;
+      }
+      
+      // Show export button
+      exportContainer.style.display = 'block';
+      
+      // Sort saved suppliers by distance (nearest first)
+      const sorted = [...saved].sort((a, b) => parseDistance(a.distance) - parseDistance(b.distance));
+      
+      let html = '<div class="partners-grid">';
+      
+      sorted.forEach(sup => {
+        const mapsLink = sup.maps_link || `https://maps.google.com/?q=${encodeURIComponent(sup.supplier_name + ' ' + sup.address)}`;
+        const websiteLink = sup.website || '#';
+        const stockStatus = sup.stock || 'In Stock';
+        const stockClass = stockStatus.toLowerCase().includes('low') ? 'low-stock' : 'in-stock';
+        
+        html += `
+          <div class="partner-card" id="partner-card-${sup.id}">
+            <div class="partner-header">
+              <div class="component-name">${sup.component || 'General Material'}</div>
+              <div class="supplier-name">${sup.supplier_name}</div>
+              <div class="partner-meta">
+                <span class="distance-badge">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                    <circle cx="12" cy="10" r="3"></circle>
+                  </svg>
+                  ${sup.distance} away ⭐
+                </span>
+                <span class="stock-indicator ${stockClass}">
+                  <span class="stock-dot"></span>
+                  ${stockStatus}
+                </span>
+              </div>
+              <div class="partner-address">${sup.address}</div>
+            </div>
+            <div class="partner-actions">
+              <a href="#" class="btn-card-action btn-web" onclick="event.preventDefault(); alert('Navigating to ${sup.supplier_name} Official Website...')">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <line x1="2" y1="12" x2="22" y2="12"></line>
+                  <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+                </svg>
+                Website
+              </a>
+              <a href="${mapsLink}" target="_blank" rel="noopener noreferrer" class="btn-card-action btn-maps">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                  <circle cx="12" cy="10" r="3"></circle>
+                </svg>
+                Google Maps
+              </a>
+              <button class="btn-remove" onclick="removeSupplier('${sup.id}')">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="18" y1="6" x2="6" y2="18"></line>
+                  <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+                Remove ✕
+              </button>
+            </div>
+          </div>
+        `;
+      });
+      
+      html += '</div>';
+      partnersContainer.innerHTML = html;
+    }
+
+    // Remove Supplier
+    window.removeSupplier = function(id) {
+      let saved = JSON.parse(localStorage.getItem('saved_suppliers') || '[]');
+      const itemToRemove = saved.find(item => item.id === id);
+      saved = saved.filter(item => item.id !== id);
+      localStorage.setItem('saved_suppliers', JSON.stringify(saved));
+      
+      const supplierName = itemToRemove ? itemToRemove.supplier_name : 'Supplier';
+      showToast(`Removed ${supplierName} from Partners`);
+      renderSavedSuppliers();
+    }
+
+    // Export CSV function
+    window.downloadCSV = function() {
+      const saved = JSON.parse(localStorage.getItem('saved_suppliers') || '[]');
+      if (saved.length === 0) {
+        showToast('No saved suppliers to download');
+        return;
+      }
+      
+      const headers = ['id', 'component', 'supplier_name', 'address', 'distance', 'stock', 'maps_link', 'saved_date'];
+      const rows = saved.map(item => [
+        item.id || '',
+        item.component || '',
+        item.supplier_name || '',
+        item.address || '',
+        item.distance || '',
+        item.stock || '',
+        item.maps_link || '',
+        item.saved_date || ''
+      ]);
+      
+      const csvContent = [
+        headers.join(','),
+        ...rows.map(r => r.map(val => `"${val.replace(/"/g, '""').replace(/\r?
+/g, ' ')}"`).join(','))
+      ].join('
+');
+      
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.setAttribute("href", url);
+      link.setAttribute("download", `saved_suppliers_${new Date().toISOString().slice(0,10)}.csv`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      // Load Suppliers initially
+      renderSavedSuppliers();
+
+      // Check User Auth
+      try {
+        const { data: { session } } = await sb.auth.getSession();
+        const user = session ? session.user : null;
+        if (user) {
+          document.body.classList.add('logged-in');
+          
+          const navActions = document.querySelector('.nav-actions');
+          if (isPlus) {
+            const titleEl = document.querySelector('.page-title');
+            if (titleEl && !titleEl.querySelector('.plus-badge')) {
+              titleEl.innerHTML += ' <span class="plus-badge" title="GrabRaw+ Member" style="vertical-align: middle; position: static; box-shadow: none; border: none; font-size: 14px; width: 24px; height: 24px;">✦</span>';
+            }
+          }
+
+          if (navActions) {
+            const email = user.email || '';
+            const name = user.user_metadata?.full_name || user.user_metadata?.name || user.email || '';
+            const initial = name ? name.charAt(0).toUpperCase() : '?';
+            const avatar = user.user_metadata?.avatar_url;
+            navActions.innerHTML = `
+              <div class="user-profile-menu-container" style="position: relative;">
+                <button id="account-btn" class="btn" style="border: 1px solid #dadce0; background-color: #ffffff; color: #3c4043; border-radius: 100px; display: inline-flex; align-items: center; gap: 8px; padding: 4px 12px 4px 16px; cursor: pointer; transition: all 0.2s ease; height: 40px; box-shadow: 0 1px 2px rgba(0,0,0,0.05); text-decoration: none;">
+                  <span style="font-size: 14px; font-weight: 600;">My Account</span>
+                  ${avatar ? `<img src="${avatar}" style="width: 32px; height: 32px; border-radius: 50%; object-fit: cover;" alt="Avatar" />` : `${avatar ? `<img src="${avatar}" style="width: 32px; height: 32px; border-radius: 50%; object-fit: cover;" alt="Avatar" />` : `<div style="background-color: #4285F4; color: #ffffff; border-radius: 50%; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 700; text-transform: uppercase;">${initial}</div>`}`}
+                </button>
+                <div id="account-dropdown" style="display: none; position: absolute; right: 0; top: calc(100% + 8px); background-color: #ffffff; border: 1px solid #e0e0e0; border-radius: 12px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); width: 220px; min-width: 200px; z-index: 1000; overflow: hidden; padding: 12px 0; text-align: left;">
+                  <div style="padding: 12px 16px; border-bottom: 1px solid #e0e0e0; margin-bottom: 4px; pointer-events: none; user-select: text;">
+                     <div style="font-size: 11px; font-weight: 500; color: #70757a; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 2px;">Signed in as</div>
+                     <div style="font-size: 13px; font-weight: 600; color: #1a1a1a; text-overflow: ellipsis; overflow: hidden; white-space: nowrap;" title="${email}">${email}</div>
+                  </div>
+                  <a href="profile.html" class="dropdown-item">Profile</a>
+                  <a href="location.html" class="dropdown-item">My Location</a>
+                  <a href="my-partners.html" class="dropdown-item">My Partner</a>
+                  <a href="register-company.html" class="dropdown-item">Register Company</a>
+                  <a href="#" id="signout-link" class="dropdown-item" style="color: #d93025 !important; font-weight: 600; border-top: 1px solid #e0e0e0; margin-top: 8px; padding-top: 12px;">Sign Out</a>
+                </div>
+              </div>
+            `;
+
+            const styleNode = document.createElement('style');
+            styleNode.textContent = `
+              .dropdown-item{
+                cursor: pointer;
+              }
+              .dropdown-item:hover {
+                background-color: #f5f5f5 !important;
+              }
+            `;
+            document.head.appendChild(styleNode);
+
+            const accountBtn = document.getElementById('account-btn');
+            const dropdown = document.getElementById('account-dropdown');
+            const signOutLink = document.getElementById('signout-link');
+
+            if (accountBtn && dropdown) {
+              accountBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                dropdown.classList.toggle('active');
+              });
+            }
+
+            if (signOutLink) {
+              signOutLink.addEventListener('click', async (e) => {
+                e.preventDefault();
+                await sb.auth.signOut();
+                window.location.href = 'index.html';
+              });
+            }
+
+            document.addEventListener('click', function(e) {
+              const dropdown = document.getElementById('account-dropdown')
+              const accountBtn = document.getElementById('account-btn')
+              if (dropdown && !dropdown.contains(e.target) && (!accountBtn || !accountBtn.contains(e.target))) {
+                dropdown.classList.remove('active');
+              }
+            })
+
+            document.addEventListener('keydown', function(e) {
+              if (e.key === 'Escape') {
+                const dropdown = document.getElementById('account-dropdown')
+                if (dropdown) dropdown.classList.remove('active');
+              }
+            })
+          }
+        }
+      } catch (err) {
+        console.error('Navbar Auth Check error:', err);
+      }
+    });
+  </script>
+</body>
 </html>
