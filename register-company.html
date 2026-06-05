@@ -1518,7 +1518,12 @@
     const saveCompanyBtn = document.getElementById('save-company-btn');
     if (saveCompanyBtn) {
       saveCompanyBtn.addEventListener('click', async () => {
-        if (!currentUser) return;
+        const { data: userData, error: userError } = await sb.auth.getUser();
+        if (userError || !userData?.user) {
+          showToast('Please sign in first', 'error');
+          return;
+        }
+        const user = userData.user;
 
         const company_name = document.getElementById('company-name-input').value.trim();
         const company_website = document.getElementById('company-web-input').value.trim();
@@ -1540,17 +1545,17 @@
             company_website,
             company_type,
             company_address,
-            company_products_supplied
+            company_products_supplied,
+            role: 'supplier'
           };
 
-          const { error: updateError } = await sb.from('profiles').update(updateData).eq('id', currentUser.id);
+          const { error: updateError } = await sb.from('profiles').update(updateData).eq('id', user.id);
           if (updateError) {
             // Upsert fallback
             const { error: upsertErr } = await sb.from('profiles').upsert({
-              id: currentUser.id,
+              id: user.id,
               ...updateData,
-              full_name: currentUser.user_metadata?.full_name || currentUser.user_metadata?.first_name || 'GrabRaw Builder',
-              role: currentUser.user_metadata?.role || 'builder'
+              full_name: user.user_metadata?.full_name || user.user_metadata?.first_name || 'GrabRaw Builder'
             });
             if (upsertErr) throw upsertErr;
           }
