@@ -1386,17 +1386,14 @@
     </div>
   </footer>
 
-  <script type="module" src="/src/auth.js"></script>
+  <script src="/auth-global.js"></script>
   <script>
     // Supabase credentials
-    const { createClient } = supabase;
-    const sb = createClient(
-      'https://luumbrsddwupxxujnxlc.supabase.co',
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx1dW1icnNkZHd1cHh4dWpueGxjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA1Mzc2MzYsImV4cCI6MjA5NjExMzYzNn0.n0fL8SIdrFJGQcIAu5RA9HfaoK9DY9z1xm_1gP_6kG8'
-    );
+    
+    const sb = window.sb;
 
     // Initialize Auth
-    initAuth(sb);
+    
     
     // Check if already signed in
     sb.auth.getSession().then(({ data: { session } }) => {
