@@ -2437,10 +2437,22 @@ document.addEventListener('DOMContentLoaded', () => {
       });
 
       if (!response.ok) {
-        throw new Error('Failed to fetch data from Worker');
+        let errMsg = 'Failed to fetch data from Worker';
+        try {
+          const errData = await response.json();
+          if (errData && errData.error) {
+             errMsg = errData.error;
+          } else if (errData && errData.message) {
+             errMsg = errData.message;
+          }
+        } catch(e) {}
+        throw new Error(errMsg);
       }
 
       const data = await response.json();
+      if (data && data.error) {
+         throw new Error(data.error);
+      }
       
       const materials = data.materials || [];
       const total = data.total_materials || materials.length;
@@ -2514,12 +2526,12 @@ document.addEventListener('DOMContentLoaded', () => {
   // Check URL param on load
   const urlParams = new URLSearchParams(window.location.search);
   const initialQuery = urlParams.get('q');
-  if (initialQuery && initialQuery.toLowerCase() !== 'iphone 15') { // wait, even if it is iPhone 15 we should fetch real data
+  if (initialQuery) {
     searchInput.value = initialQuery;
     performSearch(initialQuery);
   } else {
-    // Also run for default iPhone 15
-    const q = searchInput.value.trim();
+    // Also run for default search input value
+    const q = searchInput.value ? searchInput.value.trim() : '';
     if(q) {
        performSearch(q);
     }
