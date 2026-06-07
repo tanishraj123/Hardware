@@ -2421,6 +2421,45 @@ document.addEventListener('DOMContentLoaded', () => {
   `;
   document.head.appendChild(styleTag);
 
+  // Robust JSON parsing utility to handle markdown fences, extra text, or raw characters
+  function parseRobustJSON(text) {
+    let cleanText = text.trim();
+    try {
+      return JSON.parse(cleanText);
+    } catch (e1) {
+      console.warn("Standard JSON.parse failed. Retrying with robust patterns...", e1);
+    }
+
+    // Try stripping markdown fences if present
+    const markdownMatch = cleanText.match(/```(?:json)?\s*([\s\S]*?)\s*```/i);
+    if (markdownMatch) {
+      const matchText = markdownMatch[1].trim();
+      try {
+        return JSON.parse(matchText);
+      } catch (e2) {}
+    }
+
+    // Look for first '{' and last '}'
+    const startCurly = cleanText.indexOf('{');
+    const endCurly = cleanText.lastIndexOf('}');
+    if (startCurly !== -1 && endCurly !== -1 && endCurly > startCurly) {
+      try {
+        return JSON.parse(cleanText.substring(startCurly, endCurly + 1));
+      } catch (e3) {}
+    }
+
+    // Look for first '[' and last ']'
+    const startSquare = cleanText.indexOf('[');
+    const endSquare = cleanText.lastIndexOf(']');
+    if (startSquare !== -1 && endSquare !== -1 && endSquare > startSquare) {
+      try {
+        return JSON.parse(cleanText.substring(startSquare, endSquare + 1));
+      } catch (e4) {}
+    }
+
+    throw new Error(`Unexpected character or malformed JSON structure. Raw response snippet: "${cleanText.substring(0, 150)}..."`);
+  }
+
   async function performSearch(productName) {
     if (!productName) return;
 
@@ -2436,20 +2475,32 @@ document.addEventListener('DOMContentLoaded', () => {
         body: JSON.stringify({ product_name: productName })
       });
 
+      const responseText = await response.text();
+      console.log("Raw Response from Worker:", responseText);
+
       if (!response.ok) {
-        let errMsg = 'Failed to fetch data from Worker';
+        let errMsg = `Failed to fetch data from Worker (HTTP ${response.status})`;
         try {
-          const errData = await response.json();
+          const errData = parseRobustJSON(responseText);
           if (errData && errData.error) {
              errMsg = errData.error;
           } else if (errData && errData.message) {
              errMsg = errData.message;
           }
-        } catch(e) {}
+        } catch(e) {
+          errMsg += ": " + (responseText ? responseText.substring(0, 200) : "Empty response body");
+        }
         throw new Error(errMsg);
       }
 
-      const data = await response.json();
+      let data;
+      try {
+        data = parseRobustJSON(responseText);
+      } catch (jsonErr) {
+        console.error("JSON Parsing Error of Raw Text:", jsonErr);
+        throw new Error(`Failed to parse response JSON: ${jsonErr.message}. Raw text: ${responseText.substring(0, 250)}...`);
+      }
+
       if (data && data.error) {
          throw new Error(data.error);
       }
