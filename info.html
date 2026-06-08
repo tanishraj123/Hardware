@@ -2445,13 +2445,13 @@ document.addEventListener('DOMContentLoaded', () => {
       }
 
       // Step 1: Find product
-      const { data: productData, error: prodErr } = await window.sb
+      const { data: products, error: prodErr } = await window.sb
         .from('products')
-        .select('id, name')
-        .ilike('name', \`%\${currentProductName}%\`)
-        .single();
+        .select('*')
+        .ilike('name', `%${currentProductName}%`)
+        .limit(1);
 
-      if (prodErr || !productData) {
+      if (prodErr || !products || products.length === 0) {
          if (offset === 0) {
             materialList.innerHTML = '<div style="text-align:center; padding: 40px; color:#5f6368">No matching products found in database.</div>';
             statsText.innerHTML = '<span class="sparkle-accent">✦</span> 0 materials found';
@@ -2460,21 +2460,30 @@ document.addEventListener('DOMContentLoaded', () => {
          isLoading = false;
          return;
       }
+      const productId = products[0].id;
 
       // Ensure total count is updated (once)
       if (offset === 0) {
-         const { count } = await window.sb
+         const { count, error: countErr } = await window.sb
            .from('product_components')
            .select('*', { count: 'exact', head: true })
-           .eq('product_id', productData.id);
+           .eq('product_id', productId);
          currentTotalMatchCount = count || 0;
       }
 
-      // Step 2: Get component IDs
-      const { data: pcData, error: pcErr } = await window.sb
+      // Step 2: Find components
+      const { data: productComponents, error: pcErr } = await window.sb
         .from('product_components')
-        .select('component_id')
-        .eq('product_id', productData.id)
+        .select(`
+          component_id,
+          components (
+            id,
+            component_name,
+            component_category
+          )
+        `)
+        .eq('product_id', productId)
+        .order('component_id')
         .range(offset, offset + limit - 1);
 
       if (pcErr) throw new Error(pcErr.message);
@@ -2486,7 +2495,7 @@ document.addEventListener('DOMContentLoaded', () => {
          if (spinner) spinner.remove();
       }
 
-      if (!pcData || pcData.length === 0) {
+      if (!productComponents || productComponents.length === 0) {
          hasMore = false;
          isLoading = false;
          if (offset === 0) {
@@ -2495,50 +2504,60 @@ document.addEventListener('DOMContentLoaded', () => {
          return;
       }
 
-      // Step 3 & 4: Fetch components and suppliers
-      const formattedMaterials = await Promise.all(pcData.map(async (pc) => {
-        // Fetch component details
-        const { data: compData, error: compErr } = await window.sb
-          .from('components')
-          .select('id, component_name, component_category')
-          .eq('id', pc.component_id)
-          .single();
+      const components = productComponents.map(pc => pc.components).filter(Boolean);
 
-        if (compErr || !compData) return null;
-
-        // Fetch component suppliers
-        const { data: csData } = await window.sb
+      // Step 3: Find suppliers for these components in parallel
+      const formattedMaterials = await Promise.all(components.map(async (comp) => {
+        const { data: compSupps, error: suppErr } = await window.sb
           .from('component_suppliers')
-          .select('distance_km, stock_status, google_maps_link, supplier_product_link, supplier_id')
-          .eq('component_id', compData.id)
-          .single();
+          .select('supplier_id, distance_km, stock_status, google_maps_link, supplier_product_link')
+          .eq('component_id', comp.id)
+          .limit(1);
           
-        let supData = null;
-        if (csData && csData.supplier_id) {
-            const { data } = await window.sb
-              .from('suppliers')
-              .select('supplier_name, city')
-              .eq('id', csData.supplier_id)
-              .single();
-            supData = data;
+        let sd = { 
+           distance_km: 'N/A',
+           stock_status: 'N/A',
+           google_maps_link: null,
+           supplier_product_link: null,
+           supplier_name: 'N/A',
+           city: 'N/A'
+        };
+        
+        if (compSupps && compSupps.length > 0) {
+           const cs = compSupps[0];
+           sd.distance_km = cs.distance_km ? cs.distance_km + ' km' : 'N/A';
+           sd.stock_status = cs.stock_status || 'N/A';
+           sd.google_maps_link = cs.google_maps_link || null;
+           sd.supplier_product_link = cs.supplier_product_link || null;
+           
+           if (cs.supplier_id) {
+              const { data: suppliers } = await window.sb
+                .from('suppliers')
+                .select('supplier_name, city')
+                .eq('id', cs.supplier_id)
+                .limit(1);
+                
+              if (suppliers && suppliers.length > 0) {
+                 sd.supplier_name = suppliers[0].supplier_name || 'N/A';
+                 sd.city = suppliers[0].city || 'N/A';
+              }
+           }
         }
-
+        
         return {
-           name: compData.component_name || '',
-           category: compData.component_category || '',
-           stock_status: csData ? csData.stock_status : '',
-           distance_km: csData && csData.distance_km ? csData.distance_km + ' km' : '',
-           supplier_name: supData ? supData.supplier_name : '',
-           supplier_address: supData ? supData.city : '',
-           supplier_website: csData ? csData.supplier_product_link : '',
-           google_maps_link: csData ? csData.google_maps_link : ''
+           name: comp.component_name || 'N/A',
+           category: comp.component_category || 'N/A',
+           stock_status: sd.stock_status,
+           distance_km: sd.distance_km,
+           supplier_name: sd.supplier_name,
+           supplier_address: sd.city,
+           supplier_website: sd.supplier_product_link,
+           google_maps_link: sd.google_maps_link
         };
       }));
-      
-      const validMaterials = formattedMaterials.filter(Boolean);
 
       // Render items
-      validMaterials.forEach((mat, index) => {
+      formattedMaterials.forEach((mat, index) => {
          const absoluteIndex = offset + index;
          const catClassRaw = getCatClass(mat.category || 'default');
          const knownCats = ['display', 'semiconductor', 'power', 'glass', 'metal', 'audio'];
@@ -2546,45 +2565,45 @@ document.addEventListener('DOMContentLoaded', () => {
          const stockClass = (mat.stock_status || '').toLowerCase().includes('low') ? 'low-stock' : 'in-stock';
 
          const card = document.createElement('article');
-         card.className = \`material-card cat-\${catClass}\`;
+         card.className = `material-card cat-${catClass}`;
          
-         card.innerHTML = \`
+         card.innerHTML = `
            <div class="material-info">
              <div class="material-meta-row">
-               <h2 class="material-name">\${absoluteIndex + 1}. \${mat.name}</h2>
-               <span class="pill-tag pill-\${catClass}" style="padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 600;">\${mat.category}</span>
-               <span class="distance-badge">\${mat.distance_km}</span>
-               <span class="stock-indicator \${stockClass}">
+               <h2 class="material-name">${absoluteIndex + 1}. ${mat.name}</h2>
+               <span class="pill-tag pill-${catClass}" style="padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 600;">${mat.category}</span>
+               <span class="distance-badge">${mat.distance_km}</span>
+               <span class="stock-indicator ${stockClass}">
                  <span class="stock-dot"></span>
-                 \${mat.stock_status}
+                 ${mat.stock_status}
                </span>
              </div>
              <div class="supplier-details">
-               <span class="supplier-name">\${mat.supplier_name}</span>
-               <span class="supplier-address">\${mat.supplier_address}</span>
+               <span class="supplier-name">${mat.supplier_name}</span>
+               <span class="supplier-address">${mat.supplier_address}</span>
              </div>
            </div>
            <div class="row-actions">
-             <a href="\${mat.supplier_website || '#'}" target="_blank" class="btn btn-row-action btn-supplier-web" \${mat.supplier_website ? '' : 'style="display:none;"'}>
+             <a href="${mat.supplier_website || '#'}" target="_blank" class="btn btn-row-action btn-supplier-web" ${mat.supplier_website ? '' : 'style="display:none;"'}>
                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: inline-block; vertical-align: text-bottom; margin-right: 4px;"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
                Supplier Website
              </a>
-             <a href="\${mat.google_maps_link || '#'}" target="_blank" rel="noopener noreferrer" class="btn btn-row-action btn-supplier-maps" \${mat.google_maps_link ? '' : 'style="display:none;"'}>
+             <a href="${mat.google_maps_link || '#'}" target="_blank" rel="noopener noreferrer" class="btn btn-row-action btn-supplier-maps" ${mat.google_maps_link ? '' : 'style="display:none;"'}>
                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: inline-block; vertical-align: text-bottom; margin-right: 4px;"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
                Open in Google Maps
              </a>
            </div>
-         \`;
+         `;
          materialList.appendChild(card);
          if(window.setupCardActions) window.setupCardActions(card, absoluteIndex);
       });
 
-      offset += pcData.length;
-      if (pcData.length < limit) {
+      offset += components.length;
+      if (components.length < limit) {
          hasMore = false;
       }
       
-      statsText.innerHTML = \`<span class="sparkle-accent">✦</span> Sourced \${offset} of \${currentTotalMatchCount} materials • Click <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: inline-block; vertical-align: text-bottom; margin: 0 2px;"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg> to open supplier location in Google Maps\`;
+      statsText.innerHTML = `<span class="sparkle-accent">✦</span> Sourced ${offset} of ${currentTotalMatchCount} materials • Click <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: inline-block; vertical-align: text-bottom; margin: 0 2px;"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg> to open supplier location in Google Maps`;
 
     } catch (err) {
       if (offset === 0) materialList.innerHTML = '';
