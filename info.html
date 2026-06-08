@@ -2332,9 +2332,11 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  const urlParams = new URLSearchParams(window.location.search);
-  const initialQuery = urlParams.get('q') || '';
-  if (initialQuery) { waitForSb(() => performSearch(initialQuery)); }
+  const initialQuery = new URLSearchParams(window.location.search).get('q');
+  if (initialQuery && initialQuery.trim() !== '') {
+    if (searchInput) searchInput.value = initialQuery;
+    waitForSb(() => performSearch(initialQuery.trim()));
+  }
 });
 </script>
 
