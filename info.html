@@ -2213,7 +2213,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!query || !window.sb) return;
     materialList.innerHTML = '<div style="text-align:center;padding:60px;color:#5f6368">Finding materials...<br><br><div style="border:4px solid #e0e0e0;border-left-color:#4285F4;border-radius:50%;width:36px;height:36px;animation:spin 1s linear infinite;margin:16px auto;"></div></div>';
     statsText.innerHTML = '<span style="color:#4285F4">✦</span> Querying database...';
-    bomTitle.textContent = \'Bill of Materials — \' + query;
+    bomTitle.textContent = 'Bill of Materials — ' + query;
 
     try {
       // Step 1: Find product
@@ -2234,8 +2234,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const { data: pcRows } = await window.sb
         .from('product_components')
         .select('component_id')
-        .eq('product_id', productId)
-        .range(offset, offset + limit - 1);
+        .eq('product_id', productId);
 
       if (!pcRows || pcRows.length === 0) {
         materialList.innerHTML = '<div style="text-align:center;padding:40px;color:#5f6368">No components found for this product.</div>';
@@ -2314,8 +2313,8 @@ document.addEventListener('DOMContentLoaded', () => {
             </div>
           </div>
           <div class="row-actions">
-            ${mat.websiteLink ? \`<a href="\${mat.websiteLink}" target="_blank" class="btn btn-row-action btn-supplier-web">🌐 Supplier Website</a>\` : ''}
-            ${mat.mapsLink ? \`<a href="\${mat.mapsLink}" target="_blank" class="btn btn-row-action btn-supplier-maps">📍 Open in Google Maps</a>\` : ''}
+            ${mat.websiteLink ? `<a href="${mat.websiteLink}" target="_blank" class="btn btn-row-action btn-supplier-web">🌐 Supplier Website</a>` : ''}
+            ${mat.mapsLink ? `<a href="${mat.mapsLink}" target="_blank" class="btn btn-row-action btn-supplier-maps">📍 Open in Google Maps</a>` : ''}
           </div>
         `;
         materialList.appendChild(card);
