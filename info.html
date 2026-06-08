@@ -2478,8 +2478,8 @@ document.addEventListener('DOMContentLoaded', () => {
           component_id,
           components (
             id,
-            name,
-            category
+            component_name,
+            component_category
           )
         `)
         .eq('product_id', productId)
@@ -2530,8 +2530,8 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         
         return {
-           name: comp.name,
-           category: comp.category,
+           name: comp.component_name,
+           category: comp.component_category,
            stock_status: supplierData.suppliers?.stock_status,
            distance_km: supplierData.suppliers?.distance_km,
            supplier_name: supplierData.suppliers?.supplier_name,
