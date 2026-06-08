@@ -2465,21 +2465,28 @@ document.addEventListener('DOMContentLoaded', () => {
       // Ensure total count is updated (once)
       if (offset === 0) {
          const { count, error: countErr } = await window.sb
-           .from('components')
+           .from('product_components')
            .select('*', { count: 'exact', head: true })
            .eq('product_id', productId);
          currentTotalMatchCount = count || 0;
       }
 
       // Step 2: Find components
-      const { data: components, error: compErr } = await window.sb
-        .from('components')
-        .select('*')
+      const { data: productComponents, error: pcErr } = await window.sb
+        .from('product_components')
+        .select(`
+          component_id,
+          components (
+            id,
+            name,
+            category
+          )
+        `)
         .eq('product_id', productId)
-        .order('id')
+        .order('component_id')
         .range(offset, offset + limit - 1);
 
-      if (compErr) throw new Error(compErr.message);
+      if (pcErr) throw new Error(pcErr.message);
 
       if (offset === 0) {
          materialList.innerHTML = '';
@@ -2488,7 +2495,7 @@ document.addEventListener('DOMContentLoaded', () => {
          if (spinner) spinner.remove();
       }
 
-      if (!components || components.length === 0) {
+      if (!productComponents || productComponents.length === 0) {
          hasMore = false;
          isLoading = false;
          if (offset === 0) {
@@ -2497,38 +2504,39 @@ document.addEventListener('DOMContentLoaded', () => {
          return;
       }
 
+      const components = productComponents.map(pc => pc.components).filter(Boolean);
+
       // Step 3: Find suppliers for these components in parallel
       const formattedMaterials = await Promise.all(components.map(async (comp) => {
         const { data: compSupps, error: suppErr } = await window.sb
           .from('component_suppliers')
           .select(`
-            stock_status,
-            distance_km,
             suppliers (
-              name,
-              address,
-              website,
-              google_maps_link
+              supplier_name,
+              city,
+              supplier_address,
+              supplier_website,
+              google_maps_link,
+              stock_status,
+              distance_km
             )
           `)
           .eq('component_id', comp.id)
           .limit(1);
           
-        let supplierData = { stock_status: 'Unknown', distance_km: '~10 km', suppliers: {} };
-        if (compSupps && compSupps.length > 0) {
-           supplierData = compSupps[0];
-        } else {
-           supplierData.suppliers = { name: 'Unknown Supplier', address: 'N/A', website: '#', google_maps_link: '#' };
+        let supplierData = { suppliers: { supplier_name: 'Unknown Supplier', supplier_address: 'N/A', supplier_website: '#', google_maps_link: '#', stock_status: 'Unknown', distance_km: '~10 km' } };
+        if (compSupps && compSupps.length > 0 && compSupps[0].suppliers) {
+           supplierData.suppliers = compSupps[0].suppliers;
         }
         
         return {
            name: comp.name,
            category: comp.category,
-           stock_status: supplierData.stock_status,
-           distance_km: supplierData.distance_km,
-           supplier_name: supplierData.suppliers?.name,
-           supplier_address: supplierData.suppliers?.address,
-           supplier_website: supplierData.suppliers?.website,
+           stock_status: supplierData.suppliers?.stock_status,
+           distance_km: supplierData.suppliers?.distance_km,
+           supplier_name: supplierData.suppliers?.supplier_name,
+           supplier_address: supplierData.suppliers?.supplier_address || supplierData.suppliers?.city,
+           supplier_website: supplierData.suppliers?.supplier_website || supplierData.suppliers?.supplier_product_link,
            google_maps_link: supplierData.suppliers?.google_maps_link
         };
       }));
