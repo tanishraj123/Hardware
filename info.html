@@ -2525,7 +2525,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         if (compSupps && compSupps.length > 0) {
            const cs = compSupps[0];
-           sd.distance_km = cs.distance_km ? cs.distance_km + ' km' : 'N/A';
+           sd.distance_km = cs.distance_km ? '~' + cs.distance_km + ' km away' : 'N/A';
            sd.stock_status = cs.stock_status || 'N/A';
            sd.google_maps_link = cs.google_maps_link || null;
            sd.supplier_product_link = cs.supplier_product_link || null;
