@@ -2471,23 +2471,6 @@ document.addEventListener('DOMContentLoaded', () => {
          currentTotalMatchCount = count || 0;
       }
 
-      // Step 2: Find components
-      const { data: productComponents, error: pcErr } = await window.sb
-        .from('product_components')
-        .select(`
-          component_id,
-          components (
-            id,
-            component_name,
-            component_category
-          )
-        `)
-        .eq('product_id', productId)
-        .order('component_id')
-        .range(offset, offset + limit - 1);
-
-      if (pcErr) throw new Error(pcErr.message);
-
       if (offset === 0) {
          materialList.innerHTML = '';
       } else {
@@ -2495,7 +2478,16 @@ document.addEventListener('DOMContentLoaded', () => {
          if (spinner) spinner.remove();
       }
 
-      if (!productComponents || productComponents.length === 0) {
+      // Step 2a: get component_ids
+      const { data: pcRows, error: pcErr } = await window.sb
+        .from('product_components')
+        .select('component_id')
+        .eq('product_id', productId)
+        .range(offset, offset + limit - 1);
+
+      if (pcErr) throw new Error(pcErr.message);
+
+      if (!pcRows || pcRows.length === 0) {
          hasMore = false;
          isLoading = false;
          if (offset === 0) {
@@ -2504,7 +2496,14 @@ document.addEventListener('DOMContentLoaded', () => {
          return;
       }
 
-      const components = productComponents.map(pc => pc.components).filter(Boolean);
+      // Step 2b: get component details
+      const componentIds = pcRows.map(r => r.component_id);
+      const { data: components, error: compErr } = await window.sb
+        .from('components')
+        .select('id, component_name, component_category')
+        .in('id', componentIds);
+        
+      if (compErr) throw new Error(compErr.message);
 
       // Step 3: Find suppliers for these components in parallel
       const formattedMaterials = await Promise.all(components.map(async (comp) => {
