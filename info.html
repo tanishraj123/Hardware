@@ -2638,15 +2638,23 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
+  function waitForSb(callback) {
+    if (window.sb) {
+      callback();
+    } else {
+      setTimeout(() => waitForSb(callback), 100);
+    }
+  }
+
   // Handle form submit
   if (searchForm) {
     searchForm.addEventListener('submit', (e) => {
       e.preventDefault();
-      performSearch(searchInput.value.trim());
-      // update URL without reload
+      const query = searchInput.value.trim();
       const url = new URL(window.location);
-      url.searchParams.set('q', searchInput.value.trim());
+      url.searchParams.set('q', query);
       window.history.pushState({}, '', url);
+      waitForSb(() => performSearch(query));
     });
   }
 
@@ -2655,12 +2663,12 @@ document.addEventListener('DOMContentLoaded', () => {
   const initialQuery = urlParams.get('q');
   if (initialQuery) {
     searchInput.value = initialQuery;
-    performSearch(initialQuery);
+    waitForSb(() => performSearch(initialQuery));
   } else {
     // Also run for default search input value
     const q = searchInput.value ? searchInput.value.trim() : '';
     if(q) {
-       performSearch(q);
+       waitForSb(() => performSearch(q));
     }
   }
 });
