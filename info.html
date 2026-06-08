@@ -2448,7 +2448,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const { data: productData, error: prodErr } = await window.sb
         .from('products')
         .select('id, name')
-        .ilike('name', `%${currentProductName}%`)
+        .ilike('name', \`%\${currentProductName}%\`)
         .single();
 
       if (prodErr || !productData) {
@@ -2470,7 +2470,7 @@ document.addEventListener('DOMContentLoaded', () => {
          currentTotalMatchCount = count || 0;
       }
 
-      // Step 2: Get component IDs (with pagination)
+      // Step 2: Get component IDs
       const { data: pcData, error: pcErr } = await window.sb
         .from('product_components')
         .select('component_id')
@@ -2498,50 +2498,47 @@ document.addEventListener('DOMContentLoaded', () => {
       // Step 3 & 4: Fetch components and suppliers
       const formattedMaterials = await Promise.all(pcData.map(async (pc) => {
         // Fetch component details
-        const { data: compData } = await window.sb
+        const { data: compData, error: compErr } = await window.sb
           .from('components')
           .select('id, component_name, component_category')
           .eq('id', pc.component_id)
           .single();
 
-        let comp = compData || { id: pc.component_id, component_name: 'Unknown', component_category: 'Unknown' };
+        if (compErr || !compData) return null;
 
         // Fetch component suppliers
         const { data: csData } = await window.sb
           .from('component_suppliers')
           .select('distance_km, stock_status, google_maps_link, supplier_product_link, supplier_id')
-          .eq('component_id', comp.id)
-          .limit(1)
+          .eq('component_id', compData.id)
           .single();
-
-        let cs = csData || { distance_km: null, stock_status: 'Unknown', google_maps_link: null, supplier_product_link: null, supplier_id: null };
-
-        let sup = { supplier_name: 'Unknown Supplier', city: 'N/A' };
-        if (cs.supplier_id) {
-            // Fetch supplier details
-            const { data: supData } = await window.sb
+          
+        let supData = null;
+        if (csData && csData.supplier_id) {
+            const { data } = await window.sb
               .from('suppliers')
               .select('supplier_name, city')
-              .eq('id', cs.supplier_id)
+              .eq('id', csData.supplier_id)
               .single();
-              
-            if (supData) sup = supData;
+            supData = data;
         }
 
         return {
-           name: comp.component_name || 'N/A',
-           category: comp.component_category || 'N/A',
-           stock_status: cs.stock_status || 'N/A',
-           distance_km: cs.distance_km ? cs.distance_km + ' km' : 'N/A',
-           supplier_name: sup.supplier_name || 'N/A',
-           supplier_address: sup.city || 'N/A',
-           supplier_website: cs.supplier_product_link || null,
-           google_maps_link: cs.google_maps_link || null
+           name: compData.component_name || '',
+           category: compData.component_category || '',
+           stock_status: csData ? csData.stock_status : '',
+           distance_km: csData && csData.distance_km ? csData.distance_km + ' km' : '',
+           supplier_name: supData ? supData.supplier_name : '',
+           supplier_address: supData ? supData.city : '',
+           supplier_website: csData ? csData.supplier_product_link : '',
+           google_maps_link: csData ? csData.google_maps_link : ''
         };
       }));
+      
+      const validMaterials = formattedMaterials.filter(Boolean);
 
       // Render items
-      formattedMaterials.forEach((mat, index) => {
+      validMaterials.forEach((mat, index) => {
          const absoluteIndex = offset + index;
          const catClassRaw = getCatClass(mat.category || 'default');
          const knownCats = ['display', 'semiconductor', 'power', 'glass', 'metal', 'audio'];
