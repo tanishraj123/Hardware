@@ -44,6 +44,14 @@
   <!-- Supabase CDN Client -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="/auth-global.js"></script>
+  <script>
+    setTimeout(() => {
+      const el = document.createElement('div');
+      el.style = 'position:fixed;bottom:0;left:0;background:red;color:white;padding:8px;font-size:12px;z-index:99999';
+      el.textContent = 'window.sb = ' + (window.sb ? 'EXISTS' : 'UNDEFINED');
+      document.body.appendChild(el);
+    }, 3000);
+  </script>
 
   <style>
     /* Clean, Modern Google-Style CSS Reset & Base */
