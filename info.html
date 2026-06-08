@@ -2412,14 +2412,15 @@ document.addEventListener('DOMContentLoaded', () => {
       const { data: pcRows } = await window.sb
         .from('product_components')
         .select('component_id')
-        .eq('product_id', productId);
+        .eq('product_id', productId)
+        .range(offset, offset + limit - 1);
 
       if (!pcRows || pcRows.length === 0) {
         materialList.innerHTML = '<div style="text-align:center;padding:40px;color:#5f6368">No components found for this product.</div>';
         return;
       }
 
-      const componentIds = pcRows.map(r => r.component_id);
+      const componentIds = (pcRows || []).map(r => r.component_id);
 
       // Step 3: Get component details
       const { data: components } = await window.sb
