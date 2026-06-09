@@ -1029,29 +1029,47 @@
                 supplier_product_link,
                 suppliers (supplier_name, city)
               `)
-              .eq('component_id', comp.id)
-              .limit(1);
+              .eq('component_id', comp.id);
+
+            const sortedRows = (csRows || []).sort((a, b) => {
+              const distA = parseFloat(a.distance_km) || 0;
+              const distB = parseFloat(b.distance_km) || 0;
+              return distA - distB;
+            });
+
+            const primary = sortedRows.length > 0 ? sortedRows[0] : null;
+            const alternatives = sortedRows.slice(1);
 
             let supplierName = 'N/A', city = 'N/A', distanceKm = 'N/A', stockStatus = 'N/A', mapsLink = null, websiteLink = null;
+            let altData = [];
 
-            if (csRows && csRows.length > 0) {
-              const cs = csRows[0];
-              distanceKm = cs.distance_km ? '~' + cs.distance_km + ' km away' : 'N/A';
-              stockStatus = cs.stock_status || 'N/A';
-              mapsLink = cs.google_maps_link || null;
-              websiteLink = cs.supplier_product_link || null;
+            if (primary) {
+              distanceKm = primary.distance_km ? '~' + primary.distance_km + ' km away' : 'N/A';
+              stockStatus = primary.stock_status || 'N/A';
+              mapsLink = primary.google_maps_link || null;
+              websiteLink = primary.supplier_product_link || null;
 
-              // Get supplier details from foreign key relationship
-              if (cs.suppliers) {
-                supplierName = cs.suppliers.supplier_name || 'N/A';
-                city = cs.suppliers.city || 'N/A';
+              if (primary.suppliers) {
+                supplierName = primary.suppliers.supplier_name || 'N/A';
+                city = primary.suppliers.city || 'N/A';
               }
             }
+
+            alternatives.forEach(alt => {
+              altData.push({
+                supplierName: alt.suppliers?.supplier_name || 'N/A',
+                city: alt.suppliers?.city || 'N/A',
+                distance: alt.distance_km ? '~' + alt.distance_km + ' km away' : 'N/A',
+                stockStatus: alt.stock_status || 'N/A',
+                mapsLink: alt.google_maps_link || null,
+                websiteLink: alt.supplier_product_link || null
+              });
+            });
 
             return {
               name: comp.component_name,
               category: comp.component_category,
-              distanceKm, stockStatus, supplierName, city, mapsLink, websiteLink
+              distanceKm, stockStatus, supplierName, city, mapsLink, websiteLink, altData
             };
           }));
 
@@ -1060,10 +1078,19 @@
           const existingLoadMore = document.getElementById('load-more-container');
           if (existingLoadMore) existingLoadMore.remove();
 
+          let savedSuppliers = [];
+          try { savedSuppliers = JSON.parse(localStorage.getItem('savedSuppliers') || '[]'); } catch(e) {}
+
           results.forEach((mat, i) => {
             const catStyle = getCategoryStyle(mat.category);
             const colorRGB = `${catStyle.r}, ${catStyle.g}, ${catStyle.b}`;
             const stockClass = (mat.stockStatus || '').toLowerCase().includes('low') ? 'low-stock' : 'in-stock';
+            const isSaved = savedSuppliers.some(s => s.componentName === mat.name && s.supplierName === mat.supplierName);
+            const saveBtnStyle = isSaved 
+              ? `margin-right: auto; width: 36px; height: 36px; border-radius: 50%; border: 1px solid #16a34a; background: #16a34a; cursor: pointer; color: #fff; display: flex; align-items: center; justify-content: center; padding: 0; font-weight: bold; font-size: 14px;` 
+              : `margin-right: auto; width: 36px; height: 36px; border-radius: 50%; border: 1px solid #dadce0; background: #fff; cursor: pointer; color: #5f6368; display: flex; align-items: center; justify-content: center; padding: 0; font-weight: normal; font-size: 18px; line-height: 1;`;
+            const saveBtnText = isSaved ? '✓' : '+';
+            
             const card = document.createElement('article');
             card.className = 'material-card';
             card.style.borderLeft = `4px solid rgb(${colorRGB})`;
@@ -1081,12 +1108,88 @@
                   <span class="supplier-address">${mat.city}</span>
                 </div>
               </div>
-              <div class="row-actions">
+              <div class="row-actions" style="display: flex; align-items: center; justify-content: flex-end;">
+                <button class="btn btn-save-partner" style="${saveBtnStyle}" data-info="${encodeURIComponent(JSON.stringify({supplierName: mat.supplierName, city: mat.city, componentName: mat.name, distance: mat.distanceKm, stockStatus: mat.stockStatus, mapsLink: mat.mapsLink, websiteLink: mat.websiteLink}))}">${saveBtnText}</button>
                 ${mat.websiteLink ? `<a href="${mat.websiteLink}" target="_blank" class="btn btn-row-action btn-supplier-web">🌐 Supplier Website</a>` : ''}
                 ${mat.mapsLink ? `<a href="${mat.mapsLink}" target="_blank" class="btn btn-row-action btn-supplier-maps">📍 Open in Google Maps</a>` : ''}
+                ${mat.altData.length > 0 ? `<button class="btn btn-alt-suppliers" style="width: 36px; height: 36px; border-radius: 50%; border: 1px solid #dadce0; background: #fff; cursor: pointer; color: #5f6368; display: flex; align-items: center; justify-content: center; padding: 0; margin-left: 8px;" data-alts="${encodeURIComponent(JSON.stringify(mat.altData))}">
+                  <span style="font-size: 16px; transition: transform 0.2s;" class="chevron-icon">⌄</span>
+                </button>` : ''}
               </div>
+              <div class="alt-suppliers-section" style="display: none; border-top: 1px solid #e5e7eb; margin-top: 16px; padding-top: 12px;"></div>
             `;
             materialList.appendChild(card);
+
+            // Add Save Button Event Listener
+            const saveBtn = card.querySelector('.btn-save-partner');
+            if (saveBtn) {
+              saveBtn.addEventListener('click', () => {
+                const info = JSON.parse(decodeURIComponent(saveBtn.getAttribute('data-info')));
+                let saved = [];
+                try { saved = JSON.parse(localStorage.getItem('savedSuppliers') || '[]'); } catch(err) {}
+                const idx = saved.findIndex(s => s.componentName === info.componentName && s.supplierName === info.supplierName);
+                if (idx > -1) {
+                  saved.splice(idx, 1);
+                  saveBtn.innerHTML = '+';
+                  saveBtn.style.background = '#fff';
+                  saveBtn.style.color = '#5f6368';
+                  saveBtn.style.border = '1px solid #dadce0';
+                  saveBtn.style.fontWeight = 'normal';
+                  saveBtn.style.fontSize = '18px';
+                } else {
+                  saved.push(info);
+                  saveBtn.innerHTML = '✓';
+                  saveBtn.style.background = '#16a34a';
+                  saveBtn.style.color = '#fff';
+                  saveBtn.style.border = '1px solid #16a34a';
+                  saveBtn.style.fontWeight = 'bold';
+                  saveBtn.style.fontSize = '14px';
+                }
+                localStorage.setItem('savedSuppliers', JSON.stringify(saved));
+              });
+            }
+
+            // Add Alt Suppliers Event Listener
+            const altBtn = card.querySelector('.btn-alt-suppliers');
+            if (altBtn) {
+              altBtn.addEventListener('click', () => {
+                const section = card.querySelector('.alt-suppliers-section');
+                const icon = altBtn.querySelector('.chevron-icon');
+                if (section.style.display === 'none') {
+                  const alts = JSON.parse(decodeURIComponent(altBtn.getAttribute('data-alts')));
+                  if (!section.innerHTML) {
+                    let html = '<div style="font-size: 12px; color: #5f6368; font-weight: 600; text-transform: uppercase; margin-bottom: 12px;">Alternative Suppliers</div>';
+                    alts.forEach(alt => {
+                      const altStockClass = (alt.stockStatus || '').toLowerCase().includes('low') ? 'low-stock' : 'in-stock';
+                      html += \`
+                        <div style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; padding-bottom: 16px; border-bottom: 1px dashed #e5e7eb;">
+                          <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                            <div>
+                              <div style="font-weight: 600; font-size: 14px; color: #202124;">\${alt.supplierName}</div>
+                              <div style="font-size: 13px; color: #5f6368;">\${alt.city}</div>
+                            </div>
+                            <div style="text-align: right;">
+                              <span class="distance-badge">\${alt.distance}</span>
+                              <div class="stock-indicator \${altStockClass}"><span class="stock-dot"></span>\${alt.stockStatus}</div>
+                            </div>
+                          </div>
+                          <div style="display: flex; gap: 8px; margin-top: 4px; justify-content: flex-end;">
+                            \${alt.websiteLink ? \`<a href="\${alt.websiteLink}" target="_blank" class="btn btn-row-action btn-supplier-web" style="padding: 6px 12px; font-size: 12px;">🌐 Website</a>\` : ''}
+                            \${alt.mapsLink ? \`<a href="\${alt.mapsLink}" target="_blank" class="btn btn-row-action btn-supplier-maps" style="padding: 6px 12px; font-size: 12px;">📍 Maps</a>\` : ''}
+                          </div>
+                        </div>
+                      \`;
+                    });
+                    section.innerHTML = html;
+                  }
+                  section.style.display = 'block';
+                  icon.style.transform = 'rotate(180deg)';
+                } else {
+                  section.style.display = 'none';
+                  icon.style.transform = 'rotate(0deg)';
+                }
+              });
+            }
           });
 
           let currentVisible = Math.min(10, results.length);
