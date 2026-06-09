@@ -904,32 +904,30 @@
   </footer>
 
     <script>
-      const getCatClass = (cat) => {
-        const catMap = {
-          'display': 'display',
-          'semiconductor': 'semiconductor',
-          'processor': 'semiconductor',
-          'chip': 'semiconductor',
-          'power': 'power',
-          'battery': 'power',
-          'thermal': 'power',
-          'glass': 'glass',
-          'crystal': 'glass',
-          'metal': 'metal',
-          'steel': 'metal',
-          'frame': 'metal',
-          'audio': 'audio',
-          'speaker': 'audio',
-          'electronics': 'electronics',
-          'port': 'electronics',
-          'mechanical': 'metal',
-          'cooling': 'power'
+      const getCategoryStyle = (cat) => {
+        const lowCat = (cat || '').toLowerCase();
+        const colors = {
+          'semiconductor': { r: 139, g: 92, b: 246 },
+          'display':       { r: 59,  g: 130, b: 246 },
+          'battery':       { r: 16,  g: 185, b: 129 },
+          'sensor':        { r: 245, g: 158, b: 11 },
+          'memory':        { r: 99,  g: 102, b: 241 },
+          'storage':       { r: 6,   g: 182, b: 212 },
+          'connector':     { r: 236, g: 72,  b: 153 },
+          'electronic':    { r: 239, g: 68,  b: 68 },
+          'assembly':      { r: 20,  g: 184, b: 166 },
+          'metal':         { r: 107, g: 114, b: 128 },
+          'glass':         { r: 103, g: 232, b: 249 },
+          'chemical':      { r: 234, g: 179, b: 8 },
+          'motor':         { r: 5,   g: 150, b: 105 },
+          'plastic':       { r: 124, g: 58,  b: 237 },
+          'power':         { r: 244, g: 63,  b: 94 },
+          'default':       { r: 66,  g: 133, b: 244 }
         };
-        const c = (cat || '').toLowerCase();
-        for (let key in catMap) {
-          if (c.includes(key)) return catMap[key];
+        for (let key in colors) {
+          if (lowCat.includes(key)) return colors[key];
         }
-        return 'default';
+        return colors['default'];
       };
 
       async function performSearch(query) {
@@ -1022,16 +1020,22 @@
 
           // Render
           materialList.innerHTML = '';
+          const existingLoadMore = document.getElementById('load-more-container');
+          if (existingLoadMore) existingLoadMore.remove();
+
           results.forEach((mat, i) => {
-            const catClass = getCatClass(mat.category);
+            const catStyle = getCategoryStyle(mat.category);
+            const colorRGB = `${catStyle.r}, ${catStyle.g}, ${catStyle.b}`;
             const stockClass = (mat.stockStatus || '').toLowerCase().includes('low') ? 'low-stock' : 'in-stock';
             const card = document.createElement('article');
-            card.className = 'material-card cat-' + catClass;
+            card.className = 'material-card';
+            card.style.borderLeft = `4px solid rgb(${colorRGB})`;
+            card.style.display = i < 10 ? 'block' : 'none';
             card.innerHTML = `
               <div class="material-info">
                 <div class="material-meta-row">
                   <h2 class="material-name">${i+1}. ${mat.name}</h2>
-                  <span class="pill-tag pill-${catClass}">${mat.category}</span>
+                  <span class="pill-tag" style="background-color: rgba(${colorRGB}, 0.1); color: rgb(${colorRGB}); border: none;">${mat.category || 'Component'}</span>
                   <span class="distance-badge">${mat.distanceKm}</span>
                   <span class="stock-indicator ${stockClass}"><span class="stock-dot"></span>${mat.stockStatus}</span>
                 </div>
@@ -1047,6 +1051,33 @@
             `;
             materialList.appendChild(card);
           });
+
+          let currentVisible = Math.min(10, results.length);
+          if (results.length > 10) {
+            const loadMoreDiv = document.createElement('div');
+            loadMoreDiv.id = 'load-more-container';
+            loadMoreDiv.style.textAlign = 'center';
+            loadMoreDiv.style.marginTop = '24px';
+            
+            const loadBtn = document.createElement('button');
+            loadBtn.className = 'btn btn-outline';
+            loadBtn.textContent = `Load More Components (showing ${currentVisible} of ${results.length})`;
+            loadBtn.onclick = () => {
+              let limit = Math.min(currentVisible + 10, results.length);
+              const allCards = materialList.querySelectorAll('.material-card');
+              for (let i = currentVisible; i < limit; i++) {
+                allCards[i].style.display = 'block';
+              }
+              currentVisible = limit;
+              if (currentVisible >= results.length) {
+                loadMoreDiv.innerHTML = `<span style="color:#5f6368;font-size:14px;font-weight:500;">All ${results.length} components loaded ✓</span>`;
+              } else {
+                loadBtn.textContent = `Load More Components (showing ${currentVisible} of ${results.length})`;
+              }
+            };
+            loadMoreDiv.appendChild(loadBtn);
+            materialList.parentNode.insertBefore(loadMoreDiv, materialList.nextSibling);
+          }
 
           statsSummary.textContent = `Sourced ${results.length} of ${results.length} materials • Click 📍 to open supplier location in Google Maps`;
 
