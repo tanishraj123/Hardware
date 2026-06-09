@@ -459,6 +459,22 @@
       border-left: 4px solid #F97316;
     }
 
+    .pill-thermal {
+      background-color: #FEF3C7;
+      color: #D97706;
+    }
+    .material-card.cat-thermal {
+      border-left: 4px solid #F59E0B;
+    }
+
+    .pill-default {
+      background-color: #F1F3F4;
+      color: #5F6368;
+    }
+    .material-card.cat-default {
+      border-left: 4px solid #9CA3AF;
+    }
+
     .distance-badge {
       font-size: 11px;
       font-weight: 600;
@@ -889,9 +905,31 @@
 
     <script>
       const getCatClass = (cat) => {
-        const known = ['display','semiconductor','power','glass','metal','audio'];
-        const c = (cat || '').toLowerCase().replace(/[^a-z]/g,'');
-        return known.includes(c) ? c : 'default';
+        const catMap = {
+          'display': 'display',
+          'semiconductor': 'semiconductor',
+          'processor': 'semiconductor',
+          'chip': 'semiconductor',
+          'power': 'power',
+          'battery': 'power',
+          'thermal': 'power',
+          'glass': 'glass',
+          'crystal': 'glass',
+          'metal': 'metal',
+          'steel': 'metal',
+          'frame': 'metal',
+          'audio': 'audio',
+          'speaker': 'audio',
+          'electronics': 'electronics',
+          'port': 'electronics',
+          'mechanical': 'metal',
+          'cooling': 'power'
+        };
+        const c = (cat || '').toLowerCase();
+        for (let key in catMap) {
+          if (c.includes(key)) return catMap[key];
+        }
+        return 'default';
       };
 
       async function performSearch(query) {
