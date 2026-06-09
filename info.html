@@ -44,14 +44,6 @@
   <!-- Supabase CDN Client -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="/auth-global.js"></script>
-  <script>
-    setTimeout(() => {
-      const el = document.createElement('div');
-      el.style = 'position:fixed;bottom:0;left:0;background:red;color:white;padding:8px;font-size:12px;z-index:99999';
-      el.textContent = 'window.sb = ' + (window.sb ? 'EXISTS' : 'UNDEFINED');
-      document.body.appendChild(el);
-    }, 3000);
-  </script>
 
   <style>
     /* Clean, Modern Google-Style CSS Reset & Base */
@@ -89,7 +81,6 @@
       padding: 0 20px;
     }
 
-
 /* Navbar */
       .navbar {
         height: 64px;
@@ -99,7 +90,7 @@
         justify-content: space-between;
         background: rgba(255, 255, 255, 0.75);
         backdrop-filter: blur(10px);
-        -webkit-backdrop-filter: blur(10px); /* Apple support */
+        -webkit-backdrop-filter: blur(10px);
         border-bottom: 1px solid rgba(0, 0, 0, 0.1);
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
         position: sticky;
@@ -212,7 +203,6 @@
         background-color: #2b72eb;
         box-shadow: 0 2px 6px rgba(66, 133, 244, 0.2);
       }
-
 
     /* Search Bar Row */
     .search-row-section {
@@ -603,9 +593,9 @@
 
     /* Footer Column Styles */
     footer {
-      background-color: #f8f9fa; /* light grey background */
+      background-color: #f8f9fa;
       border-top: 1px solid #e1e3e5;
-      padding: 80px 0 0; /* Let footer-bottom touch bottom */
+      padding: 80px 0 0;
       position: relative;
     }
 
@@ -635,9 +625,9 @@
     }
 
     .footer-title {
-      font-size: 12px; /* uppercase small */
+      font-size: 12px;
       font-weight: 700;
-      color: #5f6368; /* grey #5f6368 */
+      color: #5f6368;
       text-transform: uppercase;
       letter-spacing: 0.5px;
     }
@@ -650,12 +640,12 @@
 
     .footer-link {
       font-size: 13px;
-      color: #3c4043; /* dark grey #3c4043 */
+      color: #3c4043;
       transition: color 0.15s ease;
     }
 
     .footer-link:hover {
-      color: #4285F4; /* hover blue */
+      color: #4285F4;
     }
 
     .footer-description {
@@ -665,12 +655,12 @@
     }
 
     .footer-bottom {
-      background-color: #FFFFFF; /* Copyright bar: white background */
-      border-top: 1px solid #e8eaed; /* thin top border */
+      background-color: #FFFFFF;
+      border-top: 1px solid #e8eaed;
       padding: 24px;
       margin-top: 40px;
       width: 100vw;
-      margin-left: calc(-50vw + 50%); /* stretch 100vw */
+      margin-left: calc(-50vw + 50%);
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -682,13 +672,6 @@
     @media (min-width: 768px) {
       .footer-bottom {
         flex-direction: row;
-      }
-    }
-
-    @media (min-width: 1200px) {
-      .footer-bottom {
-        padding-left: calc((100vw - 1152px) / 2);
-        padding-right: calc((100vw - 1152px) / 2);
       }
     }
 
@@ -704,7 +687,7 @@
 
     .footer-legal-link {
       font-size: 12px;
-      color: #3c4043; /* dark grey #3c4043 */
+      color: #3c4043;
       transition: color 0.15s ease;
     }
 
@@ -764,53 +747,7 @@
       font-family: Inter, system-ui, sans-serif;
     }
 
-    @media (max-width: 1023px) {
-      .navbar-logo-wrapper {
-        gap: 10px;
-        padding: 6px;
-      }
-      
-      .navbar-logo-image {
-        height: 45px;
-      }
-      
-      .navbar-logo-text {
-        font-size: 22px;
-      }
-      
-      .footer-logo-image {
-        height: 38px;
-      }
-      
-      .footer-logo-text {
-        font-size: 16px;
-      }
-    }
-
-    @media (max-width: 768px) {
-      .navbar-logo-wrapper {
-        gap: 8px;
-        padding: 4px;
-      }
-      
-      .navbar-logo-image {
-        height: 40px;
-      }
-      
-      .navbar-logo-text {
-        font-size: 20px;
-      }
-      
-      .footer-logo-image {
-        height: 35px;
-      }
-      
-      .footer-logo-text {
-        font-size: 14px;
-      }
-    }
-
-    /* ===== SCROLL SMOOTHNESS & HARDWARE PERFORMANCE ===== */
+    /* SCROLL SMOOTHNESS & HARDWARE PERFORMANCE */
     html {
       scroll-behavior: smooth;
       overflow-y: scroll;
@@ -823,789 +760,10 @@
       will-change: scroll-position;
     }
 
-    /* ===== HARDWARE ACCELERATION ===== */
-    .navbar, .scroller-card, .step-card, .trending-card, .card, .supplier-card, .product-card, .bom-card, button, a {
-      transform: translate3d(0, 0, 0);
-    }
-
-    /* ===== FAST TRANSITIONS ===== */
     button, a, input, select, textarea {
       transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
     }
-
-    button:hover, a:hover {
-      transform: translateY(-2px);
-    }
-
-    /* Smooth nav link hover overrides */
-    .nav-links a {
-      transition: background-color 0.15s ease, color 0.15s ease !important;
-    }
-
-    /* Smooth card hover overrides (Material Design easing) */
-    .scroller-card, .card, .supplier-card, .product-card, .bom-card {
-      transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.2s ease !important;
-    }
-    .scroller-card:hover, .card:hover, .supplier-card:hover, .product-card:hover, .bom-card:hover {
-      transform: translateY(-4px) translate3d(0, 0, 0) !important;
-      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1) !important;
-    }
-
-    /* ===== SCROLL CONTAINMENT ===== */
-    .navbar {
-      contain: layout style;
-      overflow: visible !important;
-    }
-
-    main, section {
-      contain: layout style;
-    }
-
-    .scroller-card, .card, .supplier-card, .product-card, .bom-card {
-      contain: content;
-    }
-
-    /* ===== FORM PERFORMANCE ===== */
-    input[type="text"], input[type="email"], input[type="password"] {
-      transition: all 0.2s ease !important;
-    }
-
-    input[type="text"]:focus, input[type="email"]:focus, input[type="password"]:focus {
-      transform: scale(1.01) !important;
-      box-shadow: 0 0 0 3px rgba(66, 133, 244, 0.1) !important;
-    }
-
-    input[type="text"]::placeholder, input[type="email"]::placeholder, input[type="password"]::placeholder {
-      transition: color 0.15s ease !important;
-    }
-
-    /* ===== SCROLL LOCK MODAL/DROPDOWNS ===== */
-    body.modal-open {
-      overflow: hidden;
-      position: fixed;
-      width: 100%;
-    }
-
-    .modal-backdrop {
-      animation: fadeIn 0.2s ease;
-    }
-
-    /* ===== USER ACCOUNT DROPDOWN STYLING ===== */
-    .user-profile-menu-container {
-      position: relative !important;
-      display: inline-block !important;
-      overflow: visible !important;
-    }
-
-    #account-btn {
-      position: relative !important;
-      z-index: 101 !important;
-    }
-
-    #account-dropdown {
-      display: block !important;
-      position: absolute !important;
-      right: 0 !important;
-      top: calc(100% + 8px) !important;
-      background-color: #ffffff !important;
-      border: 1px solid #e0e0e0 !important;
-      border-radius: 12px !important;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
-      width: 220px !important;
-      min-width: 200px !important;
-      z-index: 1000 !important; /* Above all content but no backdrop */
-      padding: 12px 0 !important;
-      opacity: 0 !important;
-      visibility: hidden !important;
-      transform: translateY(-8px) !important;
-      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
-      pointer-events: none !important;
-      text-align: left !important;
-      box-sizing: border-box !important;
-    }
-
-    #account-dropdown.active {
-      opacity: 1 !important;
-      visibility: visible !important;
-      transform: translateY(0) !important;
-      pointer-events: auto !important;
-    }
-
-    #account-dropdown a, 
-    #account-dropdown button,
-    #account-dropdown .dropdown-item {
-      display: block !important;
-      width: 100% !important;
-      padding: 12px 16px !important;
-      font-size: 14px !important;
-      color: #1a1a1a !important;
-      text-decoration: none !important;
-      border: none !important;
-      background: none !important;
-      cursor: pointer !important;
-      font-weight: 500 !important;
-      transition: background-color 0.15s ease, color 0.15s ease !important;
-      font-family: Inter, system-ui, sans-serif !important;
-      box-sizing: border-box !important;
-    }
-
-    #account-dropdown a:hover, 
-    #account-dropdown button:hover,
-    #account-dropdown .dropdown-item:hover {
-      background-color: #f5f5f5 !important;
-      color: #1a1a1a !important;
-    }
-
-    #account-dropdown #signout-link {
-      border-top: 1px solid #e0e0e0 !important;
-      color: #d93025 !important;
-      font-weight: 600 !important;
-      margin-top: 8px !important;
-      padding-top: 12px !important;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
-    }
-  
-    /* GrabRaw+ CSS */
-    .plus-badge {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: 18px;
-      height: 18px;
-      background: #4285F4;
-      border-radius: 50%;
-      color: white;
-      font-size: 10px;
-      font-weight: bold;
-      margin-left: 4px;
-      border: 2px solid white;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.2);
-    }
-    .avatar-wrapper { position: relative; display: inline-block; }
-    .avatar-badge { position: absolute; bottom: -2px; right: -2px; }
-
   </style>
-
-  <!-- SVG Icon Library (Simple Embedded SVG styles) -->
-  <style>
-    .svg-icon {
-      width: 18px;
-      height: 18px;
-      fill: currentColor;
-      display: inline-block;
-      vertical-align: middle;
-    }
-
-    /* Save & Expand Icons container */
-    .material-card {
-      position: relative; /* ensure relative positioning for icons */
-    }
-    
-    .card-actions-top-right {
-      position: absolute;
-      top: 16px;
-      right: 16px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      z-index: 10;
-    }
-    
-    .btn-save-supplier, .btn-expand-alternatives {
-      width: 36px;
-      height: 36px;
-      border-radius: 50%;
-      border: 1px solid #dadce0;
-      background-color: #ffffff;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      padding: 0;
-      transition: all 0.2s ease;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-    }
-    
-    .btn-save-supplier {
-      color: #4285F4; /* Blue #4285F4 */
-    }
-    .btn-save-supplier:hover {
-      background-color: #e8f0fe;
-      border-color: #4285F4;
-    }
-    
-    .btn-save-supplier.saved {
-      background-color: #34A853 !important; /* change to ✓ checkmark with green #34A853 background */
-      border-color: #34A853 !important;
-      color: #ffffff !important;
-    }
-    
-    .btn-expand-alternatives {
-      color: #5f6368; /* Grey #5f6368 */
-    }
-    .btn-expand-alternatives:hover {
-      background-color: #f1f3f4;
-    }
-    .btn-expand-alternatives.disabled {
-      opacity: 0.35;
-      cursor: not-allowed;
-      pointer-events: none;
-    }
-    
-    /* Alternatives dropdown / popup style */
-    .alternatives-dropdown-panel {
-      position: absolute;
-      top: 100%;
-      right: 0;
-      width: 100%; /* full width on mobile */
-      background-color: #ffffff;
-      border: 1px solid #dadce0;
-      border-radius: 12px;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.12);
-      z-index: 1000;
-      padding: 16px;
-      margin-top: 8px;
-      box-sizing: border-box;
-      display: none;
-      animation: fadeInDown 0.2s ease-out;
-    }
-    
-    @keyframes fadeInDown {
-      from { opacity: 0; transform: translateY(-5px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    
-    @media (min-width: 768px) {
-      .alternatives-dropdown-panel {
-        width: 320px; /* Floating box on desktop */
-        right: 16px;
-      }
-    }
-    
-    .alt-panel-title {
-      font-size: 13px;
-      font-weight: 700;
-      color: #202124;
-      border-bottom: 1px solid #f1f3f4;
-      padding-bottom: 8px;
-      margin-bottom: 12px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    
-    .alt-supplier-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      padding: 10px 0;
-      border-bottom: 1px solid #f1f3f4;
-      position: relative;
-    }
-    .alt-supplier-row:last-child {
-      border-bottom: none;
-      padding-bottom: 0;
-    }
-    
-    .alt-supplier-info {
-      flex: 1;
-      padding-right: 36px;
-    }
-    
-    .alt-name-line {
-      font-weight: 600;
-      font-size: 13.5px;
-      color: #202124;
-    }
-    
-    .alt-meta-line {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 11px;
-      font-weight: 500;
-      margin-top: 2px;
-    }
-    
-    .alt-distance-pill {
-      background-color: #e8f0fe;
-      color: #1a73e8;
-      padding: 1px 6px;
-      border-radius: 4px;
-    }
-    
-    .alt-stock-indicator {
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-    }
-    .alt-stock-dot {
-      width: 5px;
-      height: 5px;
-      border-radius: 50%;
-    }
-    
-    .alt-address-line {
-      font-size: 11.5px;
-      color: #70757a;
-      margin-top: 4px;
-    }
-    
-    .btn-alt-save {
-      width: 28px;
-      height: 28px;
-      border-radius: 50%;
-      border: 1px solid #dadce0;
-      background-color: #ffffff;
-      color: #4285F4;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      position: absolute;
-      right: 0;
-      top: 10px;
-      padding: 0;
-      transition: all 0.2s;
-    }
-    .btn-alt-save:hover {
-      background-color: #e8f0fe;
-      border-color: #4285F4;
-    }
-    .btn-alt-save.saved {
-      background-color: #34A853 !important;
-      border-color: #34A853 !important;
-      color: #ffffff !important;
-    }
-    
-    /* Toast System container & style */
-    .toast-container {
-      position: fixed;
-      bottom: 24px;
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 9999;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-    
-    .toast {
-      background-color: #323232;
-      color: #ffffff;
-      padding: 12px 24px;
-      border-radius: 8px;
-      font-size: 14px;
-      font-weight: 500;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-      animation: slideUp 0.25s ease-out forwards;
-      opacity: 0.95;
-    }
-    
-    @keyframes slideUp {
-      from { transform: translateY(30px); opacity: 0; }
-      to { transform: translateY(0); opacity: 0.95; }
-    }
-  </style>
-
-  <!-- Comprehensive Mobile Responsiveness Overrides -->
-  <style>
-    /* Prevent auto-zoom on iOS/device focus by keeping inputs >= 16px */
-    input, select, textarea {
-      font-size: 16px !important;
-    }
-    
-    /* Ensure body line height is clean & comfortable */
-    body {
-      line-height: 1.6 !important;
-    }
-    
-    /* Strict Mobile-first spacing constraints (< 640px) */
-    @media (max-width: 639.98px) {
-      .container, .hero, section, main {
-        padding-left: 16px !important;
-        padding-right: 16px !important;
-      }
-      .card, .scroller-card, .step-card, .trending-card, .material-card {
-        margin: 12px 0 !important;
-        padding: 16px !important;
-      }
-      
-      /* Horizontal scrolling for suggestions on mobile */
-      .suggestion-row {
-        padding: 0 4px !important;
-        box-sizing: border-box !important;
-        overflow-x: auto !important;
-        justify-content: flex-start !important;
-        -webkit-overflow-scrolling: touch;
-        max-width: 100% !important;
-        scrollbar-width: none; /* Hide scrollbar */
-        margin-left: 0 !important;
-        margin-right: 0 !important;
-      }
-      .suggestion-row::-webkit-scrollbar {
-        display: none;
-      }
-      #suggestion-ticker-container {
-        width: auto !important;
-        max-width: none !important;
-        overflow: visible !important;
-        pointer-events: auto !important;
-      }
-    }
-    
-    /* Disable hovers on touch devices to prevent sticky hover states */
-    @media (hover: none) {
-      button:hover, a:hover, .btn:hover, .scroller-card:hover, .step-card:hover, .trending-card:hover {
-        transform: none !important;
-        box-shadow: none !important;
-      }
-      button:active, a:active, .btn:active {
-        background-color: rgba(0,0,0,0.06) !important;
-      }
-    }
-    
-    /* Desktop-first Navbar button overrides */
-    @media (min-width: 640px) {
-      .nav-actions {
-        gap: 12px !important;
-      }
-      .nav-actions .btn-outline, .nav-actions .btn-primary {
-        height: 44px !important;
-        line-height: 1 !important;
-        display: inline-flex !important;
-        align-items: center !important;
-        justify-content: center !important;
-        padding: 0 20px !important;
-        font-weight: 600 !important;
-        font-size: 14px !important;
-        border-radius: 100px !important;
-        box-sizing: border-box !important;
-        transition: all 0.2s ease !important;
-      }
-      .nav-actions .btn-outline {
-        border: 1px solid #dadce0 !important;
-        background-color: transparent !important;
-        color: #3c4043 !important;
-      }
-      .nav-actions .btn-outline:hover {
-        background-color: #f8f9fa !important;
-        border-color: #bdc1c6 !important;
-      }
-      .nav-actions .btn-primary {
-        background-color: #1a73e8 !important; /* solid blue */
-        color: #ffffff !important;
-        border: none !important;
-      }
-      .nav-actions .btn-primary:hover {
-        background-color: #1557b0 !important;
-      }
-    }
-    
-    /* Mobile-first Nav & Logo constraints (< 640px) */
-    @media (max-width: 639.98px) {
-      .navbar {
-        height: 56px !important;
-        padding: 0 16px !important;
-      }
-      .navbar-logo-image {
-        height: 40px !important;
-        width: auto !important;
-      }
-      .navbar-logo-text {
-        font-size: 18px !important;
-      }
-      
-      /* Full width Account buttons responsive design */
-      #account-btn {
-        width: auto !important;
-      }
-      
-      /* Hamburger menu toggle button style */
-      .hamburger-menu {
-        display: flex !important;
-        align-items: center !important;
-        justify-content: center !important;
-        background: none !important;
-        border: none !important;
-        color: #1a1a1a !important;
-        cursor: pointer !important;
-        padding: 8px !important;
-        border-radius: 8px !important;
-        width: 44px !important;
-        height: 44px !important;
-        z-index: 1010 !important;
-        order: -1 !important; /* Positions nicely on mobile headers */
-      }
-      
-      /* Responsive vertical mobile navigation list drawer style */
-      .nav-links {
-        display: none !important;
-        flex-direction: column !important;
-        position: absolute !important;
-        top: 56px !important;
-        left: 0 !important;
-        right: 0 !important;
-        background: #ffffff !important;
-        border-bottom: 1px solid #dadce0 !important;
-        padding: 16px !important;
-        gap: 8px !important;
-        margin-left: 0 !important;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.1) !important;
-        z-index: 1000 !important;
-      }
-      .nav-links.active {
-        display: flex !important;
-      }
-      .nav-link {
-        width: 100% !important;
-        font-size: 16px !important;
-        font-weight: 600 !important;
-        padding: 12px 14px !important;
-        white-space: nowrap !important;
-        box-sizing: border-box !important;
-      }
-      
-      /* Hide desktop buttons when user is logged out on mobile */
-      .nav-actions .btn-outline, .nav-actions .btn-primary {
-        display: none !important;
-      }
-      
-      /* Mobile active navigation links enhancements */
-      .mobile-nav-divider {
-        display: block !important;
-        border: 0 !important;
-        border-top: 1px solid #dadce0 !important;
-        margin: 8px 14px !important;
-      }
-      .mobile-nav-signin {
-        display: block !important;
-        text-align: center !important;
-        padding: 12px 14px !important;
-        font-weight: 600 !important;
-        font-size: 16px !important;
-        color: #1a1a1a !important;
-        text-decoration: none !important;
-      }
-      .mobile-nav-getstarted {
-        display: flex !important;
-        width: calc(100% - 32px) !important;
-        height: 48px !important;
-        font-size: 16px !important;
-        font-weight: bold !important;
-        margin: 12px 16px !important;
-        background-color: #1a73e8 !important;
-        color: #ffffff !important;
-        align-items: center !important;
-        justify-content: center !important;
-        border-radius: 100px !important;
-        box-sizing: border-box !important;
-        border: none !important;
-        box-shadow: 0 2px 6px rgba(26,115,232,0.2) !important;
-        text-decoration: none !important;
-      }
-    }
-    
-    /* When logged in, hide registration/signin elements on mobile dropdown menu */
-    body.logged-in .mobile-nav-signin,
-    body.logged-in .mobile-nav-getstarted,
-    body.logged-in .mobile-nav-divider {
-      display: none !important;
-    }
-    
-    @media (min-width: 640px) {
-      .hamburger-menu {
-        display: none !important;
-      }
-    }
-    
-    /* Click outside Dimmed Overlay - Removed black overlays */
-    .drawer-overlay {
-      display: none !important;
-    }
-    
-    /* Absolute Minimum Touch Target Dimensions (44px) */
-    .btn, button, .btn-row-action, #account-btn {
-      min-height: 44px !important;
-      box-sizing: border-box !important;
-    }
-    
-    /* Touch Target targets for BOM interactive save (+) and expand (↓) controls */
-    .btn-save-supplier, .btn-expand-alternatives {
-      width: 44px !important;
-      height: 44px !important;
-      padding: 13px !important;
-      box-sizing: border-box !important;
-      border-radius: 50% !important;
-      border: 1px solid #dadce0 !important;
-      background-color: #f0f0f0 !important;
-      display: inline-flex !important;
-      align-items: center !important;
-      justify-content: center !important;
-      cursor: pointer !important;
-      transition: all 0.2s ease !important;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.05) !important;
-    }
-    
-    .btn-save-supplier svg, .btn-expand-alternatives svg {
-      width: 18px !important;
-      height: 18px !important;
-    }
-    
-    .btn-save-supplier {
-      color: #1a73e8 !important;
-    }
-    
-    .btn-save-supplier.saved {
-      background-color: #34A853 !important;
-      color: #ffffff !important;
-      border-color: #34A853 !important;
-    }
-    
-    .btn-expand-alternatives {
-      color: #5f6368 !important;
-    }
-    
-    .btn-save-supplier:hover, .btn-expand-alternatives:hover {
-      background-color: #e0e0e0 !important;
-      border-color: #dadce0 !important;
-    }
-    
-    .btn-save-supplier.saved:hover {
-      background-color: #2b8b45 !important;
-      border-color: #2b8b45 !important;
-    }
-    
-    .btn-save-supplier:active, .btn-expand-alternatives:active {
-      background-color: #d0d0d0 !important;
-    }
-    
-    /* Truncate long single-line category pill badges */
-    .pill-tag {
-      white-space: nowrap !important;
-      overflow: hidden !important;
-      text-overflow: ellipsis !important;
-      max-width: 150px !important;
-    }
-    
-    /* Vertical Card actions stacking for narrow mobile screens <= 600px */
-    @media (max-width: 600px) {
-      .row-actions {
-        flex-direction: column !important;
-        align-items: stretch !important;
-        width: 100% !important;
-        gap: 8px !important;
-      }
-      .btn-row-action {
-        width: 100% !important;
-        box-sizing: border-box !important;
-        padding: 12px 16px !important;
-        height: 44px !important;
-        display: inline-flex !important;
-        align-items: center !important;
-        justify-content: center !important;
-      }
-    }
-    
-    /* Hero Search Block constraints on Mobile */
-    @media (max-width: 639.98px) {
-      .search-block {
-        width: 100% !important;
-        padding: 0 16px !important;
-        box-sizing: border-box !important;
-      }
-      .search-box {
-        height: 48px !important;
-        padding: 0 4px 0 12px !important;
-        border-radius: 24px !important;
-      }
-      .btn-search {
-        height: 38px !important;
-        padding: 0 16px !important;
-        font-size: 14px !important;
-      }
-    }
-    
-    /* Media Query Breakpoints Alignment Grid Controls */
-    @media (max-width: 639.98px) {
-      .steps-grid, .trending-grid, .footer-grid, .partners-grid, .form-container-grid {
-        grid-template-columns: 1fr !important;
-      }
-      /* Prevent text overlap with top right absolute actions on mobile */
-      .material-meta-row {
-        padding-right: 104px !important;
-      }
-      .material-name {
-        font-size: 16px !important;
-        margin-right: 4px !important;
-      }
-    }
-    @media (min-width: 640px) and (max-width: 1023.98px) {
-      .steps-grid, .trending-grid, .footer-grid, .partners-grid, .form-container-grid {
-        grid-template-columns: repeat(2, 1fr) !important;
-      }
-    }
-    @media (min-width: 1024px) {
-      .steps-grid {
-        grid-template-columns: repeat(3, 1fr) !important;
-      }
-      .trending-grid, .footer-grid {
-        grid-template-columns: repeat(4, 1fr) !important;
-      }
-    }
-  </style>
-
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      // Setup dynamic Hamburger toggle
-      const navbar = document.querySelector('.navbar');
-      if (navbar) {
-        const navLinks = navbar.querySelector('.nav-links');
-        if (navLinks && !navbar.querySelector('#hamburger-toggle')) {
-          const hamBtn = document.createElement('button');
-          hamBtn.id = 'hamburger-toggle';
-          hamBtn.className = 'hamburger-menu';
-          hamBtn.type = 'button';
-          hamBtn.setAttribute('aria-label', 'Toggle Navigation');
-          hamBtn.innerHTML = `
-            <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
-              <line x1="3" y1="12" x2="21" y2="12"></line>
-              <line x1="3" y1="6" x2="21" y2="6"></line>
-              <line x1="3" y1="18" x2="21" y2="18"></line>
-            </svg>
-          `;
-          navbar.insertBefore(hamBtn, navLinks);
-          
-          hamBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            navLinks.classList.toggle('active');
-          });
-        }
-      }
-
-
-
-      // Global click outside for Navbar Hamburger menu
-      document.addEventListener('click', (e) => {
-        const navLinks = document.querySelector('.nav-links');
-        const hamBtn = document.getElementById('hamburger-toggle');
-        if (navLinks && navLinks.classList.contains('active')) {
-          if (!navLinks.contains(e.target) && (!hamBtn || !hamBtn.contains(e.target))) {
-            navLinks.classList.remove('active');
-          }
-        }
-      });
-    });
-  </script>
 </head>
 <body>
 
@@ -1625,45 +783,9 @@
         <a href="/#suppliers" class="nav-link">Suppliers</a>
         <a href="/plus.html" class="nav-link">GrabRaw +</a>
         <a href="/#ask-ai" class="nav-link">Ask AI</a>
-        <hr class="mobile-nav-divider" style="display: none" />
-        <a
-          href="/signin"
-          class="nav-link mobile-nav-signin"
-          style="display: none"
-          >Sign In</a
-        >
-        <a
-          href="/register-user"
-          class="btn mobile-nav-getstarted"
-          style="display: none"
-          aria-label="Get Started"
-          >Get Started</a
-        >
       </nav>
       <div class="nav-actions">
-        <div id="unauthNav">
-          <a href="/signin.html" id="signin-btn" class="btn btn-outline" style="border-radius: 100px;">Sign In</a>
-          <a href="/register-user.html" class="btn btn-primary" style="display: none; border-radius: 100px;" id="get-started-btn">Get Started</a>
-        </div>
-        <div id="authNav" style="display: none; position: relative;">
-          <button id="account-btn" class="btn btn-outline" style="border-radius: 100px; display:inline-flex; align-items:center;" onclick="toggleDropdown()">
-            My Account
-            <span id="nav-avatar" style="display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:50%;background:#4285F4;color:white;font-size:13px;font-weight:600;margin-left:8px;overflow:hidden;"></span>
-          </button>
-          <div id="accountDropdown" style="display: none; position: absolute; right: 0; top: 100%; margin-top: 8px; background-color: #ffffff; border: 1px solid #e0e0e0; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.15); width: 220px; z-index: 10000; overflow: hidden; padding: 12px 0; text-align: left;">
-            <div class="dropdown-header" style="padding: 12px 16px;">
-              <span class="dropdown-label" style="display:block; font-size: 11px; font-weight: 500; color: #70757a; text-transform: uppercase;">SIGNED IN AS</span>
-              <span id="dropdownEmail" style="display:block; font-size: 13px; font-weight: 600; color: #1a1a1a; text-overflow: ellipsis; overflow: hidden; white-space: nowrap;"></span>
-            </div>
-            <hr style="margin: 4px 0; border: none; border-top: 1px solid #e0e0e0;">
-            <a href="/profile.html" style="padding: 8px 16px; display: block; color: #3c4043; text-decoration: none;">Profile</a>
-            <a href="/location.html" style="padding: 8px 16px; display: block; color: #3c4043; text-decoration: none;">My Location</a>
-            <a href="/my-partners.html" style="padding: 8px 16px; display: block; color: #3c4043; text-decoration: none;">My Partner</a>
-            <a href="/register-company.html" style="padding: 8px 16px; display: block; color: #3c4043; text-decoration: none;">Register Company</a>
-            <hr style="margin: 4px 0; border: none; border-top: 1px solid #e0e0e0;">
-            <a id="signOutBtn" style="padding: 8px 16px; display: block; color: red; font-weight: 600; cursor: pointer; text-decoration: none;">Sign Out</a>
-          </div>
-        </div>
+        <a href="/signin.html" id="signin-btn" class="btn btn-outline" style="border-radius: 100px;">Sign In</a>
       </div>
   </header>
 
@@ -1679,12 +801,12 @@
       </form>
       <div class="search-stats-text">
         <span class="sparkle-accent">✦</span>
-        AI analyzed 48 raw materials • 12 local sources found • Click <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: inline-block; vertical-align: text-bottom; margin: 0 2px;"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg> to open supplier location in Google Maps
+        <span id="stats-summary">Loading...</span>
       </div>
     </div>
   </section>
 
-  <!-- Main Content Bill of Materials Single Column Layout -->
+  <!-- Main Content -->
   <main>
     <div class="container-slim">
       
@@ -1700,32 +822,12 @@
         <p class="bom-subtext">AI-generated component breakdown. Click any supplier link to visit their website or open their location in Google Maps.</p>
       </div>
 
-      <!-- Supplier Radius Matching Notification Note (CHANGE 2) -->
-      <div class="supplier-radius-note" style="margin-bottom: 24px; padding: 18px; border-radius: 12px; background-color: #f8f9fa; border: 1px solid #dadce0; text-align: left; box-sizing: border-box; font-family: inherit;">
-        <div style="display: flex; align-items: start; gap: 12px;">
-          <div style="background-color: #e8f0fe; color: #4285F4; border-radius: 50%; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 12px; flex-shrink: 0; margin-top: 1px;">ii</div>
-          <div style="flex: 1;">
-            <p style="margin: 0 0 8px 0; font-size: 13.5px; color: #5f6368; line-height: 1.4; font-weight: 500;">
-              Showing suppliers within 40km radius. If fewer than 3 suppliers found, we'll show the nearest available.
-            </p>
-            <div style="display: flex; flex-direction: column; gap: 6px; margin-top: 8px; border-top: 1px solid #e8eaed; padding-top: 10px;">
-              <div style="display: flex; align-items: center; gap: 6px; font-size: 12.5px; font-weight: 600; color: #137333;">
-                <span style="font-size: 14px;">✓</span> 5 suppliers found within 40km
-              </div>
-              <div style="display: flex; align-items: center; gap: 6px; font-size: 12.5px; font-weight: 500; color: #b06000;">
-                <span style="font-size: 14px;">⚠</span> Only 2 suppliers within 40km. Showing nearest 3 available within 65km
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
       <!-- Materials List Cards -->
       <div class="material-list"></div>
 
       <!-- PDF Download Button -->
       <div class="download-bom-container">
-        <button class="btn btn-download-bom" onclick="alert('Downloading high-fidelity iPhone 15 sourcing specifications as full production-ready PDF...')">
+        <button class="btn btn-download-bom" onclick="alert('Downloading BOM as PDF...')">
           ⬇ Download Full BOM as PDF
         </button>
       </div>
@@ -1757,25 +859,21 @@
           <a href="/#categories" class="footer-link">Microcontrollers</a>
           <a href="/#categories" class="footer-link">Sensors & Dev Kits</a>
           <a href="/#categories" class="footer-link">Batteries & Power</a>
-          <a href="/#categories" class="footer-link">Smartwatch Castings</a>
-          <a href="/#categories" class="footer-link">PCB Fabrication</a>
         </div>
       </div>
 
       <div class="footer-col">
         <h4 class="footer-title">Top Searches</h4>
         <div class="footer-links">
-          <a href="/info?q=iPhone+15" class="footer-link">iPhone 15 BOM</a>
-          <a href="/info?q=Smartwatch" class="footer-link">Smartwatch Sinks</a>
-          <a href="/info?q=Shampoo" class="footer-link">Chemical Formula Mixtures</a>
-          <a href="/info?q=Solar+Panel" class="footer-link">Grid Inverter Stations</a>
+          <a href="/info?q=Smartphone" class="footer-link">Smartphone BOM</a>
+          <a href="/info?q=Smartwatch" class="footer-link">Smartwatch</a>
         </div>
       </div>
 
       <div class="footer-col">
         <h4 class="footer-title">About Us</h4>
         <p class="footer-description">
-          GrabRaw is committed to local, decentralized product prototyping. We empower makers to find local inventory within 40km.
+          GrabRaw is committed to local, decentralized product prototyping.
         </p>
       </div>
     </div>
@@ -1785,567 +883,167 @@
       <div class="footer-legal-links">
         <a href="privacy-policy.html" class="footer-legal-link">Privacy Policy</a>
         <a href="terms-of-service.html" class="footer-legal-link">Terms of Service</a>
-        <a href="supplier-standards.html" class="footer-legal-link">Supplier Standards</a>
       </div>
     </div>
   </footer>
 
     <script>
-      function toggleDropdown() {
-        const d = document.getElementById('accountDropdown');
-        if (d) {
-            d.style.display = d.style.display === 'block' ? 'none' : 'block';
-        }
-      }
-      
-      document.addEventListener('click', function(e) {
-        if (!e.target.closest('#account-btn') && !e.target.closest('#accountDropdown')) {
-          const d = document.getElementById('accountDropdown');
-          if (d) d.style.display = 'none';
-        }
-      });
+      const getCatClass = (cat) => {
+        const known = ['display','semiconductor','power','glass','metal','audio'];
+        const c = (cat || '').toLowerCase().replace(/[^a-z]/g,'');
+        return known.includes(c) ? c : 'default';
+      };
 
-      window.GRABRAW_IS_PLUS = false;
+      async function performSearch(query) {
+        if (!query || !window.sb) return;
+        
+        const materialList = document.querySelector('.material-list');
+        const statsSummary = document.getElementById('stats-summary');
+        const bomTitle = document.querySelector('.bom-title');
 
-      // Handle custom plus banner & blurring logic
-      function renderInfoContent() {
-        // remove existing banner if any
-        const existingBanner = document.getElementById('info-banner');
-        if (existingBanner) existingBanner.remove();
+        materialList.innerHTML = '<div style="text-align:center;padding:60px;color:#5f6368">Finding materials...<br><br><div style="border:4px solid #e0e0e0;border-left-color:#4285F4;border-radius:50%;width:36px;height:36px;animation:spin 1s linear infinite;margin:16px auto;"></div></div>';
+        statsSummary.textContent = 'Querying database...';
+        bomTitle.textContent = 'Bill of Materials — ' + query;
 
-        const navHeaders = document.querySelectorAll('header');
-        const header = navHeaders.length > 0 ? navHeaders[0] : null;
-        if (header) {
-          const banner = document.createElement('div');
-          banner.id = 'info-banner';
-          if (!window.GRABRAW_IS_PLUS) {
-            banner.style.backgroundColor = '#e8f0fe';
-            banner.style.color = '#1967d2';
-            banner.style.padding = '10px 24px';
-            banner.style.fontSize = '14px';
-            banner.style.fontWeight = '500';
-            banner.style.display = 'flex';
-            banner.style.justifyContent = 'space-between';
-            banner.style.alignItems = 'center';
-            banner.style.fontFamily = "'Inter', sans-serif";
-            banner.innerHTML = `
-              <span>✦ You're on the Free plan — some suppliers are hidden. <a href="/plus.html" style="color: #1a73e8; text-decoration: underline; font-weight: 600;">Upgrade to GrabRaw+</a></span>
-              <button style="background: none; border: none; color: #1967d2; font-size: 16px; cursor: pointer;" onclick="this.parentElement.remove()">✕</button>
-            `;
-          } else {
-            banner.style.backgroundColor = '#e6f4ea';
-            banner.style.color = '#34A853';
-            banner.style.padding = '10px 24px';
-            banner.style.fontSize = '14px';
-            banner.style.fontWeight = '600';
-            banner.style.display = 'flex';
-            banner.style.justifyContent = 'center';
-            banner.style.alignItems = 'center';
-            banner.style.fontFamily = "'Inter', sans-serif";
-            banner.innerHTML = '✦ GrabRaw+ Active — All suppliers unlocked';
+        try {
+          // Step 1: Find product
+          const { data: products } = await window.sb
+            .from('products')
+            .select('id, name')
+            .ilike('name', '%' + query + '%')
+            .limit(1);
+
+          if (!products || products.length === 0) {
+            materialList.innerHTML = '<div style="text-align:center;padding:40px;color:#5f6368">No matching products found in database.</div>';
+            statsSummary.textContent = '0 materials found';
+            return;
           }
-          header.parentNode.insertBefore(banner, header.nextSibling);
-        }
+          const productId = products[0].id;
 
-        // Blurred supplier card (Every 10th card -> index 9, 19...)
-        if (!window.GRABRAW_IS_PLUS) {
-          const cards = document.querySelectorAll('.material-card');
-          cards.forEach((card, index) => {
-            if ((index + 1) % 10 === 0) {
-                const metaRow = card.querySelector('.material-meta-row');
-                const nameH2 = metaRow ? metaRow.querySelector('.material-name') : null;
-                const supplierLinkWrapper = card.querySelector('.supplier-identity');
-                if (nameH2) {
-                  nameH2.style.filter = 'blur(6px)';
-                  nameH2.style.userSelect = 'none';
-                }
-                if (supplierLinkWrapper) {
-                  supplierLinkWrapper.style.filter = 'blur(6px)';
-                  supplierLinkWrapper.style.userSelect = 'none';
-                }
-                if (!card.querySelector('.plus-overlay')) {
-                  const overlay = document.createElement('div');
-                  overlay.className = 'plus-overlay';
-                  overlay.style.position = 'absolute';
-                  overlay.style.top = '0';
-                  overlay.style.left = '0';
-                  overlay.style.right = '0';
-                  overlay.style.bottom = '0';
-                  overlay.style.backgroundColor = 'rgba(255, 255, 255, 0.6)';
-                  overlay.style.backdropFilter = 'blur(2px)';
-                  overlay.style.display = 'flex';
-                  overlay.style.alignItems = 'center';
-                  overlay.style.justifyContent = 'center';
-                  overlay.style.zIndex = '10';
-                  overlay.style.borderRadius = '16px'; 
-                  const overlayContent = document.createElement('div');
-                  overlayContent.style.backgroundColor = '#4285F4';
-                  overlayContent.style.color = '#fff';
-                  overlayContent.style.padding = '12px 24px';
-                  overlayContent.style.borderRadius = '100px';
-                  overlayContent.style.fontFamily = "'Inter', sans-serif";
-                  overlayContent.style.fontWeight = '600';
-                  overlayContent.style.fontSize = '14px';
-                  overlayContent.style.boxShadow = '0 4px 12px rgba(66, 133, 244, 0.3)';
-                  overlayContent.style.display = 'flex';
-                  overlayContent.style.alignItems = 'center';
-                  overlayContent.style.gap = '8px';
-                  overlayContent.style.cursor = 'pointer';
-                  overlayContent.innerHTML = '🔒 Unlock with GrabRaw+';
-                  overlayContent.onclick = () => { window.location.href = '/plus.html'; };
-                  overlay.appendChild(overlayContent);
-                  card.style.position = 'relative';
-                  card.appendChild(overlay);
-                }
-             }
-          });
-        }
-      }
+          // Step 2: Get component IDs
+          const { data: pcRows } = await window.sb
+            .from('product_components')
+            .select('component_id')
+            .eq('product_id', productId);
 
-      window.addEventListener('auth-changed', async (e) => {
-        const user = e.detail.session?.user;
-        let plan = 'free';
-        if (user) {
-          try {
-            const { data } = await window.sb.from('profiles').select('plan').eq('id', user.id).single();
-            if (data && data.plan) { plan = data.plan; }
-          } catch(err) {}
-          
-          if (plan === 'plus' || plan === 'GrabRaw+') {
-            const accountBtn = document.getElementById('account-btn');
-            if (accountBtn && !document.getElementById('plus-badge')) {
-                const badge = document.createElement('span');
-                badge.id = 'plus-badge';
-                badge.textContent = 'PLUS';
-                badge.style.cssText = 'background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); color: white; font-size: 10px; font-weight: 800; padding: 2px 6px; border-radius: 4px; margin-left: 8px; letter-spacing: 0.5px;';
-                accountBtn.appendChild(badge);
+          if (!pcRows || pcRows.length === 0) {
+            materialList.innerHTML = '<div style="text-align:center;padding:40px;color:#5f6368">No components found for this product.</div>';
+            return;
+          }
+
+          const componentIds = (pcRows || []).map(r => r.component_id);
+
+          // Step 3: Get component details
+          const { data: components } = await window.sb
+            .from('components')
+            .select('id, component_name, component_category')
+            .in('id', componentIds);
+
+          if (!components || components.length === 0) {
+            materialList.innerHTML = '<div style="text-align:center;padding:40px;color:#5f6368">No components found.</div>';
+            return;
+          }
+
+          // Step 4: For each component get supplier data WITH FOREIGN KEY JOIN
+          const results = await Promise.all(components.map(async (comp) => {
+            const { data: csRows, error } = await window.sb
+              .from('component_suppliers')
+              .select(`
+                supplier_id, 
+                distance_km, 
+                stock_status, 
+                google_maps_link, 
+                supplier_product_link,
+                suppliers (supplier_name, city)
+              `)
+              .eq('component_id', comp.id)
+              .limit(1);
+
+            let supplierName = 'N/A', city = 'N/A', distanceKm = 'N/A', stockStatus = 'N/A', mapsLink = null, websiteLink = null;
+
+            if (csRows && csRows.length > 0) {
+              const cs = csRows[0];
+              distanceKm = cs.distance_km ? '~' + cs.distance_km + ' km away' : 'N/A';
+              stockStatus = cs.stock_status || 'N/A';
+              mapsLink = cs.google_maps_link || null;
+              websiteLink = cs.supplier_product_link || null;
+
+              // Get supplier details from foreign key relationship
+              if (cs.suppliers) {
+                supplierName = cs.suppliers.supplier_name || 'N/A';
+                city = cs.suppliers.city || 'N/A';
+              }
             }
-          }
-        }
-        window.GRABRAW_IS_PLUS = plan.includes('+') || plan.toLowerCase().includes('plus');
-        renderInfoContent();
-      });
 
-      // Show toast
-      function showToast(message, type = 'success') {
-        let container = document.querySelector('.toast-container');
-        if (!container) {
-          container = document.createElement('div');
-          container.className = 'toast-container';
-          document.body.appendChild(container);
-        }
-        const toast = document.createElement('div');
-        toast.className = 'toast';
-        toast.textContent = message;
-        container.appendChild(toast);
-        setTimeout(() => toast.remove(), 2000);
-      }
-
-      // Check if supplier is saved
-      function isSupplierSaved(id) {
-        const saved = JSON.parse(localStorage.getItem('savedSuppliers') || '[]');
-        return saved.some(item => item.id === id);
-      }
-
-      function showUpgradeModal() {
-         const modalOverlay = document.createElement('div');
-         modalOverlay.style.position = 'fixed';
-         modalOverlay.style.top = '0';
-         modalOverlay.style.left = '0';
-         modalOverlay.style.width = '100vw';
-         modalOverlay.style.height = '100vh';
-         modalOverlay.style.backgroundColor = 'rgba(0,0,0,0.5)';
-         modalOverlay.style.display = 'flex';
-         modalOverlay.style.justifyContent = 'center';
-         modalOverlay.style.alignItems = 'center';
-         modalOverlay.style.zIndex = '99999';
-         const modal = document.createElement('div');
-         modal.style.backgroundColor = '#fff';
-         modal.style.padding = '32px';
-         modal.style.borderRadius = '16px';
-         modal.style.width = '90%';
-         modal.style.maxWidth = '400px';
-         modal.style.textAlign = 'center';
-         modal.style.fontFamily = "'Inter', sans-serif";
-         modal.style.boxShadow = '0 10px 40px rgba(0,0,0,0.1)';
-         const title = document.createElement('h3');
-         title.textContent = 'Limit Reached';
-         title.style.margin = '0 0 16px 0';
-         title.style.fontSize = '20px';
-         title.style.color = '#1a1a1a';
-         const desc = document.createElement('p');
-         desc.textContent = "You've reached the free limit of 5 partners. Upgrade to GrabRaw+ for unlimited.";
-         desc.style.color = '#5f6368';
-         desc.style.lineHeight = '1.5';
-         desc.style.marginBottom = '24px';
-         const btnContainer = document.createElement('div');
-         btnContainer.style.display = 'flex';
-         btnContainer.style.gap = '12px';
-         btnContainer.style.justifyContent = 'center';
-         const cancelBtn = document.createElement('button');
-         cancelBtn.textContent = 'Cancel';
-         cancelBtn.className = 'btn btn-outline';
-         cancelBtn.style.borderRadius = '100px';
-         cancelBtn.onclick = () => { modalOverlay.remove(); };
-         const upgradeBtn = document.createElement('button');
-         upgradeBtn.textContent = 'Upgrade Now';
-         upgradeBtn.className = 'btn btn-primary';
-         upgradeBtn.style.borderRadius = '100px';
-         upgradeBtn.onclick = () => { window.location.href = '/plus.html'; };
-         btnContainer.appendChild(cancelBtn);
-         btnContainer.appendChild(upgradeBtn);
-         modal.appendChild(title);
-         modal.appendChild(desc);
-         modal.appendChild(btnContainer);
-         modalOverlay.appendChild(modal);
-         document.body.appendChild(modalOverlay);
-      }
-
-      function toggleSaveSupplier(supData) {
-        let saved = JSON.parse(localStorage.getItem('savedSuppliers') || '[]');
-        const index = saved.findIndex(item => item.id === supData.id);
-        if (index > -1) {
-          saved.splice(index, 1);
-          localStorage.setItem('savedSuppliers', JSON.stringify(saved));
-          showToast(`Removed ${supData.supplier_name} from Partners`);
-          return false;
-        } else {
-          if (!window.GRABRAW_IS_PLUS && saved.length >= 5) {
-            showUpgradeModal();
-            return null;
-          }
-          saved.push({
-            ...supData,
-            saved_date: new Date().toISOString().slice(0, 10)
-          });
-          localStorage.setItem('savedSuppliers', JSON.stringify(saved));
-          showToast(`Added ${supData.supplier_name} to My Partners`);
-          return true;
-        }
-      }
-
-      function renderAlternativesPanel(card, mainId, materialName) {
-        const panel = card.querySelector('.alternatives-dropdown-panel');
-        const alts = window.ALTERNATIVES_DATA[materialName] || [];
-        const sorted = [...alts].sort((a,b) => parseFloat(a.distance) - parseFloat(b.distance));
-        
-        let rowsHtml = sorted.map((alt, idx) => {
-          if (!window.GRABRAW_IS_PLUS && idx >= 1) {
-            return `
-            <div class="alt-supplier-row" style="position: relative; overflow: hidden;">
-              <div style="filter: blur(4px); user-select: none; display: flex; align-items: center; justify-content: space-between; width: 100%;">
-                  <div class="alt-supplier-info">
-                    <div class="alt-name-line">Premium Supplier</div>
-                    <div class="alt-meta-line">
-                      <span class="alt-distance-pill">~ km away</span>
-                      <span class="alt-stock-indicator">In Stock</span>
-                    </div>
-                    <div class="alt-address-line">Premium address secured</div>
-                  </div>
-              </div>
-              <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; display: flex; align-items: center; justify-content: center; z-index: 5; background-color: rgba(255, 255, 255, 0.2);">
-                 <div style="background-color: #4285F4; color: #fff; padding: 6px 16px; border-radius: 100px; font-size: 13px; font-weight: 600; cursor: pointer; box-shadow: 0 2px 6px rgba(0,0,0,0.1);" onclick="window.location.href='/plus.html'; event.stopPropagation();">🔒 Unlock with GrabRaw+</div>
-              </div>
-            </div>`;
-          }
-
-          const isAltSaved = isSupplierSaved(alt.id);
-          const stockClass = alt.stock.toLowerCase().includes('low') ? 'low-stock' : 'in-stock';
-          return `
-            <div class="alt-supplier-row">
-              <div class="alt-supplier-info">
-                <div class="alt-name-line">${alt.supplier_name}</div>
-                <div class="alt-meta-line">
-                  <span class="alt-distance-pill">${alt.distance} away</span>
-                  <span class="alt-stock-indicator ${stockClass}">${alt.stock}</span>
-                </div>
-                <div class="alt-address-line">${alt.address}</div>
-              </div>
-              <button class="btn-alt-save ${isAltSaved ? 'saved' : ''}" data-id="${alt.id}" data-component="${materialName}" data-supplier-name="${alt.supplier_name}" data-address="${alt.address}" data-distance="${alt.distance}" data-stock="${alt.stock}" data-maps-link="${alt.maps_link}" title="${isAltSaved ? 'Remove' : 'Save'}">
-                ${isAltSaved ? '✔' : '+'}
-              </button>
-            </div>
-          `;
-        }).join('');
-        
-        panel.innerHTML = `<div class="alt-panel-title"><span>Alternative Sources</span></div><div class="alt-suppliers-list">${rowsHtml}</div>`;
-        
-        panel.querySelectorAll('.btn-alt-save').forEach(btn => {
-          btn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            const altData = {
-              id: btn.getAttribute('data-id'),
-              component: btn.getAttribute('data-component'),
-              supplier_name: btn.getAttribute('data-supplier-name'),
-              address: btn.getAttribute('data-address'),
-              distance: btn.getAttribute('data-distance'),
-              stock: btn.getAttribute('data-stock'),
-              maps_link: btn.getAttribute('data-maps-link')
+            return {
+              name: comp.component_name,
+              category: comp.component_category,
+              distanceKm, stockStatus, supplierName, city, mapsLink, websiteLink
             };
-            const nowSaved = toggleSaveSupplier(altData);
-            if (nowSaved === null) return;
-            if (nowSaved) {
-              btn.classList.add('saved');
-              btn.innerHTML = '✔';
-            } else {
-              btn.classList.remove('saved');
-              btn.innerHTML = '+';
-            }
-            updateMainCardStats();
+          }));
+
+          // Render
+          materialList.innerHTML = '';
+          results.forEach((mat, i) => {
+            const catClass = getCatClass(mat.category);
+            const stockClass = (mat.stockStatus || '').toLowerCase().includes('low') ? 'low-stock' : 'in-stock';
+            const card = document.createElement('article');
+            card.className = 'material-card cat-' + catClass;
+            card.innerHTML = `
+              <div class="material-info">
+                <div class="material-meta-row">
+                  <h2 class="material-name">${i+1}. ${mat.name}</h2>
+                  <span class="pill-tag pill-${catClass}">${mat.category}</span>
+                  <span class="distance-badge">${mat.distanceKm}</span>
+                  <span class="stock-indicator ${stockClass}"><span class="stock-dot"></span>${mat.stockStatus}</span>
+                </div>
+                <div class="supplier-details">
+                  <span class="supplier-name">${mat.supplierName}</span>
+                  <span class="supplier-address">${mat.city}</span>
+                </div>
+              </div>
+              <div class="row-actions">
+                ${mat.websiteLink ? `<a href="${mat.websiteLink}" target="_blank" class="btn btn-row-action btn-supplier-web">🌐 Supplier Website</a>` : ''}
+                ${mat.mapsLink ? `<a href="${mat.mapsLink}" target="_blank" class="btn btn-row-action btn-supplier-maps">📍 Open in Google Maps</a>` : ''}
+              </div>
+            `;
+            materialList.appendChild(card);
           });
-        });
+
+          statsSummary.textContent = `Sourced ${results.length} of ${results.length} materials • Click 📍 to open supplier location in Google Maps`;
+
+        } catch (err) {
+          materialList.innerHTML = '<div style="text-align:center;padding:40px;color:#c5221f">Error: ' + err.message + '</div>';
+          console.error('Search error:', err);
+        }
       }
 
-      function updateMainCardStats() {
-        document.querySelectorAll('.btn-save-supplier').forEach(btn => {
-          const id = btn.getAttribute('data-id');
-          const isSaved = isSupplierSaved(id);
-          if (isSaved) {
-            btn.classList.add('saved');
-            btn.innerHTML = '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>';
-          } else {
-            btn.classList.remove('saved');
-            btn.innerHTML = '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>';
-          }
-        });
+      function waitForSb(cb) {
+        if (window.sb) { cb(); } else { setTimeout(() => waitForSb(cb), 100); }
       }
 
       document.addEventListener('DOMContentLoaded', () => {
-        // We define the data
-        window.ALTERNATIVES_DATA = {
-          "OLED Display Panel": [
-            { id: "alt-oled-1", supplier_name: "Pioneer Robotics", distance: "5.1 km", stock: "In Stock", address: "7 Pioneer Circle, Tech Hub", maps_link: "#" },
-            { id: "alt-oled-2", supplier_name: "Alpha Electronics", distance: "8.2 km", stock: "Low Stock", address: "19 Alpha Road, Ind. Area", maps_link: "#" }
-          ],
-          "A17 Bionic Chip": [
-            { id: "alt-chip-1", supplier_name: "MicroFab Circuits", distance: "12.4 km", stock: "In Stock", address: "12 MicroFab Lane", maps_link: "#" }
-          ],
-          "Lithium Battery Cell": [
-            { id: "alt-batt-1", supplier_name: "Volt Energy Solutions", distance: "2.1 km", stock: "In Stock", address: "14 Volt Avenue", maps_link: "#" },
-            { id: "alt-batt-2", supplier_name: "GreenCell Corp", distance: "3.7 km", stock: "In Stock", address: "1 GreenCell Blvd", maps_link: "#" }
-          ]
-        };
+        const searchForm = document.querySelector('.search-box-container');
+        const searchInput = document.querySelector('.search-input');
 
-        
-        window.setupCardActions = function(card, index) {
-          const rowNum = index + 1;
-          const id = `bom-row-${rowNum}`;
-          card.id = id;
-          const materialName = card.querySelector('.material-name')?.textContent.replace(/^\d+\.\s*/, '').trim();
-          const supplierName = card.querySelector('.supplier-name')?.textContent.trim();
-          const address = card.querySelector('.supplier-address')?.textContent.trim();
-          const distanceText = card.querySelector('.distance-badge')?.textContent.replace('~', '').trim();
-          const stockText = card.querySelector('.stock-indicator')?.textContent.trim();
-          const mapsLink = card.querySelector('.btn-supplier-maps')?.href;
-
-          const alts = window.ALTERNATIVES_DATA ? (window.ALTERNATIVES_DATA[materialName] || []) : [];
-          const hasAlternatives = alts.length > 0;
-          const isSaved = typeof isSupplierSaved === 'function' ? isSupplierSaved(id) : false;
-
-          const actionContainer = document.createElement('div');
-          actionContainer.className = 'card-actions-top-right';
-          actionContainer.innerHTML = `
-            <button class="btn-save-supplier ${isSaved ? 'saved' : ''}" data-id="${id}">
-              ${isSaved ? '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>' : '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>'}
-            </button>
-            <button class="btn-expand-alternatives ${!hasAlternatives ? 'disabled' : ''}" data-id="${id}" style="${!hasAlternatives ? 'opacity: 0.3; cursor: default;' : ''}">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
-            </button>
-          `;
-          card.appendChild(actionContainer);
-          
-          const panel = document.createElement('div');
-          panel.className = 'alternatives-dropdown-panel';
-          card.appendChild(panel);
-
-          actionContainer.querySelector('.btn-save-supplier').addEventListener('click', (e) => {
-            e.stopPropagation();
-            if(typeof toggleSaveSupplier === 'function') {
-               const nowSaved = toggleSaveSupplier({ id, component: materialName, supplier_name: supplierName, address, distance: distanceText, stock: stockText, maps_link: mapsLink });
-               if (nowSaved === null) return;
-               if (typeof updateMainCardStats === 'function') updateMainCardStats();
+        if (searchForm) {
+          searchForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const q = searchInput.value.trim();
+            if (q) { 
+              window.history.pushState({}, '', '?q=' + encodeURIComponent(q)); 
+              waitForSb(() => performSearch(q)); 
             }
           });
-
-          actionContainer.querySelector('.btn-expand-alternatives').addEventListener('click', (e) => {
-             e.stopPropagation();
-             if (!hasAlternatives) return;
-             const isShown = panel.style.display === 'block';
-             document.querySelectorAll('.alternatives-dropdown-panel').forEach(p => p.style.display = 'none');
-             if (!isShown) {
-               if(typeof renderAlternatives === 'function') renderAlternatives(panel, alts);
-               panel.style.display = 'block';
-             }
-          });
-        };
-
-        const cards = document.querySelectorAll('.material-card');
-        cards.forEach((card, index) => {
-           window.setupCardActions(card, index);
-        });
-
-
-
-
-        document.addEventListener('click', (e) => {
-          if (!e.target.closest('.material-card')) {
-            document.querySelectorAll('.alternatives-dropdown-panel').forEach(p => p.style.display = 'none');
-          }
-        });
-      });
-    </script>
-
-<script>
-document.addEventListener('DOMContentLoaded', () => {
-  const searchForm = document.querySelector('.search-box-container');
-  const searchInput = document.querySelector('.search-input');
-  const materialList = document.querySelector('.material-list');
-  const statsText = document.querySelector('.search-stats-text');
-  const bomTitle = document.querySelector('.bom-title');
-
-  const getCatClass = (cat) => {
-    const known = ['display','semiconductor','power','glass','metal','audio'];
-    const c = (cat || '').toLowerCase().replace(/[^a-z]/g,'');
-    return known.includes(c) ? c : 'default';
-  };
-
-  async function performSearch(query) {
-    if (!query || !window.sb) return;
-    materialList.innerHTML = '<div style="text-align:center;padding:60px;color:#5f6368">Finding materials...<br><br><div style="border:4px solid #e0e0e0;border-left-color:#4285F4;border-radius:50%;width:36px;height:36px;animation:spin 1s linear infinite;margin:16px auto;"></div></div>';
-    statsText.innerHTML = '<span style="color:#4285F4">✦</span> Querying database...';
-    bomTitle.textContent = 'Bill of Materials — ' + query;
-
-    try {
-      // Step 1: Find product
-      const { data: products } = await window.sb
-        .from('products')
-        .select('id, name')
-        .ilike('name', '%' + query + '%')
-        .limit(1);
-
-      if (!products || products.length === 0) {
-        materialList.innerHTML = '<div style="text-align:center;padding:40px;color:#5f6368">No matching products found in database.</div>';
-        statsText.innerHTML = '<span style="color:#4285F4">✦</span> 0 materials found';
-        return;
-      }
-      const productId = products[0].id;
-
-      // Step 2: Get component IDs
-      const { data: pcRows } = await window.sb
-        .from('product_components')
-        .select('component_id')
-        .eq('product_id', productId);
-
-      if (!pcRows || pcRows.length === 0) {
-        materialList.innerHTML = '<div style="text-align:center;padding:40px;color:#5f6368">No components found for this product.</div>';
-        return;
-      }
-
-      const componentIds = (pcRows || []).map(r => r.component_id);
-
-      // Step 3: Get component details
-      const { data: components } = await window.sb
-        .from('components')
-        .select('id, component_name, component_category')
-        .in('id', componentIds);
-
-      if (!components || components.length === 0) {
-        materialList.innerHTML = '<div style="text-align:center;padding:40px;color:#5f6368">No components found.</div>';
-        return;
-      }
-
-      // Step 4: For each component get supplier data
-      const results = await Promise.all(components.map(async (comp) => {
-        const { data: csRows } = await window.sb
-          .from('component_suppliers')
-          .select('supplier_id, distance_km, stock_status, google_maps_link, supplier_product_link')
-          .eq('component_id', comp.id)
-          .limit(1);
-
-        let supplierName = 'N/A', city = 'N/A', distanceKm = 'N/A', stockStatus = 'N/A', mapsLink = null, websiteLink = null;
-
-        if (csRows && csRows.length > 0) {
-          const cs = csRows[0];
-          distanceKm = cs.distance_km ? '~' + cs.distance_km + ' km away' : 'N/A';
-          stockStatus = cs.stock_status || 'N/A';
-          mapsLink = cs.google_maps_link || null;
-          websiteLink = cs.supplier_product_link || null;
-
-          if (cs.supplier_id) {
-            const { data: supRows } = await window.sb
-              .from('suppliers')
-              .select('supplier_name, city')
-              .eq('id', cs.supplier_id)
-              .limit(1);
-
-            if (supRows && supRows.length > 0) {
-              supplierName = supRows[0].supplier_name || 'N/A';
-              city = supRows[0].city || 'N/A';
-            }
-          }
         }
 
-        return {
-          name: comp.component_name,
-          category: comp.component_category,
-          distanceKm, stockStatus, supplierName, city, mapsLink, websiteLink
-        };
-      }));
-
-      // Render
-      materialList.innerHTML = '';
-      results.forEach((mat, i) => {
-        const catClass = getCatClass(mat.category);
-        const stockClass = (mat.stockStatus || '').toLowerCase().includes('low') ? 'low-stock' : 'in-stock';
-        const card = document.createElement('article');
-        card.className = 'material-card cat-' + catClass;
-        card.innerHTML = `
-          <div class="material-info">
-            <div class="material-meta-row">
-              <h2 class="material-name">${i+1}. ${mat.name}</h2>
-              <span class="pill-tag pill-${catClass}">${mat.category}</span>
-              <span class="distance-badge">${mat.distanceKm}</span>
-              <span class="stock-indicator ${stockClass}"><span class="stock-dot"></span>${mat.stockStatus}</span>
-            </div>
-            <div class="supplier-details">
-              <span class="supplier-name">${mat.supplierName}</span>
-              <span class="supplier-address">${mat.city}</span>
-            </div>
-          </div>
-          <div class="row-actions">
-            ${mat.websiteLink ? `<a href="${mat.websiteLink}" target="_blank" class="btn btn-row-action btn-supplier-web">🌐 Supplier Website</a>` : ''}
-            ${mat.mapsLink ? `<a href="${mat.mapsLink}" target="_blank" class="btn btn-row-action btn-supplier-maps">📍 Open in Google Maps</a>` : ''}
-          </div>
-        `;
-        materialList.appendChild(card);
+        const initialQuery = new URLSearchParams(window.location.search).get('q');
+        if (initialQuery && initialQuery.trim() !== '') {
+          if (searchInput) searchInput.value = initialQuery;
+          waitForSb(() => performSearch(initialQuery.trim()));
+        }
       });
-
-      statsText.innerHTML = '<span style="color:#4285F4">✦</span> Sourced ' + results.length + ' of ' + results.length + ' materials • Click 📍 to open supplier location in Google Maps';
-
-    } catch (err) {
-      materialList.innerHTML = '<div style="text-align:center;padding:40px;color:#c5221f">Error: ' + err.message + '</div>';
-    }
-  }
-
-  function waitForSb(cb) {
-    if (window.sb) { cb(); } else { setTimeout(() => waitForSb(cb), 100); }
-  }
-
-  if (searchForm) {
-    searchForm.addEventListener('submit', (e) => {
-      e.preventDefault();
-      const q = searchInput.value.trim();
-      if (q) { window.history.pushState({}, '', '?q=' + encodeURIComponent(q)); waitForSb(() => performSearch(q)); }
-    });
-  }
-
-  const initialQuery = new URLSearchParams(window.location.search).get('q');
-  if (initialQuery && initialQuery.trim() !== '') {
-    if (searchInput) searchInput.value = initialQuery;
-    waitForSb(() => performSearch(initialQuery.trim()));
-  }
-});
-</script>
+    </script>
 
 </body>
 </html>
