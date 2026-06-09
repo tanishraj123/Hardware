@@ -904,6 +904,46 @@
   </footer>
 
     <script>
+      // Show toast
+      function showToast(message, type = 'success') {
+        let container = document.querySelector('.toast-container');
+        if (!container) {
+          container = document.createElement('div');
+          container.className = 'toast-container';
+          document.body.appendChild(container);
+        }
+        const toast = document.createElement('div');
+        toast.className = 'toast';
+        toast.textContent = message;
+        container.appendChild(toast);
+        setTimeout(() => toast.remove(), 2000);
+      }
+
+      // Check if supplier is saved
+      function isSupplierSaved(id) {
+        const saved = JSON.parse(localStorage.getItem('savedSuppliers') || '[]');
+        return saved.some(item => item.id === id);
+      }
+
+      function toggleSaveSupplier(supData) {
+        let saved = JSON.parse(localStorage.getItem('savedSuppliers') || '[]');
+        const index = saved.findIndex(item => item.id === supData.id);
+        if (index > -1) {
+          saved.splice(index, 1);
+          localStorage.setItem('savedSuppliers', JSON.stringify(saved));
+          showToast(`Removed ${supData.supplier_name} from Partners`);
+          return false;
+        } else {
+          saved.push({
+            ...supData,
+            saved_date: new Date().toISOString().slice(0, 10)
+          });
+          localStorage.setItem('savedSuppliers', JSON.stringify(saved));
+          showToast(`Added ${supData.supplier_name} to My Partners`);
+          return true;
+        }
+      }
+
       const getCatClass = (cat) => {
         const catMap = {
           'display': 'display',
