@@ -804,6 +804,7 @@
         <a href="/signin.html" id="signin-btn" class="btn btn-outline" style="border-radius: 100px;">Sign In</a>
       </div>
   </header>
+  <div id="plan-banner-container"></div>
 
   <!-- Search Bar Row -->
   <section class="search-row-section">
@@ -911,6 +912,35 @@
   </footer>
 
     <script>
+      window.addEventListener('auth-changed', async (e) => {
+        const user = e.detail.session?.user;
+        let plan = 'free';
+        if (user) {
+          try {
+            const { data } = await window.sb.from('profiles').select('plan').eq('id', user.id).single();
+            if (data && data.plan) { plan = data.plan; }
+          } catch(err) {}
+        }
+        
+        const bannerContainer = document.getElementById('plan-banner-container');
+        if (!bannerContainer) return;
+
+        if (plan === 'plus' || plan === 'GrabRaw+') {
+          bannerContainer.innerHTML = `
+            <div style="background-color: #f0fdf4; color: #16a34a; padding: 10px; font-size: 13px; font-weight: 600; text-align: center; width: 100%; border-left: 4px solid #16a34a; box-sizing: border-box;">
+              ✦ GrabRaw+ Active — All suppliers unlocked
+            </div>
+          `;
+        } else {
+          bannerContainer.innerHTML = `
+            <div style="background-color: #eff6ff; color: #1d4ed8; padding: 10px; font-size: 13px; text-align: center; width: 100%; display: flex; justify-content: center; align-items: center; position: relative; box-sizing: border-box;">
+              <span>✦ You're on the Free plan — some suppliers are hidden. <a href="/plus.html" style="color: #1d4ed8; text-decoration: underline; font-weight: 600;">Upgrade to GrabRaw+</a></span>
+              <button style="position: absolute; right: 16px; background: none; border: none; color: #1d4ed8; font-size: 16px; cursor: pointer; padding: 0;" onclick="this.parentElement.style.display='none'">✕</button>
+            </div>
+          `;
+        }
+      });
+
       const getCategoryStyle = (cat) => {
         const lowCat = (cat || '').toLowerCase();
         const colors = {
