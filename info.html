@@ -1025,6 +1025,9 @@
           results.forEach((mat, i) => {
             const catClass = getCatClass(mat.category);
             const stockClass = (mat.stockStatus || '').toLowerCase().includes('low') ? 'low-stock' : 'in-stock';
+            const supplierId = mat.supplierName.replace(/\s+/g, '-').toLowerCase() + '-' + i;
+            const isSaved = isSupplierSaved(supplierId);
+            
             const card = document.createElement('article');
             card.className = 'material-card cat-' + catClass;
             card.innerHTML = `
@@ -1041,11 +1044,41 @@
                 </div>
               </div>
               <div class="row-actions">
+                <button class="btn-save-partner" data-id="${supplierId}" data-supplier="${mat.supplierName}" data-city="${mat.city}" data-distance="${mat.distanceKm}" style="width:44px;height:44px;border-radius:50%;border:1px solid #dadce0;background:${isSaved ? '#34A853' : '#fff'};color:${isSaved ? '#fff' : '#4285F4'};padding:0;display:flex;align-items:center;justify-content:center;cursor:pointer;margin-right:8px;transition:all 0.2s ease;font-size:20px;font-weight:bold;" title="Save as Partner">
+                  ${isSaved ? '✓' : '+'}
+                </button>
                 ${mat.websiteLink ? `<a href="${mat.websiteLink}" target="_blank" class="btn btn-row-action btn-supplier-web">🌐 Supplier Website</a>` : ''}
                 ${mat.mapsLink ? `<a href="${mat.mapsLink}" target="_blank" class="btn btn-row-action btn-supplier-maps">📍 Open in Google Maps</a>` : ''}
               </div>
             `;
             materialList.appendChild(card);
+
+            // Add save button listener
+            const saveBtn = card.querySelector('.btn-save-partner');
+            saveBtn.addEventListener('click', (e) => {
+              e.stopPropagation();
+              const supplierId = saveBtn.getAttribute('data-id');
+              const supplierData = {
+                id: supplierId,
+                supplier_name: saveBtn.getAttribute('data-supplier'),
+                city: saveBtn.getAttribute('data-city'),
+                distance: saveBtn.getAttribute('data-distance')
+              };
+              const nowSaved = toggleSaveSupplier(supplierData);
+              if (nowSaved === null) return;
+              
+              if (nowSaved) {
+                saveBtn.textContent = '✓';
+                saveBtn.style.backgroundColor = '#34A853';
+                saveBtn.style.borderColor = '#34A853';
+                saveBtn.style.color = '#fff';
+              } else {
+                saveBtn.textContent = '+';
+                saveBtn.style.backgroundColor = '#fff';
+                saveBtn.style.borderColor = '#dadce0';
+                saveBtn.style.color = '#4285F4';
+              }
+            });
           });
 
           statsSummary.textContent = `Sourced ${results.length} of ${results.length} materials • Click 📍 to open supplier location in Google Maps`;
