@@ -835,7 +835,14 @@
             Live Inventory
           </span>
         </div>
-        <p class="bom-subtext">AI-generated component breakdown. Click any supplier link to visit their website or open their location in Google Maps.</p>
+        <div class="bom-header-right" style="display: flex; flex-direction: column; gap: 12px; flex: 0 1 400px; min-width: 250px;">
+          <p class="bom-subtext" style="margin: 0;">AI-generated component breakdown. Click any supplier link to visit their website or open their location in Google Maps.</p>
+          <div style="position: relative;">
+            <svg style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: #9ca3af; pointer-events: none;" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+            <input type="text" id="bom-mini-filter" placeholder="Filter components... e.g. Battery, Camera" style="width: 100%; border: 1px solid #d1d5db; border-radius: 9999px; padding: 8px 14px 8px 34px; font-size: 13px; outline: none; background: #fdfdfd; transition: border-color 0.2s;" onfocus="this.style.borderColor='#4285F4'" onblur="this.style.borderColor='#d1d5db'">
+          </div>
+          <div id="bom-filter-stats" style="font-size: 12px; color: #5f6368; display: none;"></div>
+        </div>
       </div>
 
       <!-- Materials List Cards -->
@@ -1053,8 +1060,9 @@
           });
 
           let currentVisible = Math.min(10, results.length);
+          let loadMoreDiv = null;
           if (results.length > 10) {
-            const loadMoreDiv = document.createElement('div');
+            loadMoreDiv = document.createElement('div');
             loadMoreDiv.id = 'load-more-container';
             loadMoreDiv.style.textAlign = 'center';
             loadMoreDiv.style.marginTop = '24px';
@@ -1080,6 +1088,72 @@
           }
 
           statsSummary.textContent = `Sourced ${results.length} of ${results.length} materials • Click 📍 to open supplier location in Google Maps`;
+
+          // Mini Search Filter Logic
+          const miniFilter = document.getElementById('bom-mini-filter');
+          const filterStats = document.getElementById('bom-filter-stats');
+          
+          if (miniFilter && filterStats) {
+            // Reset existing filter inputs from previous search
+            const newFilter = miniFilter.cloneNode(true);
+            miniFilter.parentNode.replaceChild(newFilter, miniFilter);
+            
+            newFilter.value = '';
+            filterStats.style.display = 'none';
+
+            newFilter.addEventListener('input', (e) => {
+              const filterQuery = e.target.value.toLowerCase().trim();
+              const allCards = materialList.querySelectorAll('.material-card');
+              let matchCount = 0;
+
+              if (filterQuery === '') {
+                filterStats.style.display = 'none';
+                if (loadMoreDiv) loadMoreDiv.style.display = 'block';
+                
+                allCards.forEach((c, idx) => {
+                  c.style.display = idx < currentVisible ? 'block' : 'none';
+                });
+                
+                const noRes = document.getElementById('bom-no-results-msg');
+                if (noRes) noRes.remove();
+              } else {
+                if (loadMoreDiv) loadMoreDiv.style.display = 'none';
+                
+                allCards.forEach(c => {
+                  const nameEl = c.querySelector('.material-name');
+                  const catEl = c.querySelector('.pill-tag');
+                  
+                  const textName = nameEl ? nameEl.textContent.toLowerCase() : '';
+                  const textCat = catEl ? catEl.textContent.toLowerCase() : '';
+                  
+                  if (textName.includes(filterQuery) || textCat.includes(filterQuery)) {
+                    c.style.display = 'block';
+                    matchCount++;
+                  } else {
+                    c.style.display = 'none';
+                  }
+                });
+
+                filterStats.style.display = 'block';
+                filterStats.textContent = `Showing ${matchCount} of ${results.length} components`;
+                
+                let noRes = document.getElementById('bom-no-results-msg');
+                if (matchCount === 0) {
+                  if (!noRes) {
+                    noRes = document.createElement('div');
+                    noRes.id = 'bom-no-results-msg';
+                    noRes.style.textAlign = 'center';
+                    noRes.style.padding = '40px 20px';
+                    noRes.style.color = '#5f6368';
+                    materialList.appendChild(noRes);
+                  }
+                  noRes.innerHTML = `No components found for '<b>${e.target.value}</b>'`;
+                } else if (noRes) {
+                  noRes.remove();
+                }
+              }
+            });
+          }
 
         } catch (err) {
           materialList.innerHTML = '<div style="text-align:center;padding:40px;color:#c5221f">Error: ' + err.message + '</div>';
