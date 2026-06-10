@@ -16,9 +16,22 @@
       border-color: #3a3a3c !important;
     }
     
+    .navbar, header {
+      position: sticky !important;
+      top: 0 !important;
+      z-index: 50 !important;
+      background: rgba(255, 255, 255, 0.8) !important;
+      backdrop-filter: blur(20px) !important;
+      -webkit-backdrop-filter: blur(20px) !important;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.08) !important;
+    }
+    
     html.dark .navbar, html.dark header {
-      background-color: #1c1c1e !important;
-      border-bottom: 1px solid #3a3a3c !important;
+      background: rgba(28, 28, 30, 0.75) !important;
+      backdrop-filter: blur(20px) !important;
+      -webkit-backdrop-filter: blur(20px) !important;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+      box-shadow: none !important;
     }
     
     html.dark footer, html.dark .footer-bottom {
@@ -214,7 +227,9 @@
     }
     
     html.dark .navbar-logo-image, html.dark .footer-logo-image {
-      filter: invert(1) hue-rotate(180deg) brightness(1.5);
+      filter: none !important;
+      background: transparent !important;
+      mix-blend-mode: normal !important;
     }
     
     .dark-mode-toggle {
