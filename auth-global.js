@@ -53,14 +53,52 @@
       border-color: #48484a !important;
     }
     
-    html.dark input, html.dark select, html.dark textarea, 
     html.dark .search-box-container, html.dark .search-box, 
     html.dark #account-dropdown, html.dark .nav-links, 
-    html.dark .btn-outline, html.dark .btn-supplier-web, 
-    html.dark .btn-icon-round:not(.saved), html.dark .sample-supplier-block { 
+    html.dark .sample-supplier-block { 
       background-color: #2c2c2e !important; 
       border-color: #3a3a3c !important; 
       color: #f5f5f7 !important; 
+    }
+    
+    html.dark input, html.dark select, html.dark textarea {
+      background-color: #3a3a3c !important;
+      border: 1px solid #48484a !important;
+      color: #f5f5f7 !important;
+    }
+    
+    html.dark .btn-outline, html.dark .btn-secondary, html.dark .btn-export, html.dark .btn-remove, html.dark .btn-supplier-web, html.dark .btn-icon-round:not(.saved) {
+      background-color: #3a3a3c !important;
+      border: 1px solid #48484a !important;
+      color: #f5f5f7 !important;
+    }
+    
+    html.dark .profile-card, html.dark .partner-card, html.dark .white-card {
+      background-color: #2c2c2e !important;
+      border: 1px solid #3a3a3c !important;
+      color: #f5f5f7 !important;
+    }
+
+    html.dark .section-heading, html.dark .page-title, html.dark .component-name {
+      color: #888888 !important;
+    }
+    
+    html.dark .section-subtext, html.dark .page-subtitle, html.dark .account-meta, html.dark .meta-date, html.dark .file-types {
+      color: #aeaeb2 !important;
+    }
+    
+    html.dark .section-div, html.dark .partner-header {
+      border-bottom-color: #3a3a3c !important;
+      border-color: #3a3a3c !important;
+    }
+    
+    html.dark .danger-zone {
+      border-color: #4a1c1c !important;
+    }
+    
+    html.dark .success-text {
+      background-color: #1c3a2a !important;
+      color: #34d058 !important;
     }
     
     html.dark .search-box input {
@@ -401,9 +439,7 @@ document.addEventListener('DOMContentLoaded', async () => {
      toggleDiv.className = 'dropdown-item dark-mode-toggle';
      const isDark = document.documentElement.classList.contains('dark');
      toggleDiv.innerHTML = `
-        <span class="toggle-label-ui">
-           <span class="theme-icon-indicator">${isDark ? '🌙' : '☀️'}</span> Dark Mode
-        </span>
+        <span class="toggle-label-ui">Dark Mode</span>
         <div class="toggle-switch-ui"></div>
      `;
      toggleDiv.addEventListener('click', (e) => {
@@ -411,11 +447,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         e.stopPropagation();
         const currentlyDark = document.documentElement.classList.toggle('dark');
         localStorage.setItem('grabraw-theme', currentlyDark ? 'dark' : 'light');
-        
-        // Update all theme icons in the document to stay in sync
-        document.querySelectorAll('.theme-icon-indicator').forEach(icon => {
-          icon.textContent = currentlyDark ? '🌙' : '☀️';
-        });
      });
      
      if (registerObj && registerObj.nextSibling) {
