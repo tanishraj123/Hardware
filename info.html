@@ -339,7 +339,7 @@
     }
     function setSaved(arr) { localStorage.setItem('savedSuppliers', JSON.stringify(arr)); }
     function isSaved(componentName, supplierName) {
-      return getSaved().some(s => s.componentName === componentName && s.supplierName === supplierName);
+      return getSaved().some(s => s.component === componentName && s.supplier_name === supplierName);
     }
 
     // ── Build one card DOM element ──────────────────────────────────────────
@@ -382,9 +382,19 @@
       saveBtn.innerHTML = saved ? '✓' : '+';
       saveBtn.title = saved ? 'Saved to My Partners' : 'Save to My Partners';
       saveBtn.addEventListener('click', () => {
-        const info = { supplierName: mat.supplierName, city: mat.city, componentName: mat.name, distance: mat.distanceKm, stockStatus: mat.stockStatus, mapsLink: mat.mapsLink, websiteLink: mat.websiteLink };
+        const info = {
+          id: `${mat.name}-${mat.supplierName}`.replace(/\s+/g, '-').toLowerCase(),
+          supplier_name: mat.supplierName,
+          address: mat.city,
+          component: mat.name,
+          distance: mat.distanceKm,
+          stock: mat.stockStatus,
+          maps_link: mat.mapsLink,
+          website: mat.websiteLink,
+          saved_date: new Date().toISOString()
+        };
         const arr = getSaved();
-        const idx = arr.findIndex(s => s.componentName === info.componentName && s.supplierName === info.supplierName);
+        const idx = arr.findIndex(s => s.component === info.component && s.supplier_name === info.supplier_name);
         if (idx > -1) {
           arr.splice(idx, 1);
           saveBtn.classList.remove('saved');
