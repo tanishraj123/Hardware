@@ -7,26 +7,37 @@
 
   const style = document.createElement('style');
   style.textContent = `
-    html.dark body { background-color: #0a0a0a !important; color: #ededed !important; }
-    html.dark .navbar, html.dark header, html.dark footer, html.dark main, 
-    html.dark section, html.dark .search-row-section, html.dark .footer-bottom, 
+    html.dark body { background-color: #1c1c1e !important; color: #f5f5f7 !important; }
+    
+    html.dark main, html.dark section, html.dark .search-row-section, 
     html.dark .hero, html.dark .categories-section, html.dark .how-it-works, 
     html.dark .trending, html.dark .supplier-reg, html.dark .profile-container { 
-      background-color: #0a0a0a !important; 
-      border-color: #2a2a2a !important;
+      background-color: #1c1c1e !important; 
+      border-color: #3a3a3c !important;
+    }
+    
+    html.dark .navbar, html.dark header {
+      background-color: #1c1c1e !important;
+      border-bottom: 1px solid #3a3a3c !important;
+    }
+    
+    html.dark footer, html.dark .footer-bottom {
+      background-color: #161618 !important;
+      border-color: #3a3a3c !important;
     }
     
     html.dark .card, html.dark .material-card, html.dark .step-card, 
     html.dark .trending-card, html.dark .sample-bom-card, html.dark .auth-card,
     html.dark .settings-card, html.dark .billing-card { 
-      background-color: #111111 !important; 
-      border-color: #2a2a2a !important; 
-      color: #ededed !important; 
+      background-color: #2c2c2e !important; 
+      border: 1px solid #3a3a3c !important; 
+      color: #f5f5f7 !important; 
+      box-shadow: 0 1px 3px rgba(0,0,0,0.3) !important;
     }
     
     html.dark .card:hover, html.dark .material-card:hover, 
     html.dark .step-card:hover, html.dark .trending-card:hover {
-      border-color: #3a3a3a !important;
+      border-color: #48484a !important;
     }
     
     html.dark input, html.dark select, html.dark textarea, 
@@ -34,44 +45,60 @@
     html.dark #account-dropdown, html.dark .nav-links, 
     html.dark .btn-outline, html.dark .btn-supplier-web, 
     html.dark .btn-icon-round:not(.saved), html.dark .sample-supplier-block { 
-      background-color: #1a1a1a !important; 
-      border-color: #2a2a2a !important; 
-      color: #ededed !important; 
+      background-color: #2c2c2e !important; 
+      border-color: #3a3a3c !important; 
+      color: #f5f5f7 !important; 
+    }
+    
+    html.dark .search-box input {
+      background-color: transparent !important;
+    }
+    
+    html.dark .search-box:focus-within {
+      border-color: #0a84ff !important;
+    }
+    
+    html.dark input:focus, html.dark select:focus, html.dark textarea:focus {
+      border-color: #0a84ff !important;
+    }
+    
+    html.dark #account-dropdown {
+      box-shadow: 0 4px 12px rgba(0,0,0,0.4) !important;
     }
     
     html.dark .btn-outline:hover, html.dark .btn-supplier-web:hover,
     html.dark .btn-icon-round:not(.saved):hover {
-      background-color: #111111 !important;
-      border-color: #3a3a3a !important;
+      background-color: #3a3a3c !important;
+      border-color: #48484a !important;
     }
     
     html.dark #bom-mini-filter {
-      background-color: #1a1a1a !important;
-      border-color: #2a2a2a !important;
-      color: #ededed !important;
+      background-color: #2c2c2e !important;
+      border-color: #3a3a3c !important;
+      color: #f5f5f7 !important;
     }
     html.dark #bom-mini-filter:focus {
-      border-color: #3b82f6 !important;
+      border-color: #0a84ff !important;
     }
     
     html.dark #account-dropdown a, html.dark #account-dropdown button, 
     html.dark #account-dropdown .dropdown-item { 
-      color: #ededed !important; 
-      background-color: #1a1a1a !important; 
+      color: #f5f5f7 !important; 
+      background-color: #2c2c2e !important; 
     }
     html.dark #account-dropdown a:hover, html.dark #account-dropdown button:hover, 
     html.dark #account-dropdown .dropdown-item:hover { 
-      background-color: #111111 !important; 
+      background-color: #3a3a3c !important; 
     }
     html.dark #signout-link, html.dark #signOutBtn {
-      border-top-color: #2a2a2a !important;
+      border-top-color: #3a3a3c !important;
     }
     
     html.dark h1, html.dark h2, html.dark h3, html.dark h4, 
     html.dark .navbar-logo-text, html.dark .footer-logo-text, 
     html.dark .bom-title, html.dark .material-name, html.dark .supplier-name,
     html.dark .scroller-title, html.dark .step-title, html.dark .trending-title { 
-      color: #ededed !important; 
+      color: #f5f5f7 !important; 
     }
     
     html.dark .bom-subtext, html.dark .footer-description, html.dark .footer-title, 
@@ -81,99 +108,109 @@
     html.dark .suggestion-label, html.dark .stat-dot, html.dark .sample-item-qty, 
     html.dark .sample-supplier-meta, html.dark .search-icon, html.dark .search-icon-left svg,
     html.dark .hero-tagline, html.dark .hero-subtitle, html.dark .alt-badges .distance-badge {
-      color: #888888 !important;
+      color: #aeaeb2 !important;
       background-color: transparent !important;
     }
-    html.dark .distance-badge {
-      background-color: #1a1a1a !important;
-      border: 1px solid #2a2a2a !important;
+    html.dark .distance-badge, html.dark .category-badge, html.dark .bom-category, html.dark .pill-tag {
+      background-color: #2c2c2e !important;
+      border: 1px solid #48484a !important;
+      color: #aeaeb2 !important;
     }
     
     html.dark input::placeholder, html.dark textarea::placeholder { 
-      color: #555555 !important; 
+      color: #6c6c70 !important; 
     }
     
     html.dark .nav-link, html.dark .footer-link, html.dark .footer-legal-link { 
-      color: #888888 !important; 
+      color: #aeaeb2 !important; 
     }
     html.dark .nav-link:hover, html.dark .footer-link:hover, html.dark .footer-legal-link:hover { 
-      color: #3b82f6 !important; 
+      color: #0a84ff !important; 
       background-color: transparent !important;
     }
     html.dark .navbar .nav-link:hover {
-      background-color: #1a1a1a !important;
+      background-color: #2c2c2e !important;
     }
     
     html.dark .btn-primary, html.dark .btn-search, html.dark .btn-download-bom, 
     html.dark .btn-supplier-maps, html.dark .mobile-nav-getstarted, html.dark .step-num, 
     html.dark .trending-btn, html.dark .btn-ai-cta, html.dark #load-more-btn { 
-      background-color: #3b82f6 !important; 
+      background-color: #0a84ff !important; 
       color: #ffffff !important; 
       border: none !important;
     }
     html.dark .btn-primary:hover, html.dark .btn-search:hover, html.dark .btn-download-bom:hover, 
     html.dark .btn-supplier-maps:hover, html.dark .mobile-nav-getstarted:hover, 
     html.dark .trending-btn:hover, html.dark .btn-ai-cta:hover, html.dark #load-more-btn:hover { 
-      background-color: #2563eb !important; 
+      background-color: #0071e3 !important; 
     }
     
     html.dark .stock-indicator.in-stock, html.dark .live-badge, 
     html.dark .sample-supplier-badge, html.dark .btn-icon-round.saved { 
-      background-color: #166534 !important; 
-      color: #bbf7d0 !important; 
-      border-color: #166534 !important;
+      background-color: #1c3a2a !important; 
+      color: #34d058 !important; 
+      border-color: #1c3a2a !important;
     }
     html.dark .stock-indicator.in-stock .stock-dot, html.dark .live-badge .dot,
     html.dark .sample-supplier-badge { 
-      background-color: #bbf7d0 !important; 
+      background-color: #34d058 !important; 
     }
     html.dark .stock-indicator.in-stock {
       padding: 0px 8px; border-radius: 100px;
     }
     
-    html.dark .stock-indicator.low-stock, html.dark .stock-indicator.out-of-stock { 
-      background-color: #7f1d1d !important; 
-      color: #fecaca !important; 
-      border-color: #7f1d1d !important;
+    html.dark .stock-indicator.low-stock { 
+      background-color: #3a2a1c !important; 
+      color: #f0a050 !important; 
+      border-color: #3a2a1c !important;
       padding: 0px 8px; border-radius: 100px;
     }
-    html.dark .stock-indicator.low-stock .stock-dot, html.dark .stock-indicator.out-of-stock .stock-dot { 
-      background-color: #fecaca !important; 
+    html.dark .stock-indicator.out-of-stock { 
+      background-color: #3a1c1c !important; 
+      color: #f47067 !important; 
+      border-color: #3a1c1c !important;
+      padding: 0px 8px; border-radius: 100px;
+    }
+    html.dark .stock-indicator.low-stock .stock-dot { 
+      background-color: #f0a050 !important; 
+    }
+    html.dark .stock-indicator.out-of-stock .stock-dot { 
+      background-color: #f47067 !important; 
     }
     
     html.dark #plan-banner-container > div[style*="background:#f0fdf4"] {
-      background-color: #166534 !important;
-      color: #bbf7d0 !important;
-      border-color: #166534 !important;
+      background-color: #1c3a2a !important;
+      color: #34d058 !important;
+      border-color: #1c3a2a !important;
     }
     html.dark #plan-banner-container > div[style*="background:#eff6ff"] {
-      background-color: #111111 !important;
-      color: #ededed !important;
-      border-bottom: 1px solid #2a2a2a !important;
+      background-color: #2c2c2e !important;
+      color: #f5f5f7 !important;
+      border-bottom: 1px solid #3a3a3c !important;
     }
     html.dark #plan-banner-container > div[style*="background:#eff6ff"] a {
-      color: #3b82f6 !important;
+      color: #0a84ff !important;
     }
     html.dark #plan-banner-container button {
-      color: #888888 !important;
+      color: #aeaeb2 !important;
     }
     
     html.dark .sample-item, html.dark .alt-supplier-row, html.dark .alt-suppliers-section, html.dark .sample-header, html.dark .hero {
-      border-color: #2a2a2a !important;
+      border-color: #3a3a3c !important;
     }
     html.dark .sample-header, html.dark table th {
-      background-color: #1a1a1a !important;
-      color: #ededed !important;
+      background-color: #2c2c2e !important;
+      color: #f5f5f7 !important;
     }
     html.dark .suggestion-chip {
-      background-color: #111111 !important;
-      border-color: #2a2a2a !important;
-      color: #ededed !important;
+      background-color: #2c2c2e !important;
+      border-color: #3a3a3c !important;
+      color: #aeaeb2 !important;
     }
     html.dark .suggestion-chip:hover {
-      background-color: #1a1a1a !important;
-      border-color: #3b82f6 !important;
-      color: #3b82f6 !important;
+      background-color: #3a3a3c !important;
+      border-color: #0a84ff !important;
+      color: #0a84ff !important;
     }
     
     html.dark .navbar-logo-image, html.dark .footer-logo-image {
@@ -195,7 +232,7 @@
       transition: .4s;
     }
     html.dark .toggle-switch-ui {
-      background-color: #3b82f6;
+      background-color: #0a84ff;
     }
     .toggle-switch-ui::before {
       content: "";
@@ -350,7 +387,7 @@ document.addEventListener('DOMContentLoaded', async () => {
      const isDark = document.documentElement.classList.contains('dark');
      toggleDiv.innerHTML = `
         <span class="toggle-label-ui">
-           <span id="theme-icon">${isDark ? '🌙' : '☀️'}</span> Dark Mode
+           <span class="theme-icon-indicator">${isDark ? '🌙' : '☀️'}</span> Dark Mode
         </span>
         <div class="toggle-switch-ui"></div>
      `;
@@ -359,7 +396,11 @@ document.addEventListener('DOMContentLoaded', async () => {
         e.stopPropagation();
         const currentlyDark = document.documentElement.classList.toggle('dark');
         localStorage.setItem('grabraw-theme', currentlyDark ? 'dark' : 'light');
-        document.getElementById('theme-icon').textContent = currentlyDark ? '🌙' : '☀️';
+        
+        // Update all theme icons in the document to stay in sync
+        document.querySelectorAll('.theme-icon-indicator').forEach(icon => {
+          icon.textContent = currentlyDark ? '🌙' : '☀️';
+        });
      });
      
      if (registerObj && registerObj.nextSibling) {
