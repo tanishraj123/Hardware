@@ -498,7 +498,18 @@
         // 1. Find product
         const { data: products } = await window.sb.from('products').select('id,name').ilike('name','%'+query+'%').limit(1);
         if (!products || products.length === 0) {
-          materialList.innerHTML = '<div style="text-align:center;padding:40px;color:#5f6368;">No matching products found.</div>';
+          materialList.innerHTML = `<div style="text-align:center; padding: 60px 24px;">
+  <div style="font-size: 48px; margin-bottom: 16px;">🔍</div>
+  <h3 style="font-size: 20px; font-weight: 700; color: #1a1a1a; margin-bottom: 8px;">No components found for "<span id="empty-search-term"></span>"</h3>
+  <p style="color: #5f6368; font-size: 15px; margin-bottom: 24px;">We don't have this product in our database yet. Try searching for a related product.</p>
+  <div style="display:flex; gap:12px; justify-content:center; flex-wrap:wrap;">
+    <a href="/info.html?q=Smartphone" style="background:#4285F4;color:#fff;padding:10px 20px;border-radius:100px;font-weight:600;font-size:14px;text-decoration:none;">Try Smartphone</a>
+    <a href="/info.html?q=Laptop" style="background:#4285F4;color:#fff;padding:10px 20px;border-radius:100px;font-weight:600;font-size:14px;text-decoration:none;">Try Laptop</a>
+    <a href="/" style="border:1px solid #dadce0;color:#3c4043;padding:10px 20px;border-radius:100px;font-weight:600;font-size:14px;text-decoration:none;">Back to Home</a>
+  </div>
+</div>`;
+          const emptyTerm = document.getElementById('empty-search-term');
+          if (emptyTerm) emptyTerm.textContent = new URLSearchParams(window.location.search).get('q') || '';
           statsSummary.textContent = '0 materials found';
           return;
         }
