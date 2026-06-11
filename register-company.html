@@ -1,1715 +1,2559 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Register Your Company — GrabRaw</title>
   
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Register Company - GrabRaw</title>
+
+    <!-- AI Crawler Meta Tags -->
+    <meta
+      name="description"
+      content="GrabRaw is an AI-powered search engine that breaks down any product into its complete Bill of Materials and finds local suppliers near you."
+    />
+    <meta
+      name="keywords"
+      content="component sourcing, raw materials, local suppliers, BOM, bill of materials, product intelligence, grabraw"
+    />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="https://grabraw.com" />
+
+    <!-- Open Graph -->
+    <meta
+      property="og:title"
+      content="GrabRaw — Search Any Product, Find Every Component"
+    />
+    <meta
+      property="og:description"
+      content="GrabRaw is an AI-powered search engine that breaks down any product into its complete Bill of Materials and finds local suppliers near you."
+    />
+    <meta property="og:url" content="https://grabraw.com" />
+    <meta property="og:type" content="website" />
+
+    <!-- Inter Font -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="/auth-global.js"></script>
-  <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      let isScrolling = false;
-      window.addEventListener('scroll', function() {
-        if (!isScrolling) {
-          isScrolling = true;
-          requestAnimationFrame(() => {
-            isScrolling = false;
-          });
-        }
-      }, { passive: true });
-    });
-  </script>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        let isScrolling = false;
+        window.addEventListener(
+          "scroll",
+          function () {
+            if (!isScrolling) {
+              isScrolling = true;
+              requestAnimationFrame(() => {
+                isScrolling = false;
+              });
+            }
+          },
+          { passive: true },
+        );
+      });
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
 
-  <style>
-    /* Modern Custom Stylesheet (Google Inspired Clean UI) */
-    *, *::before, *::after {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    body {
-      font-family: 'Inter', system-ui, -apple-system, sans-serif;
-      background-color: #f8f9fa;
-      color: #1a1a1a;
-      line-height: 1.5;
-      -webkit-font-smoothing: antialiased;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-    }
-
-    a {
-      text-decoration: none;
-      color: inherit;
-    }
-
-    .container {
-      width: 100%;
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 0 24px;
-    }
-
-    /* Navbar */
-    .navbar {
-      height: 64px;
-      padding: 12px 24px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      background: rgba(255, 255, 255, 0.75);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px); /* Apple support */
-      border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      font-family: Inter, system-ui, sans-serif;
-      box-sizing: border-box;
-      width: 100%;
-      max-width: 100%;
-      margin: 0;
-    }
-
-    .nav-links {
-      display: none;
-      gap: 24px;
-      align-items: center;
-      flex: 1;
-      margin-left: 40px;
-    }
-
-    @media (min-width: 768px) {
-      .nav-links {
-        display: flex;
+    <!-- Structured Schema for AI Sourcing Crawlers -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "GrabRaw",
+        "url": "https://grabraw.com",
+        "description": "AI-powered platform that breaks down any product into its raw materials and components, then finds local suppliers within 40km.",
+        "foundingDate": "2026",
+        "sameAs": []
       }
-    }
+    </script>
 
-    .nav-link {
-      font-size: 14px;
-      color: #1a1a1a;
-      text-decoration: none;
-      font-weight: 500;
-      padding: 8px 12px;
-      border-radius: 8px;
-      transition: background-color 0.2s ease, color 0.2s ease;
-    }
+    <style>
+      /* Modern Custom Stylesheet (Google Inspired Clean UI) */
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
 
-    .nav-link:hover {
-      background-color: #f0f0f0;
-      color: #4285F4;
-    }
+      body {
+        font-family:
+          "Inter",
+          system-ui,
+          -apple-system,
+          sans-serif;
+        background-color: #ffffff;
+        color: #1a1a1a;
+        line-height: 1.5;
+        -webkit-font-smoothing: antialiased;
+      }
 
-    .nav-actions {
-      display: flex;
-      gap: 16px;
-      align-items: center;
-      margin-left: auto;
-    }
+      a {
+        text-decoration: none;
+        color: inherit;
+      }
 
-    .nav-actions .btn {
-      transition: background-color 0.3s ease, transform 0.2s ease;
-    }
+      .container {
+        width: 100%;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 24px;
+      }
 
-    .nav-actions .btn:hover {
-      transform: translateY(-2px);
-    }
+      /* Headings styling */
+      h1,
+      h2,
+      h3,
+      h4 {
+        font-weight: 800;
+        letter-spacing: -0.5px;
+        color: #1a1a1a;
+      }
 
-    @media (max-width: 768px) {
+      /* Navbar */
       .navbar {
-        height: 56px;
-        padding: 8px 16px;
+        height: 64px;
+        padding: 12px 24px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background: rgba(255, 255, 255, 0.75);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px); /* Apple support */
+        border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        font-family: Inter, system-ui, sans-serif;
+        box-sizing: border-box;
+        width: 100%;
+        max-width: 100%;
+        margin: 0;
       }
-      
+
       .nav-links {
-        gap: 16px;
-        margin-left: 20px;
+        display: none;
+        gap: 24px;
+        align-items: center;
+        flex: 1;
+        margin-left: 40px;
       }
-      
+
+      @media (min-width: 768px) {
+        .nav-links {
+          display: flex;
+        }
+      }
+
       .nav-link {
-        font-size: 13px;
-        padding: 6px 10px;
-      }
-    }
-
-    /* Standardized Buttons */
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 14px;
-      font-weight: 600;
-      padding: 10px 20px;
-      border-radius: 8px;
-      transition: all 0.2s ease;
-      cursor: pointer;
-      border: none;
-      text-align: center;
-    }
-
-    .btn-outline {
-      background-color: transparent;
-      border: 1px solid #dadce0;
-      color: #3c4043;
-    }
-
-    .btn-outline:hover {
-      background-color: #f8f9fa;
-      border-color: #bdc1c6;
-    }
-
-    .btn-primary {
-      background-color: #4285F4;
-      color: #FFFFFF;
-    }
-
-    .btn-primary:hover {
-      background-color: #2b72eb;
-      box-shadow: 0 2px 6px rgba(66, 133, 244, 0.2);
-    }
-
-    /* Profile Page Main Wrap */
-    main {
-      flex: 1;
-      padding: 40px 16px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-
-    .profile-card {
-      width: 100%;
-      max-width: 600px;
-      background: #FFFFFF;
-      border-radius: 16px;
-      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
-      border: 1px solid #f1f3f4;
-      padding: 32px;
-    }
-
-    .section-div {
-      padding-bottom: 0px;
-      margin-bottom: 0px;
-    }
-
-    .section-heading {
-      font-size: 16px;
-      font-weight: 700;
-      color: #1a1a1a;
-      margin-bottom: 8px;
-    }
-
-    .section-subtext {
-      font-size: 13px;
-      color: #5f6368;
-      margin-bottom: 16px;
-    }
-
-    /* Warning & Success statuses */
-    .success-text {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 12px;
-      color: #137333;
-      background-color: #e6f4ea;
-      padding: 4px 10px;
-      border-radius: 6px;
-      font-weight: 500;
-    }
-
-    /* Toast system */
-    .toast-container {
-      position: fixed;
-      bottom: 24px;
-      right: 24px;
-      z-index: 10000;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-
-    .toast {
-      background-color: #323232;
-      color: #ffffff;
-      padding: 12px 24px;
-      border-radius: 8px;
-      font-size: 14px;
-      font-weight: 500;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.25);
-      opacity: 0;
-      transform: translateY(20px);
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-      white-space: pre-line;
-      text-align: left;
-    }
-
-    .suggestion-item {
-      padding: 10px 16px;
-      font-size: 13.5px;
-      color: #3c4043;
-      cursor: pointer;
-      border-bottom: 1px solid #f1f3f4;
-      transition: background-color 0.15s ease;
-      text-align: left;
-    }
-    .suggestion-item:last-child {
-      border-bottom: none;
-    }
-    .suggestion-item:hover {
-      background-color: #f8f9fa;
-      color: #4285F4;
-    }
-
-    .toast.show {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    .toast.toast-success {
-      background-color: #137333;
-    }
-
-    .toast.toast-error {
-      background-color: #c5221f;
-    }
-
-    /* Footer styled matching index.html */
-    footer {
-      background-color: #FFFFFF;
-      border-top: 1px solid #e8eaed;
-      padding: 40px 0 24px;
-      text-align: center;
-      margin-top: auto;
-    }
-
-    .footer-grid {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 40px;
-      padding-bottom: 40px;
-    }
-
-    @media (min-width: 768px) {
-      .footer-grid {
-        grid-template-columns: 2fr 1fr;
-        text-align: left;
-      }
-    }
-
-    .footer-description {
-      font-size: 13px;
-      color: #5f6368;
-      line-height: 1.6;
-    }
-
-    .footer-col {
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-    }
-
-    .footer-title {
-      font-size: 12px;
-      font-weight: 700;
-      color: #5f6368;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-
-    .footer-bottom {
-      background-color: #FFFFFF;
-      border-top: 1px solid #e8eaed;
-      padding: 24px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: space-between;
-      gap: 16px;
-    }
-
-    @media (min-width: 768px) {
-      .footer-bottom {
-        flex-direction: row;
-      }
-    }
-
-    .copyright {
-      font-size: 12px;
-      color: #5f6368;
-    }
-
-    .footer-legal-links {
-      display: flex;
-      gap: 20px;
-    }
-
-    .footer-legal-link {
-      font-size: 12px;
-      color: #3c4043;
-      transition: color 0.15s ease;
-    }
-
-    .footer-legal-link:hover {
-      color: #4285F4;
-    }
-
-    /* Dropdown CSS overrides */
-    .dropdown-item:hover {
-      background-color: #f8f9fa !important;
-    }
-
-    /* Company registration form style overrides */
-    .company-input {
-      width: 100%;
-      height: 44px;
-      border: 1px solid #dadce0;
-      border-radius: 12px;
-      padding: 0 16px;
-      font-size: 15px;
-      color: #1a1a1a;
-      outline: none;
-      transition: border-color 0.2s ease, box-shadow 0.2s ease;
-      box-sizing: border-box;
-      background-color: #ffffff;
-    }
-    .company-input:focus {
-      border-color: #4285F4;
-      box-shadow: 0 0 0 2px rgba(66, 133, 244, 0.15);
-    }
-    .company-textarea {
-      width: 100%;
-      border: 1px solid #dadce0;
-      border-radius: 12px;
-      padding: 12px 16px;
-      font-size: 15px;
-      color: #1a1a1a;
-      outline: none;
-      transition: border-color 0.2s ease, box-shadow 0.2s ease;
-      box-sizing: border-box;
-      background-color: #ffffff;
-      resize: vertical;
-    }
-    .company-textarea:focus {
-      border-color: #4285F4;
-      box-shadow: 0 0 0 2px rgba(66, 133, 244, 0.15);
-    }
-    .company-select {
-      width: 100%;
-      height: 44px;
-      border: 1px solid #dadce0;
-      border-radius: 12px;
-      padding: 0 16px;
-      font-size: 15px;
-      color: #1a1a1a;
-      outline: none;
-      transition: border-color 0.2s ease, box-shadow 0.2s ease;
-      box-sizing: border-box;
-      background-color: #ffffff;
-    }
-    .company-select:focus {
-      border-color: #4285F4;
-      box-shadow: 0 0 0 2px rgba(66, 133, 244, 0.15);
-    }
-
-    .navbar-logo-wrapper {
-      display: inline-flex;
-      align-items: center;
-      gap: 12px;
-      text-decoration: none;
-      cursor: pointer;
-      transition: opacity 0.3s ease;
-      padding: 8px;
-    }
-
-    .navbar-logo-wrapper:hover {
-      opacity: 0.85;
-    }
-
-    .navbar-logo-image {
-      height: 50px;
-      width: auto;
-      max-width: 100%;
-      object-fit: contain;
-      display: block;
-    }
-
-    .navbar-logo-text {
-      font-size: 24px;
-      font-weight: 700;
-      color: #1a1a1a;
-      font-family: Inter, system-ui, sans-serif;
-      letter-spacing: -0.5px;
-    }
-
-    .footer-logo-wrapper {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 16px;
-    }
-
-    .footer-logo-image {
-      height: 40px;
-      width: auto;
-      max-width: 100%;
-      object-fit: contain;
-      display: block;
-    }
-
-    .footer-logo-text {
-      font-size: 18px;
-      font-weight: 700;
-      color: #1a1a1a;
-      font-family: Inter, system-ui, sans-serif;
-    }
-
-    @media (max-width: 1023px) {
-      .navbar-logo-wrapper {
-        gap: 10px;
-        padding: 6px;
-      }
-      
-      .navbar-logo-image {
-        height: 45px;
-      }
-      
-      .navbar-logo-text {
-        font-size: 22px;
-      }
-      
-      .footer-logo-image {
-        height: 38px;
-      }
-      
-      .footer-logo-text {
-        font-size: 16px;
-      }
-    }
-
-    @media (max-width: 768px) {
-      .navbar-logo-wrapper {
-        gap: 8px;
-        padding: 4px;
-      }
-      
-      .navbar-logo-image {
-        height: 40px;
-      }
-      
-      .navbar-logo-text {
-        font-size: 20px;
-      }
-      
-      .footer-logo-image {
-        height: 35px;
-      }
-      
-      .footer-logo-text {
         font-size: 14px;
+        color: #1a1a1a;
+        text-decoration: none;
+        font-weight: 500;
+        padding: 8px 12px;
+        border-radius: 8px;
+        transition:
+          background-color 0.2s ease,
+          color 0.2s ease;
       }
-    }
 
-    /* ===== SCROLL SMOOTHNESS & HARDWARE PERFORMANCE ===== */
-    html {
-      scroll-behavior: smooth;
-      overflow-y: scroll;
-    }
-
-    body {
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
-      transform: translate3d(0, 0, 0);
-      will-change: scroll-position;
-    }
-
-    /* ===== HARDWARE ACCELERATION ===== */
-    .navbar, .register-box, .card, button, a {
-      transform: translate3d(0, 0, 0);
-    }
-
-    /* ===== FAST TRANSITIONS ===== */
-    button, a, input, select, textarea {
-      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
-    }
-
-    button:hover, a:hover {
-      transform: translateY(-2px);
-    }
-
-    /* Smooth nav link hover overrides */
-    .nav-links a {
-      transition: background-color 0.15s ease, color 0.15s ease !important;
-    }
-
-    /* Smooth card hover overrides (Material Design easing) */
-    .register-box, .card {
-      transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.2s ease !important;
-    }
-    .register-box:hover, .card:hover {
-      transform: translateY(-4px) translate3d(0, 0, 0) !important;
-      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1) !important;
-    }
-
-    /* ===== SCROLL CONTAINMENT ===== */
-    .navbar {
-      contain: layout style;
-      overflow: visible !important;
-    }
-
-    main, section {
-      contain: layout style;
-    }
-
-    .register-box, .card {
-      contain: content;
-    }
-
-    /* ===== FORM PERFORMANCE ===== */
-    input[type="text"], input[type="email"], input[type="password"] {
-      transition: all 0.2s ease !important;
-    }
-
-    input[type="text"]:focus, input[type="email"]:focus, input[type="password"]:focus {
-      transform: scale(1.01) !important;
-      box-shadow: 0 0 0 3px rgba(66, 133, 244, 0.1) !important;
-    }
-
-    input[type="text"]::placeholder, input[type="email"]::placeholder, input[type="password"]::placeholder {
-      transition: color 0.15s ease !important;
-    }
-
-    /* ===== SCROLL LOCK MODAL/DROPDOWOWNS ===== */
-    body.modal-open {
-      overflow: hidden;
-      position: fixed;
-      width: 100%;
-    }
-
-    .modal-backdrop {
-      animation: fadeIn 0.2s ease;
-    }
-
-    /* ===== USER ACCOUNT DROPDOWN STYLING ===== */
-    .user-profile-menu-container {
-      position: relative !important;
-      display: inline-block !important;
-      overflow: visible !important;
-    }
-
-    #account-btn {
-      position: relative !important;
-      z-index: 101 !important;
-    }
-
-    #account-dropdown {
-      display: block !important;
-      position: absolute !important;
-      right: 0 !important;
-      top: calc(100% + 8px) !important;
-      background-color: #ffffff !important;
-      border: 1px solid #e0e0e0 !important;
-      border-radius: 12px !important;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
-      width: 220px !important;
-      min-width: 200px !important;
-      z-index: 1000 !important; /* Above all content but no backdrop */
-      padding: 12px 0 !important;
-      opacity: 0 !important;
-      visibility: hidden !important;
-      transform: translateY(-8px) !important;
-      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
-      pointer-events: none !important;
-      text-align: left !important;
-      box-sizing: border-box !important;
-    }
-
-    #account-dropdown.active {
-      opacity: 1 !important;
-      visibility: visible !important;
-      transform: translateY(0) !important;
-      pointer-events: auto !important;
-    }
-
-    #account-dropdown a, 
-    #account-dropdown button,
-    #account-dropdown .dropdown-item {
-      display: block !important;
-      width: 100% !important;
-      padding: 12px 16px !important;
-      font-size: 14px !important;
-      color: #1a1a1a !important;
-      text-decoration: none !important;
-      border: none !important;
-      background: none !important;
-      cursor: pointer !important;
-      font-weight: 500 !important;
-      transition: background-color 0.15s ease, color 0.15s ease !important;
-      font-family: Inter, system-ui, sans-serif !important;
-      box-sizing: border-box !important;
-    }
-
-    #account-dropdown a:hover, 
-    #account-dropdown button:hover,
-    #account-dropdown .dropdown-item:hover {
-      background-color: #f5f5f5 !important;
-      color: #1a1a1a !important;
-    }
-
-    #account-dropdown #signout-link {
-      border-top: 1px solid #e0e0e0 !important;
-      color: #d93025 !important;
-      font-weight: 600 !important;
-      margin-top: 8px !important;
-      padding-top: 12px !important;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
-    }
-  
-    /* GrabRaw+ CSS */
-    .plus-badge {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: 18px;
-      height: 18px;
-      background: #4285F4;
-      border-radius: 50%;
-      color: white;
-      font-size: 10px;
-      font-weight: bold;
-      margin-left: 4px;
-      border: 2px solid white;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.2);
-    }
-    .avatar-wrapper { position: relative; display: inline-block; }
-    .avatar-badge { position: absolute; bottom: -2px; right: -2px; }
-
-  </style>
-
-  <!-- Comprehensive Mobile Responsiveness Overrides -->
-  <style>
-    /* Prevent auto-zoom on iOS/device focus by keeping inputs >= 16px */
-    input, select, textarea {
-      font-size: 16px !important;
-    }
-    
-    /* Ensure body line height is clean & comfortable */
-    body {
-      line-height: 1.6 !important;
-    }
-    
-    /* Strict Mobile-first spacing constraints (< 640px) */
-    @media (max-width: 639.98px) {
-      .container, .hero, section, main {
-        padding-left: 16px !important;
-        padding-right: 16px !important;
+      .nav-link:hover {
+        background-color: #f0f0f0;
+        color: #4285f4;
       }
-      .card, .scroller-card, .step-card, .trending-card, .material-card {
-        margin: 12px 0 !important;
-        padding: 16px !important;
+
+      .nav-actions {
+        display: flex;
+        gap: 16px;
+        align-items: center;
+        margin-left: auto;
       }
-      
-      /* Horizontal scrolling for suggestions on mobile */
+
+      .nav-actions .btn {
+        transition:
+          background-color 0.3s ease,
+          transform 0.2s ease;
+      }
+
+      .nav-actions .btn:hover {
+        transform: translateY(-2px);
+      }
+
+      @media (max-width: 768px) {
+        .navbar {
+          height: 56px;
+          padding: 8px 16px;
+        }
+
+        .nav-links {
+          gap: 16px;
+          margin-left: 20px;
+        }
+
+        .nav-link {
+          font-size: 13px;
+          padding: 6px 10px;
+        }
+      }
+
+      /* Standardized Buttons */
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 14px;
+        font-weight: 600;
+        padding: 10px 20px;
+        border-radius: 8px;
+        transition: all 0.2s ease;
+        cursor: pointer;
+        border: none;
+        text-align: center;
+      }
+
+      .btn-outline {
+        background-color: transparent;
+        border: 1px solid #dadce0;
+        color: #3c4043;
+      }
+
+      .btn-outline:hover {
+        background-color: #f8f9fa;
+        border-color: #bdc1c6;
+      }
+
+      .btn-primary {
+        background-color: #4285f4;
+        color: #ffffff;
+      }
+
+      .btn-primary:hover {
+        background-color: #2b72eb;
+        box-shadow: 0 2px 6px rgba(66, 133, 244, 0.2);
+      }
+
+      /* Hero Section - Centered centerpiece search like Unsplash */
+      .hero {
+        padding: 80px 0;
+        border-bottom: 1px solid #f1f3f4;
+        background-color: #ffffff;
+        background: #ffffff;
+      }
+
+      .hero-center-wrap {
+        max-width: 800px;
+        margin: 0 auto;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .hero-tagline {
+        font-size: 13px;
+        font-weight: 600;
+        color: #5f6368;
+        text-transform: uppercase;
+        letter-spacing: 0.8px;
+        margin-bottom: 16px;
+      }
+
+      .hero-title {
+        font-size: 34px;
+        line-height: 1.15;
+        font-weight: 800;
+        color: #1a1a1a;
+        margin-bottom: 16px;
+        text-align: center;
+      }
+
+      @media (min-width: 576px) {
+        .hero-title {
+          font-size: 44px;
+        }
+      }
+
+      @media (min-width: 992px) {
+        .hero-title {
+          font-size: 52px;
+        }
+      }
+
+      .hero-subtitle {
+        font-size: 16px;
+        line-height: 1.6;
+        color: #5f6368;
+        max-width: 600px;
+        margin-bottom: 32px;
+        text-align: center;
+      }
+
+      @media (min-width: 768px) {
+        .hero-subtitle {
+          font-size: 18px;
+        }
+      }
+
+      /* Search Bar centerpiece */
+      .search-block {
+        width: 100%;
+        max-width: 680px;
+        margin-bottom: 20px;
+      }
+
+      .search-box {
+        display: flex;
+        align-items: center;
+        border: 1px solid #dadce0;
+        border-radius: 100px;
+        padding: 0 8px 0 20px;
+        height: 56px;
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15);
+        background-color: #ffffff;
+        transition: all 0.2s ease;
+        width: 100%;
+      }
+
+      .search-box:focus-within {
+        border-color: #4285f4;
+        box-shadow: 0 4px 18px rgba(66, 133, 244, 0.25);
+      }
+
+      .search-icon-left {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 12px;
+        color: #5f6368;
+      }
+
+      .search-box input {
+        flex: 1;
+        border: none;
+        outline: none;
+        font-size: 16px;
+        color: #202124;
+        background: transparent;
+        width: 100%;
+        height: 100%;
+      }
+
+      .btn-search {
+        background-color: #4285f4;
+        color: #ffffff;
+        border-radius: 100px;
+        height: 42px;
+        padding: 0 28px;
+        font-weight: 700;
+        font-size: 15px;
+        border: none;
+        cursor: pointer;
+        transition: background-color 0.2s ease;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .btn-search:hover {
+        background-color: #2b72eb;
+      }
+
+      /* Centered suggestion chips */
       .suggestion-row {
-        padding: 0 4px !important;
-        box-sizing: border-box !important;
-        overflow-x: auto !important;
-        justify-content: flex-start !important;
-        -webkit-overflow-scrolling: touch;
-        max-width: 100% !important;
-        scrollbar-width: none; /* Hide scrollbar */
-        margin-left: 0 !important;
-        margin-right: 0 !important;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        margin-bottom: 32px;
+        width: 100%;
+        max-width: 680px;
+        overflow: hidden;
+        flex-wrap: nowrap;
       }
-      .suggestion-row::-webkit-scrollbar {
+
+      .suggestion-label {
+        font-size: 14px;
+        color: #5f6368;
+        font-weight: 600;
+        white-space: nowrap;
+        flex-shrink: 0;
+      }
+
+      .suggestion-chip {
+        font-size: 14px;
+        font-weight: 500;
+        color: #1a1a1a;
+        background-color: #ffffff;
+        border: 1px solid #dadce0;
+        padding: 8px 16px;
+        border-radius: 999px;
+        transition:
+          border-color 0.3s ease,
+          color 0.3s ease,
+          background-color 0.3s ease,
+          opacity 300ms ease,
+          transform 300ms ease,
+          margin 300ms ease,
+          padding 300ms ease,
+          width 300ms ease,
+          max-width 300ms ease;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        box-sizing: border-box;
+        opacity: 1;
+        transform: translateX(0);
+        white-space: nowrap;
+        max-width: 300px;
+        flex-shrink: 0;
+        pointer-events: auto;
+      }
+
+      .suggestion-chip:hover {
+        border-color: #4285f4;
+        color: #4285f4;
+        background-color: #ffffff;
+      }
+
+      .suggestion-chip.entering {
+        opacity: 0;
+        transform: translateX(10px);
+      }
+
+      .suggestion-chip.leaving {
+        opacity: 0;
+        transform: translateX(-10px);
+        width: 0 !important;
+        max-width: 0 !important;
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+        margin-left: 0 !important;
+        margin-right: -10px !important;
+        border-left-width: 0 !important;
+        border-right-width: 0 !important;
+        overflow: hidden;
+        white-space: nowrap;
+        pointer-events: none;
+      }
+
+      /* Centered Single Line Stats */
+      .stats-centered {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 8px;
+        font-size: 14px;
+        color: #5f6368;
+        font-weight: 500;
+      }
+
+      .stat-dot {
+        color: #bdc1c6;
+        margin: 0 6px;
+      }
+
+      .stat-bold {
+        font-weight: 700;
+        color: #4285f4;
+      }
+
+      .sample-bom-card {
+        background-color: #ffffff;
+        border: 1px solid #e8eaed;
+        border-radius: 16px;
+        padding: 24px;
+        width: 100%;
+        max-width: 440px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+      }
+
+      .sample-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border-bottom: 1px solid #e8eaed;
+        background-color: #f0f4ff;
+        margin: -24px -24px 16px -24px;
+        padding: 20px 24px 16px 24px;
+        border-top-left-radius: 16px;
+        border-top-right-radius: 16px;
+      }
+
+      .sample-title-block h3 {
+        font-size: 16px;
+        font-weight: 700;
+        color: #1a1a1a;
+      }
+
+      .sample-title-block p {
+        font-size: 11px;
+        color: #5f6368;
+        font-weight: 500;
+      }
+
+      .sample-tag {
+        background-color: #e8f0fe;
+        color: #1a73e8;
+        font-size: 10px;
+        font-weight: 700;
+        padding: 3px 8px;
+        border-radius: 100px;
+        text-transform: uppercase;
+      }
+
+      .sample-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        font-size: 13px;
+        padding: 10px 0;
+        border-bottom: 1px dashed #f1f3f4;
+      }
+
+      .sample-item-name {
+        font-weight: 600;
+        color: #202124;
+      }
+
+      .sample-item-qty {
+        font-size: 11px;
+        font-weight: 700;
+        color: #5f6368;
+        background-color: #f1f3f4;
+        padding: 2px 6px;
+        border-radius: 4px;
+      }
+
+      .sample-supplier-block {
+        background-color: #fafbfb;
+        border-radius: 8px;
+        padding: 12px;
+        margin-top: 16px;
+        border: 1px solid #f1f3f4;
+      }
+
+      .sample-supplier-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        font-size: 10px;
+        font-weight: 700;
+        color: #137333;
+        background-color: #e6f4ea;
+        padding: 2px 6px;
+        border-radius: 100px;
+        margin-bottom: 4px;
+      }
+
+      .sample-supplier-name {
+        font-size: 13px;
+        font-weight: 700;
+        color: #1a1a1a;
+        display: block;
+      }
+
+      .sample-supplier-meta {
+        font-size: 11px;
+        color: #5f6368;
+      }
+
+      /* Popular Categories Section */
+      section.categories-section {
+        padding: 80px 0;
+        border-bottom: 1px solid #f1f3f4;
+        background-color: #ffffff;
+      }
+
+      .section-header {
+        margin-bottom: 32px;
+      }
+
+      .section-title {
+        font-size: 26px;
+        font-weight: 800;
+        margin-bottom: 8px;
+      }
+
+      .scroller {
+        display: flex;
+        gap: 16px;
+        overflow-x: auto;
+        padding-bottom: 24px;
+        scroll-snap-type: x mandatory;
+        -webkit-overflow-scrolling: touch;
+      }
+
+      .scroller::-webkit-scrollbar {
+        height: 6px;
+      }
+
+      .scroller::-webkit-scrollbar-thumb {
+        background-color: #dadce0;
+        border-radius: 100px;
+      }
+
+      .scroller-card {
+        position: relative;
+        flex: 0 0 240px;
+        height: 220px;
+        scroll-snap-align: start;
+        border-radius: 16px;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        background-size: cover;
+        background-position: center;
+        transition: all 0.2s ease;
+        border: 1px solid rgba(0, 0, 0, 0.08);
+      }
+
+      .scroller-card::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+          to bottom,
+          rgba(0, 0, 0, 0.1),
+          rgba(0, 0, 0, 0.75)
+        );
+        z-index: 1;
+      }
+
+      .scroller-card:hover {
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+        transform: translateY(-4px);
+      }
+
+      .scroller-img {
         display: none;
       }
-      #suggestion-ticker-container {
-        width: auto !important;
-        max-width: none !important;
+
+      .scroller-content {
+        position: relative;
+        z-index: 2;
+        padding: 16px;
+      }
+
+      .scroller-title {
+        font-size: 18px;
+        font-weight: 700;
+        color: #ffffff;
+      }
+
+      .scroller-count {
+        font-size: 13px;
+        color: #d1d5db; /* light grey white */
+        font-weight: 500;
+        margin-top: 4px;
+      }
+
+      /* Popular Categories background images */
+      .card-smartwatch {
+        background-image: url("https://images.unsplash.com/photo-1546868871-7041f2a55e12?w=400");
+      }
+      .card-arduino {
+        background-image: url("https://images.unsplash.com/photo-1608564697071-ddf911d81370?w=400");
+      }
+      .card-raspi {
+        background-image: url("https://images.unsplash.com/photo-1518770660439-4636190af475?w=400");
+      }
+      .card-phone {
+        background-image: url("https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=400");
+      }
+      .card-sensors {
+        background-image: url("https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400");
+      }
+      .card-battery {
+        background-image: url("https://images.unsplash.com/photo-1620288627223-53302f4e8c74?w=400");
+      }
+      .card-shampoo {
+        background-image: url("https://images.unsplash.com/photo-1585435557343-3b092031a831?w=400");
+      }
+      .card-solar {
+        background-image: url("https://images.unsplash.com/photo-1509391366360-2e959784a276?w=400");
+      }
+
+      /* How It Works Section */
+      section.how-it-works {
+        padding: 80px 0;
+        background-color: #f8f9fa;
+        border-bottom: 1px solid #f1f3f4;
+      }
+
+      .steps-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 32px;
+        margin-top: 40px;
+      }
+
+      @media (min-width: 768px) {
+        .steps-grid {
+          grid-template-columns: repeat(3, 1fr);
+        }
+      }
+
+      .step-card {
+        background-color: #ffffff;
+        border: 1px solid #e1e3e5;
+        border-radius: 16px;
+        padding: 32px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+        text-align: left;
+      }
+
+      .step-num {
+        width: 40px;
+        height: 40px;
+        background-color: #4285f4;
+        color: #ffffff;
+        font-size: 16px;
+        font-weight: 700;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 24px;
+      }
+
+      .step-title {
+        font-size: 20px;
+        font-weight: 700;
+        margin-bottom: 12px;
+        color: #1a1a1a;
+      }
+
+      .step-desc {
+        font-size: 14px;
+        color: #5f6368;
+        line-height: 1.6;
+      }
+
+      /* Trending Searches Section */
+      section.trending {
+        padding: 80px 0;
+        background-color: #ffffff;
+        border-bottom: 1px solid #f1f3f4;
+      }
+
+      .trending-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 20px;
+        margin-top: 32px;
+      }
+
+      @media (min-width: 576px) {
+        .trending-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+
+      @media (min-width: 992px) {
+        .trending-grid {
+          grid-template-columns: repeat(4, 1fr);
+        }
+      }
+
+      .trending-card {
+        background-color: #ffffff;
+        border: 1px solid #e8eaed;
+        border-radius: 16px;
+        padding: 24px;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        transition: all 0.2s ease;
+      }
+
+      .trending-card:hover {
+        border-color: #dadce0;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+      }
+
+      .trending-info {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+      }
+
+      .trending-title {
+        font-size: 20px;
+        font-weight: 700;
+        color: #1a1a1a;
+      }
+
+      .trending-desc {
+        font-size: 13px;
+        color: #5f6368;
+      }
+
+      .trending-btn {
+        width: 100%;
+        margin-top: auto;
+        font-size: 13px;
+        padding: 10px 16px;
+        background-color: #4285f4;
+        color: #ffffff;
+        border-radius: 8px;
+        font-weight: 600;
+        text-align: center;
+        transition: all 0.2s ease;
+      }
+
+      .trending-btn:hover {
+        background-color: #2b72eb;
+      }
+
+      /* AI Sourcing Banner component styling */
+      section.ai-banner {
+        padding: 80px 0;
+        background-color: #1a1a2e; /* dark navy */
+        color: #ffffff;
+        border-bottom: 1px solid #1a1a2e;
+      }
+
+      .ai-banner-content {
+        max-width: 650px;
+        margin: 0 auto;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 24px;
+      }
+
+      .ai-banner-content h2 {
+        color: #ffffff;
+        font-size: 32px;
+        font-weight: 800;
+      }
+
+      .ai-banner-content p {
+        color: #94a3b8;
+        font-size: 16px;
+        line-height: 1.6;
+      }
+
+      .btn-ai-cta {
+        background-color: #4285f4;
+        color: #ffffff;
+        font-weight: 700;
+        padding: 12px 32px;
+        border-radius: 100px; /* rounded pill shape */
+        font-size: 15px;
+        transition: all 0.2s ease;
+      }
+
+      .btn-ai-cta:hover {
+        background-color: #2b72eb;
+      }
+
+      /* Supplier Registration Section */
+      section.supplier-reg {
+        padding: 80px 0;
+        text-align: center;
+        background-color: #ffffff;
+        border-bottom: 1px solid #f1f3f4;
+      }
+
+      .supplier-reg-content {
+        max-width: 600px;
+        margin: 0 auto;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 20px;
+      }
+
+      .supplier-reg-title {
+        font-size: 26px;
+        font-weight: 800;
+        color: #1a1a1a;
+      }
+
+      .supplier-reg-desc {
+        font-size: 15px;
+        color: #5f6368;
+        line-height: 1.6;
+      }
+
+      .supplier-actions {
+        display: flex;
+        gap: 12px;
+        margin-top: 8px;
+        justify-content: center;
+      }
+
+      /* Footer Column Styles */
+      footer {
+        background-color: #f8f9fa; /* light grey background */
+        border-top: 1px solid #e1e3e5;
+        padding: 80px 0 0; /* Let footer-bottom touch bottom */
+        position: relative;
+      }
+
+      .footer-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 40px;
+        margin-bottom: 40px;
+      }
+
+      @media (min-width: 576px) {
+        .footer-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+
+      @media (min-width: 992px) {
+        .footer-grid {
+          grid-template-columns: repeat(4, 1fr);
+        }
+      }
+
+      .footer-col {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+      }
+
+      .footer-title {
+        font-size: 12px; /* uppercase small */
+        font-weight: 700;
+        color: #5f6368; /* grey #5f6368 */
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+
+      .footer-links {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .footer-link {
+        font-size: 13px;
+        color: #3c4043; /* dark grey #3c4043 */
+        transition: color 0.15s ease;
+      }
+
+      .footer-link:hover {
+        color: #4285f4; /* hover blue */
+      }
+
+      .footer-description {
+        font-size: 13px;
+        color: #5f6368;
+        line-height: 1.6;
+      }
+
+      .footer-bottom {
+        background-color: #ffffff; /* Copyright bar: white background */
+        border-top: 1px solid #e8eaed; /* thin top border */
+        padding: 24px;
+        margin-top: 40px;
+        width: 100vw;
+        margin-left: calc(-50vw + 50%); /* stretch 100vw */
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        box-sizing: border-box;
+      }
+
+      @media (min-width: 768px) {
+        .footer-bottom {
+          flex-direction: row;
+        }
+      }
+
+      @media (min-width: 1200px) {
+        .footer-bottom {
+          padding-left: calc((100vw - 1152px) / 2);
+          padding-right: calc((100vw - 1152px) / 2);
+        }
+      }
+
+      .copyright {
+        font-size: 12px;
+        color: #5f6368;
+      }
+
+      .footer-legal-links {
+        display: flex;
+        gap: 20px;
+      }
+
+      .footer-legal-link {
+        font-size: 12px;
+        color: #3c4043; /* dark grey #3c4043 */
+        transition: color 0.15s ease;
+      }
+
+      .footer-legal-link:hover {
+        color: #4285f4;
+      }
+
+      .navbar-logo-wrapper {
+        display: inline-flex;
+        align-items: center;
+        gap: 12px;
+        text-decoration: none;
+        cursor: pointer;
+        transition: opacity 0.3s ease;
+        padding: 8px;
+      }
+
+      .navbar-logo-wrapper:hover {
+        opacity: 0.85;
+      }
+
+      .navbar-logo-image {
+        height: 50px;
+        width: auto;
+        max-width: 100%;
+        object-fit: contain;
+        display: block;
+      }
+
+      .navbar-logo-text {
+        font-size: 24px;
+        font-weight: 700;
+        color: #1a1a1a;
+        font-family: Inter, system-ui, sans-serif;
+        letter-spacing: -0.5px;
+      }
+
+      .footer-logo-wrapper {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 16px;
+      }
+
+      .footer-logo-image {
+        height: 40px;
+        width: auto;
+        max-width: 100%;
+        object-fit: contain;
+        display: block;
+      }
+
+      .footer-logo-text {
+        font-size: 18px;
+        font-weight: 700;
+        color: #1a1a1a;
+        font-family: Inter, system-ui, sans-serif;
+      }
+
+      @media (max-width: 1023px) {
+        .navbar-logo-wrapper {
+          gap: 10px;
+          padding: 6px;
+        }
+
+        .navbar-logo-image {
+          height: 45px;
+        }
+
+        .navbar-logo-text {
+          font-size: 22px;
+        }
+
+        .footer-logo-image {
+          height: 38px;
+        }
+
+        .footer-logo-text {
+          font-size: 16px;
+        }
+      }
+
+      @media (max-width: 768px) {
+        .navbar-logo-wrapper {
+          gap: 8px;
+          padding: 4px;
+        }
+
+        .navbar-logo-image {
+          height: 40px;
+        }
+
+        .navbar-logo-text {
+          font-size: 20px;
+        }
+
+        .footer-logo-image {
+          height: 35px;
+        }
+
+        .footer-logo-text {
+          font-size: 14px;
+        }
+      }
+
+      /* ===== SCROLL SMOOTHNESS & HARDWARE PERFORMANCE ===== */
+      html {
+        scroll-behavior: smooth;
+        overflow-y: scroll;
+      }
+
+      body {
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        transform: translate3d(0, 0, 0);
+        will-change: scroll-position;
+      }
+
+      /* ===== HARDWARE ACCELERATION ===== */
+      .navbar,
+      .scroller-card,
+      .step-card,
+      .trending-card,
+      .card,
+      button,
+      a {
+        transform: translate3d(0, 0, 0);
+      }
+
+      /* ===== FAST TRANSITIONS ===== */
+      button,
+      a,
+      input,
+      select,
+      textarea {
+        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+      }
+
+      button:hover,
+      a:hover {
+        transform: translateY(-2px);
+      }
+
+      /* Smooth nav link hover overrides */
+      .nav-links a {
+        transition:
+          background-color 0.15s ease,
+          color 0.15s ease !important;
+      }
+
+      /* Smooth card hover overrides (Material Design easing) */
+      .scroller-card {
+        transition:
+          transform 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+          box-shadow 0.2s ease !important;
+      }
+      .scroller-card:hover {
+        transform: translateY(-4px) translate3d(0, 0, 0) !important;
+        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1) !important;
+      }
+
+      .step-card {
+        transition:
+          transform 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+          box-shadow 0.2s ease !important;
+      }
+      .step-card:hover {
+        transform: translateY(-4px) translate3d(0, 0, 0) !important;
+        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1) !important;
+      }
+
+      .trending-card {
+        transition:
+          transform 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+          box-shadow 0.2s ease !important;
+      }
+      .trending-card:hover {
+        transform: translateY(-4px) translate3d(0, 0, 0) !important;
+        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1) !important;
+      }
+
+      /* ===== SCROLL CONTAINMENT ===== */
+      .navbar {
+        contain: layout style;
         overflow: visible !important;
-        pointer-events: auto !important;
       }
-    }
-    
-    /* Disable hovers on touch devices to prevent sticky hover states */
-    @media (hover: none) {
-      button:hover, a:hover, .btn:hover, .scroller-card:hover, .step-card:hover, .trending-card:hover {
-        transform: none !important;
-        box-shadow: none !important;
+
+      main,
+      section {
+        contain: layout style;
       }
-      button:active, a:active, .btn:active {
-        background-color: rgba(0,0,0,0.06) !important;
+
+      .scroller-card,
+      .step-card,
+      .trending-card {
+        contain: content;
       }
-    }
-    
-    /* Desktop-first Navbar button overrides */
-    @media (min-width: 640px) {
-      .nav-actions {
-        gap: 12px !important;
-      }
-      .nav-actions .btn-outline, .nav-actions .btn-primary {
-        height: 44px !important;
-        line-height: 1 !important;
-        display: inline-flex !important;
-        align-items: center !important;
-        justify-content: center !important;
-        padding: 0 20px !important;
-        font-weight: 600 !important;
-        font-size: 14px !important;
-        border-radius: 100px !important;
-        box-sizing: border-box !important;
+
+      /* ===== FORM PERFORMANCE ===== */
+      input[type="text"],
+      input[type="email"],
+      input[type="password"] {
         transition: all 0.2s ease !important;
       }
-      .nav-actions .btn-outline {
-        border: 1px solid #dadce0 !important;
-        background-color: transparent !important;
-        color: #3c4043 !important;
+
+      input[type="text"]:focus,
+      input[type="email"]:focus,
+      input[type="password"]:focus {
+        transform: scale(1.01) !important;
+        box-shadow: 0 0 0 3px rgba(66, 133, 244, 0.1) !important;
       }
-      .nav-actions .btn-outline:hover {
-        background-color: #f8f9fa !important;
-        border-color: #bdc1c6 !important;
+
+      input[type="text"]::placeholder,
+      input[type="email"]::placeholder,
+      input[type="password"]::placeholder {
+        transition: color 0.15s ease !important;
       }
-      .nav-actions .btn-primary {
-        background-color: #1a73e8 !important; /* solid blue */
-        color: #ffffff !important;
-        border: none !important;
+
+      /* ===== SCROLL LOCK MODAL/DROPDOWNS ===== */
+      body.modal-open {
+        overflow: hidden;
+        position: fixed;
+        width: 100%;
       }
-      .nav-actions .btn-primary:hover {
-        background-color: #1557b0 !important;
+
+      .modal-backdrop {
+        animation: fadeIn 0.2s ease;
       }
-    }
-    
-    /* Mobile-first Nav & Logo constraints (< 640px) */
-    @media (max-width: 639.98px) {
-      .navbar {
-        height: 56px !important;
-        padding: 0 16px !important;
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
       }
-      .navbar-logo-image {
-        height: 40px !important;
-        width: auto !important;
+
+      /* ===== USER ACCOUNT DROPDOWN STYLING ===== */
+      .user-profile-menu-container {
+        position: relative !important;
+        display: inline-block !important;
+        overflow: visible !important;
       }
-      .navbar-logo-text {
-        font-size: 18px !important;
-      }
-      
-      /* Full width Account buttons responsive design */
+
       #account-btn {
-        width: auto !important;
+        position: relative !important;
+        z-index: 101 !important;
       }
-      
-      /* Hamburger menu toggle button style */
-      .hamburger-menu {
-        display: flex !important;
-        align-items: center !important;
-        justify-content: center !important;
-        background: none !important;
-        border: none !important;
+
+      #account-dropdown {
+        display: block !important;
+        position: absolute !important;
+        right: 0 !important;
+        top: calc(100% + 8px) !important;
+        background-color: #ffffff !important;
+        border: 1px solid #e0e0e0 !important;
+        border-radius: 12px !important;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
+        width: 220px !important;
+        min-width: 200px !important;
+        z-index: 1000 !important; /* Above all content but no backdrop */
+        padding: 12px 0 !important;
+        opacity: 0 !important;
+        visibility: hidden !important;
+        transform: translateY(-8px) !important;
+        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+        pointer-events: none !important;
+        text-align: left !important;
+        box-sizing: border-box !important;
+      }
+
+      #account-dropdown.active {
+        opacity: 1 !important;
+        visibility: visible !important;
+        transform: translateY(0) !important;
+        pointer-events: auto !important;
+      }
+
+      #account-dropdown a,
+      #account-dropdown button,
+      #account-dropdown .dropdown-item {
+        display: block !important;
+        width: 100% !important;
+        padding: 12px 16px !important;
+        font-size: 14px !important;
         color: #1a1a1a !important;
+        text-decoration: none !important;
+        border: none !important;
+        background: none !important;
         cursor: pointer !important;
-        padding: 8px !important;
-        border-radius: 8px !important;
+        font-weight: 500 !important;
+        transition:
+          background-color 0.15s ease,
+          color 0.15s ease !important;
+        font-family: Inter, system-ui, sans-serif !important;
+        box-sizing: border-box !important;
+      }
+
+      #account-dropdown a:hover,
+      #account-dropdown button:hover,
+      #account-dropdown .dropdown-item:hover {
+        background-color: #f5f5f5 !important;
+        color: #1a1a1a !important;
+      }
+
+      #account-dropdown #signout-link {
+        border-top: 1px solid #e0e0e0 !important;
+        color: #d93025 !important;
+        font-weight: 600 !important;
+        margin-top: 8px !important;
+        padding-top: 12px !important;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+
+      /* GrabRaw+ CSS */
+      .plus-badge {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 18px;
+        height: 18px;
+        background: #4285f4;
+        border-radius: 50%;
+        color: white;
+        font-size: 10px;
+        font-weight: bold;
+        margin-left: 4px;
+        border: 2px solid white;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+      }
+      .avatar-wrapper {
+        position: relative;
+        display: inline-block;
+      }
+      .avatar-badge {
+        position: absolute;
+        bottom: -2px;
+        right: -2px;
+      }
+    </style>
+
+    <!-- Inline SVG helper -->
+    <style>
+      .svg-icon {
+        width: 18px;
+        height: 18px;
+        fill: currentColor;
+        display: inline-block;
+        vertical-align: middle;
+      }
+    </style>
+
+    <!-- Comprehensive Mobile Responsiveness Overrides -->
+    <style>
+      /* Prevent auto-zoom on iOS/device focus by keeping inputs >= 16px */
+      input,
+      select,
+      textarea {
+        font-size: 16px !important;
+      }
+
+      /* Ensure body line height is clean & comfortable */
+      body {
+        line-height: 1.6 !important;
+      }
+
+      /* Strict Mobile-first spacing constraints (< 640px) */
+      @media (max-width: 639.98px) {
+        .container,
+        .hero,
+        section,
+        main {
+          padding-left: 16px !important;
+          padding-right: 16px !important;
+        }
+        .card,
+        .scroller-card,
+        .step-card,
+        .trending-card,
+        .material-card {
+          margin: 12px 0 !important;
+          padding: 16px !important;
+        }
+
+        /* Horizontal scrolling for suggestions on mobile */
+        .suggestion-row {
+          padding: 0 4px !important;
+          box-sizing: border-box !important;
+          overflow-x: auto !important;
+          justify-content: flex-start !important;
+          -webkit-overflow-scrolling: touch;
+          max-width: 100% !important;
+          scrollbar-width: none; /* Hide scrollbar */
+          margin-left: 0 !important;
+          margin-right: 0 !important;
+        }
+        .suggestion-row::-webkit-scrollbar {
+          display: none;
+        }
+        #suggestion-ticker-container {
+          width: auto !important;
+          max-width: none !important;
+          overflow: visible !important;
+          pointer-events: auto !important;
+        }
+      }
+
+      /* Disable hovers on touch devices to prevent sticky hover states */
+      @media (hover: none) {
+        button:hover,
+        a:hover,
+        .btn:hover,
+        .scroller-card:hover,
+        .step-card:hover,
+        .trending-card:hover {
+          transform: none !important;
+          box-shadow: none !important;
+        }
+        button:active,
+        a:active,
+        .btn:active {
+          background-color: rgba(0, 0, 0, 0.06) !important;
+        }
+      }
+
+      /* Desktop-first Navbar button overrides */
+      @media (min-width: 640px) {
+        .nav-actions {
+          gap: 12px !important;
+        }
+        .nav-actions .btn-outline,
+        .nav-actions .btn-primary {
+          height: 44px !important;
+          line-height: 1 !important;
+          display: inline-flex !important;
+          align-items: center !important;
+          justify-content: center !important;
+          padding: 0 20px !important;
+          font-weight: 600 !important;
+          font-size: 14px !important;
+          border-radius: 100px !important;
+          box-sizing: border-box !important;
+          transition: all 0.2s ease !important;
+        }
+        .nav-actions .btn-outline {
+          border: 1px solid #dadce0 !important;
+          background-color: transparent !important;
+          color: #3c4043 !important;
+        }
+        .nav-actions .btn-outline:hover {
+          background-color: #f8f9fa !important;
+          border-color: #bdc1c6 !important;
+        }
+        .nav-actions .btn-primary {
+          background-color: #1a73e8 !important; /* solid blue */
+          color: #ffffff !important;
+          border: none !important;
+        }
+        .nav-actions .btn-primary:hover {
+          background-color: #1557b0 !important;
+        }
+      }
+
+      /* Mobile-first Nav & Logo constraints (< 640px) */
+      @media (max-width: 639.98px) {
+        .navbar {
+          height: 56px !important;
+          padding: 0 16px !important;
+        }
+        .navbar-logo-image {
+          height: 40px !important;
+          width: auto !important;
+        }
+        .navbar-logo-text {
+          font-size: 18px !important;
+        }
+
+        /* Full width Account buttons responsive design */
+        #account-btn {
+          width: auto !important;
+        }
+
+        /* Hamburger menu toggle button style */
+        .hamburger-menu {
+          display: flex !important;
+          align-items: center !important;
+          justify-content: center !important;
+          background: none !important;
+          border: none !important;
+          color: #1a1a1a !important;
+          cursor: pointer !important;
+          padding: 8px !important;
+          border-radius: 8px !important;
+          width: 44px !important;
+          height: 44px !important;
+          z-index: 1010 !important;
+          order: -1 !important; /* Positions nicely on mobile headers */
+        }
+
+        /* Responsive vertical mobile navigation list drawer style */
+        .nav-links {
+          display: none !important;
+          flex-direction: column !important;
+          position: absolute !important;
+          top: 56px !important;
+          left: 0 !important;
+          right: 0 !important;
+          background: #ffffff !important;
+          border-bottom: 1px solid #dadce0 !important;
+          padding: 16px !important;
+          gap: 8px !important;
+          margin-left: 0 !important;
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
+          z-index: 1000 !important;
+        }
+        .nav-links.active {
+          display: flex !important;
+        }
+        .nav-link {
+          width: 100% !important;
+          font-size: 16px !important;
+          font-weight: 600 !important;
+          padding: 12px 14px !important;
+          white-space: nowrap !important;
+          box-sizing: border-box !important;
+        }
+
+        /* Hide desktop buttons when user is logged out on mobile */
+        .nav-actions .btn-outline,
+        .nav-actions .btn-primary {
+          display: none !important;
+        }
+
+        /* Mobile active navigation links enhancements */
+        .mobile-nav-divider {
+          display: block !important;
+          border: 0 !important;
+          border-top: 1px solid #dadce0 !important;
+          margin: 8px 14px !important;
+        }
+        .mobile-nav-signin {
+          display: block !important;
+          text-align: center !important;
+          padding: 12px 14px !important;
+          font-weight: 600 !important;
+          font-size: 16px !important;
+          color: #1a1a1a !important;
+          text-decoration: none !important;
+        }
+        .mobile-nav-getstarted {
+          display: flex !important;
+          width: calc(100% - 32px) !important;
+          height: 48px !important;
+          font-size: 16px !important;
+          font-weight: bold !important;
+          margin: 12px 16px !important;
+          background-color: #1a73e8 !important;
+          color: #ffffff !important;
+          align-items: center !important;
+          justify-content: center !important;
+          border-radius: 100px !important;
+          box-sizing: border-box !important;
+          border: none !important;
+          box-shadow: 0 2px 6px rgba(26, 115, 232, 0.2) !important;
+          text-decoration: none !important;
+        }
+      }
+
+      /* When logged in, hide registration/signin elements on mobile dropdown menu */
+      body.logged-in .mobile-nav-signin,
+      body.logged-in .mobile-nav-getstarted,
+      body.logged-in .mobile-nav-divider {
+        display: none !important;
+      }
+
+      @media (min-width: 640px) {
+        .hamburger-menu {
+          display: none !important;
+        }
+      }
+
+      /* Click outside Dimmed Overlay - Removed black overlays */
+      .drawer-overlay {
+        display: none !important;
+      }
+
+      /* Absolute Minimum Touch Target Dimensions (44px) */
+      .btn,
+      button,
+      .btn-row-action,
+      #account-btn {
+        min-height: 44px !important;
+        box-sizing: border-box !important;
+      }
+
+      /* Touch Target targets for BOM interactive save (+) and expand (↓) controls */
+      .btn-save-supplier,
+      .btn-expand-alternatives {
         width: 44px !important;
         height: 44px !important;
-        z-index: 1010 !important;
-        order: -1 !important; /* Positions nicely on mobile headers */
-      }
-      
-      /* Responsive vertical mobile navigation list drawer style */
-      .nav-links {
-        display: none !important;
-        flex-direction: column !important;
-        position: absolute !important;
-        top: 56px !important;
-        left: 0 !important;
-        right: 0 !important;
-        background: #ffffff !important;
-        border-bottom: 1px solid #dadce0 !important;
-        padding: 16px !important;
-        gap: 8px !important;
-        margin-left: 0 !important;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.1) !important;
-        z-index: 1000 !important;
-      }
-      .nav-links.active {
-        display: flex !important;
-      }
-      .nav-link {
-        width: 100% !important;
-        font-size: 16px !important;
-        font-weight: 600 !important;
-        padding: 12px 14px !important;
-        white-space: nowrap !important;
+        padding: 13px !important;
         box-sizing: border-box !important;
-      }
-      
-      /* Hide desktop buttons when user is logged out on mobile */
-      .nav-actions .btn-outline, .nav-actions .btn-primary {
-        display: none !important;
-      }
-      
-      /* Mobile active navigation links enhancements */
-      .mobile-nav-divider {
-        display: block !important;
-        border: 0 !important;
-        border-top: 1px solid #dadce0 !important;
-        margin: 8px 14px !important;
-      }
-      .mobile-nav-signin {
-        display: block !important;
-        text-align: center !important;
-        padding: 12px 14px !important;
-        font-weight: 600 !important;
-        font-size: 16px !important;
-        color: #1a1a1a !important;
-        text-decoration: none !important;
-      }
-      .mobile-nav-getstarted {
-        display: flex !important;
-        width: calc(100% - 32px) !important;
-        height: 48px !important;
-        font-size: 16px !important;
-        font-weight: bold !important;
-        margin: 12px 16px !important;
-        background-color: #1a73e8 !important;
-        color: #ffffff !important;
-        align-items: center !important;
-        justify-content: center !important;
-        border-radius: 100px !important;
-        box-sizing: border-box !important;
-        border: none !important;
-        box-shadow: 0 2px 6px rgba(26,115,232,0.2) !important;
-        text-decoration: none !important;
-      }
-    }
-    
-    /* When logged in, hide registration/signin elements on mobile dropdown menu */
-    body.logged-in .mobile-nav-signin,
-    body.logged-in .mobile-nav-getstarted,
-    body.logged-in .mobile-nav-divider {
-      display: none !important;
-    }
-    
-    @media (min-width: 640px) {
-      .hamburger-menu {
-        display: none !important;
-      }
-    }
-    
-    /* Click outside Dimmed Overlay - Removed black overlays */
-    .drawer-overlay {
-      display: none !important;
-    }
-    
-    /* Absolute Minimum Touch Target Dimensions (44px) */
-    .btn, button, .btn-row-action, #account-btn {
-      min-height: 44px !important;
-      box-sizing: border-box !important;
-    }
-    
-    /* Touch Target targets for BOM interactive save (+) and expand (↓) controls */
-    .btn-save-supplier, .btn-expand-alternatives {
-      width: 44px !important;
-      height: 44px !important;
-      padding: 13px !important;
-      box-sizing: border-box !important;
-      border-radius: 50% !important;
-      border: 1px solid #dadce0 !important;
-      background-color: #f0f0f0 !important;
-      display: inline-flex !important;
-      align-items: center !important;
-      justify-content: center !important;
-      cursor: pointer !important;
-      transition: all 0.2s ease !important;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.05) !important;
-    }
-    
-    .btn-save-supplier svg, .btn-expand-alternatives svg {
-      width: 18px !important;
-      height: 18px !important;
-    }
-    
-    .btn-save-supplier {
-      color: #1a73e8 !important;
-    }
-    
-    .btn-save-supplier.saved {
-      background-color: #34A853 !important;
-      color: #ffffff !important;
-      border-color: #34A853 !important;
-    }
-    
-    .btn-expand-alternatives {
-      color: #5f6368 !important;
-    }
-    
-    .btn-save-supplier:hover, .btn-expand-alternatives:hover {
-      background-color: #e0e0e0 !important;
-      border-color: #dadce0 !important;
-    }
-    
-    .btn-save-supplier.saved:hover {
-      background-color: #2b8b45 !important;
-      border-color: #2b8b45 !important;
-    }
-    
-    .btn-save-supplier:active, .btn-expand-alternatives:active {
-      background-color: #d0d0d0 !important;
-    }
-    
-    /* Truncate long single-line category pill badges */
-    .pill-tag {
-      white-space: nowrap !important;
-      overflow: hidden !important;
-      text-overflow: ellipsis !important;
-      max-width: 150px !important;
-    }
-    
-    /* Vertical Card actions stacking for narrow mobile screens <= 600px */
-    @media (max-width: 600px) {
-      .row-actions {
-        flex-direction: column !important;
-        align-items: stretch !important;
-        width: 100% !important;
-        gap: 8px !important;
-      }
-      .btn-row-action {
-        width: 100% !important;
-        box-sizing: border-box !important;
-        padding: 12px 16px !important;
-        height: 44px !important;
+        border-radius: 50% !important;
+        border: 1px solid #dadce0 !important;
+        background-color: #f0f0f0 !important;
         display: inline-flex !important;
         align-items: center !important;
         justify-content: center !important;
+        cursor: pointer !important;
+        transition: all 0.2s ease !important;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05) !important;
       }
-    }
-    
-    /* Hero Search Block constraints on Mobile */
-    @media (max-width: 639.98px) {
-      .search-block {
-        width: 100% !important;
-        padding: 0 16px !important;
-        box-sizing: border-box !important;
-      }
-      .search-box {
-        height: 48px !important;
-        padding: 0 4px 0 12px !important;
-        border-radius: 24px !important;
-      }
-      .btn-search {
-        height: 38px !important;
-        padding: 0 16px !important;
-        font-size: 14px !important;
-      }
-    }
-    
-    /* Media Query Breakpoints Alignment Grid Controls */
-    @media (max-width: 639.98px) {
-      .steps-grid, .trending-grid, .footer-grid, .partners-grid, .form-container-grid {
-        grid-template-columns: 1fr !important;
-      }
-      /* Prevent text overlap with top right absolute actions on mobile */
-      .material-meta-row {
-        padding-right: 104px !important;
-      }
-      .material-name {
-        font-size: 16px !important;
-        margin-right: 4px !important;
-      }
-    }
-    @media (min-width: 640px) and (max-width: 1023.98px) {
-      .steps-grid, .trending-grid, .footer-grid, .partners-grid, .form-container-grid {
-        grid-template-columns: repeat(2, 1fr) !important;
-      }
-    }
-    @media (min-width: 1024px) {
-      .steps-grid {
-        grid-template-columns: repeat(3, 1fr) !important;
-      }
-      .trending-grid, .footer-grid {
-        grid-template-columns: repeat(4, 1fr) !important;
-      }
-    }
-  </style>
 
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      // Setup dynamic Hamburger toggle
-      const navbar = document.querySelector('.navbar');
-      if (navbar) {
-        const navLinks = navbar.querySelector('.nav-links');
-        if (navLinks && !navbar.querySelector('#hamburger-toggle')) {
-          const hamBtn = document.createElement('button');
-          hamBtn.id = 'hamburger-toggle';
-          hamBtn.className = 'hamburger-menu';
-          hamBtn.type = 'button';
-          hamBtn.setAttribute('aria-label', 'Toggle Navigation');
-          hamBtn.innerHTML = `
+      .btn-save-supplier svg,
+      .btn-expand-alternatives svg {
+        width: 18px !important;
+        height: 18px !important;
+      }
+
+      .btn-save-supplier {
+        color: #1a73e8 !important;
+      }
+
+      .btn-save-supplier.saved {
+        background-color: #34a853 !important;
+        color: #ffffff !important;
+        border-color: #34a853 !important;
+      }
+
+      .btn-expand-alternatives {
+        color: #5f6368 !important;
+      }
+
+      .btn-save-supplier:hover,
+      .btn-expand-alternatives:hover {
+        background-color: #e0e0e0 !important;
+        border-color: #dadce0 !important;
+      }
+
+      .btn-save-supplier.saved:hover {
+        background-color: #2b8b45 !important;
+        border-color: #2b8b45 !important;
+      }
+
+      .btn-save-supplier:active,
+      .btn-expand-alternatives:active {
+        background-color: #d0d0d0 !important;
+      }
+
+      /* Truncate long single-line category pill badges */
+      .pill-tag {
+        white-space: nowrap !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+        max-width: 150px !important;
+      }
+
+      /* Vertical Card actions stacking for narrow mobile screens <= 600px */
+      @media (max-width: 600px) {
+        .row-actions {
+          flex-direction: column !important;
+          align-items: stretch !important;
+          width: 100% !important;
+          gap: 8px !important;
+        }
+        .btn-row-action {
+          width: 100% !important;
+          box-sizing: border-box !important;
+          padding: 12px 16px !important;
+          height: 44px !important;
+          display: inline-flex !important;
+          align-items: center !important;
+          justify-content: center !important;
+        }
+      }
+
+      /* Hero Search Block constraints on Mobile */
+      @media (max-width: 639.98px) {
+        .search-block {
+          width: 100% !important;
+          padding: 0 16px !important;
+          box-sizing: border-box !important;
+        }
+        .search-box {
+          height: 48px !important;
+          padding: 0 4px 0 12px !important;
+          border-radius: 24px !important;
+        }
+        .btn-search {
+          height: 38px !important;
+          padding: 0 16px !important;
+          font-size: 14px !important;
+        }
+      }
+
+      /* Media Query Breakpoints Alignment Grid Controls */
+      @media (max-width: 639.98px) {
+        .steps-grid,
+        .trending-grid,
+        .footer-grid,
+        .partners-grid,
+        .form-container-grid {
+          grid-template-columns: 1fr !important;
+        }
+        /* Prevent text overlap with top right absolute actions on mobile */
+        .material-meta-row {
+          padding-right: 104px !important;
+        }
+        .material-name {
+          font-size: 16px !important;
+          margin-right: 4px !important;
+        }
+      }
+      @media (min-width: 640px) and (max-width: 1023.98px) {
+        .steps-grid,
+        .trending-grid,
+        .footer-grid,
+        .partners-grid,
+        .form-container-grid {
+          grid-template-columns: repeat(2, 1fr) !important;
+        }
+      }
+      @media (min-width: 1024px) {
+        .steps-grid {
+          grid-template-columns: repeat(3, 1fr) !important;
+        }
+        .trending-grid,
+        .footer-grid {
+          grid-template-columns: repeat(4, 1fr) !important;
+        }
+      }
+    </style>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        // Setup dynamic Hamburger toggle
+        const navbar = document.querySelector(".navbar");
+        if (navbar) {
+          const navLinks = navbar.querySelector(".nav-links");
+          if (navLinks && !navbar.querySelector("#hamburger-toggle")) {
+            const hamBtn = document.createElement("button");
+            hamBtn.id = "hamburger-toggle";
+            hamBtn.className = "hamburger-menu";
+            hamBtn.type = "button";
+            hamBtn.setAttribute("aria-label", "Toggle Navigation");
+            hamBtn.innerHTML = `
             <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
               <line x1="3" y1="12" x2="21" y2="12"></line>
               <line x1="3" y1="6" x2="21" y2="6"></line>
               <line x1="3" y1="18" x2="21" y2="18"></line>
             </svg>
           `;
-          navbar.insertBefore(hamBtn, navLinks);
-          
-          hamBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            navLinks.classList.toggle('active');
-          });
-        }
-      }
+            navbar.insertBefore(hamBtn, navLinks);
 
-
-
-      // Global click outside for Navbar Hamburger menu
-      document.addEventListener('click', (e) => {
-        const navLinks = document.querySelector('.nav-links');
-        const hamBtn = document.getElementById('hamburger-toggle');
-        if (navLinks && navLinks.classList.contains('active')) {
-          if (!navLinks.contains(e.target) && (!hamBtn || !hamBtn.contains(e.target))) {
-            navLinks.classList.remove('active');
+            hamBtn.addEventListener("click", (e) => {
+              e.stopPropagation();
+              navLinks.classList.toggle("active");
+            });
           }
         }
+
+        // Global click outside for Navbar Hamburger menu
+        document.addEventListener("click", (e) => {
+          const navLinks = document.querySelector(".nav-links");
+          const hamBtn = document.getElementById("hamburger-toggle");
+          if (navLinks && navLinks.classList.contains("active")) {
+            if (
+              !navLinks.contains(e.target) &&
+              (!hamBtn || !hamBtn.contains(e.target))
+            ) {
+              navLinks.classList.remove("active");
+            }
+          }
+        });
       });
-    });
-  </script>
+    </script>
+  
+  
+<style>
+  body {
+    background-color: #f8f9fa !important;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+  main {
+    flex: 1;
+    padding: 40px 16px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+  }
+  .form-card {
+    background: #FFFFFF;
+    border-radius: 16px;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
+    border: 1px solid #f1f3f4;
+    padding: 32px;
+    width: 100%;
+    max-width: 640px;
+    margin: 0 auto;
+  }
+  .progress-container {
+    width: 100%;
+    height: 6px;
+    background-color: #f1f3f4;
+    border-radius: 100px;
+    margin-bottom: 24px;
+    overflow: hidden;
+  }
+  .progress-bar {
+    height: 100%;
+    background-color: #4285F4;
+    width: 20%;
+    transition: width 0.3s ease;
+  }
+  .step-counter {
+    font-size: 13px;
+    color: #5f6368;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 8px;
+  }
+  .step-heading {
+    font-size: 24px;
+    font-weight: 800;
+    color: #1a1a1a;
+    margin-bottom: 8px;
+  }
+  .step-subtext {
+    font-size: 14px;
+    color: #5f6368;
+    margin-bottom: 24px;
+    line-height: 1.5;
+  }
+  .form-group {
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    text-align: left;
+  }
+  .form-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #3c4043;
+  }
+  .form-input, .form-select, .form-textarea {
+    width: 100%;
+    border: 1px solid #dadce0;
+    border-radius: 8px;
+    padding: 12px 14px;
+    font-size: 15px;
+    color: #1a1a1a;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    font-family: inherit;
+  }
+  .form-input:focus, .form-select:focus, .form-textarea:focus {
+    border-color: #4285F4;
+    box-shadow: 0 0 0 2px rgba(66, 133, 244, 0.15);
+  }
+  .form-textarea {
+    resize: vertical;
+    min-height: 80px;
+  }
+  .checkbox-card-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+  @media (min-width: 500px) {
+    .checkbox-card-grid { grid-template-columns: 1fr 1fr; }
+  }
+  .checkbox-card {
+    border: 1px solid #dadce0;
+    border-radius: 12px;
+    padding: 16px;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    transition: all 0.2s ease;
+    position: relative;
+  }
+  .checkbox-card.selected { border-color: #4285F4; background-color: #f0f4ff; }
+  .checkbox-card:hover { border-color: #bdc1c6; }
+  .checkbox-card.selected:hover { border-color: #4285F4; }
+  .checkbox-icon { font-size: 24px; }
+  .checkbox-title { font-size: 15px; font-weight: 700; color: #1a1a1a; }
+  .checkbox-desc { font-size: 12px; color: #5f6368; }
+  .checkbox-check {
+    position: absolute; top: 16px; right: 16px; width: 20px; height: 20px;
+    border-radius: 50%; border: 2px solid #dadce0; display: flex;
+    align-items: center; justify-content: center;
+  }
+  .checkbox-card.selected .checkbox-check { background-color: #4285F4; border-color: #4285F4; }
+  .checkbox-card.selected .checkbox-check::after {
+    content: ''; width: 10px; height: 5px; border-bottom: 2px solid white; border-left: 2px solid white;
+    transform: rotate(-45deg); margin-top: -2px;
+  }
+  .step-actions {
+    display: flex; justify-content: space-between; margin-top: 32px; padding-top: 24px; border-top: 1px solid #f1f3f4;
+  }
+  .btn-next { background-color: #4285F4; color: #ffffff; border-radius: 100px; padding: 10px 24px; }
+  .btn-next:hover { background-color: #2b72eb; }
+  .btn-back { border-radius: 100px; }
+  .pill-container { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+  .multi-pill {
+    background-color: #ffffff; border: 1px solid #dadce0; color: #3c4043; padding: 6px 12px;
+    border-radius: 100px; font-size: 13px; font-weight: 500; cursor: pointer; display: flex;
+    align-items: center; gap: 6px; transition: all 0.2s ease;
+  }
+  .multi-pill:hover { background-color: #f8f9fa; }
+  .multi-pill.selected { background-color: #4285F4; color: #ffffff; border-color: #4285F4; }
+  .multi-pill.selected .remove-pill { opacity: 0.8; }
+  .multi-pill.selected .remove-pill:hover { opacity: 1; }
+  .custom-pill-input { border: none; outline: none; font-size: 13px; width: 100px; background: transparent; margin-left: 4px; }
+  .custom-pill-wrap { border: 1px dotted #bdc1c6; padding: 6px 12px; border-radius: 100px; display: flex; }
+  .toggle-wrapper { display: flex; align-items: center; gap: 12px; cursor: pointer; margin-bottom: 20px; }
+  .toggle-switch {
+    width: 40px; height: 24px; background-color: #dadce0; border-radius: 100px; position: relative; transition: background-color 0.2s;
+  }
+  .toggle-knob {
+    width: 20px; height: 20px; background-color: #ffffff; border-radius: 50%; position: absolute;
+    top: 2px; left: 2px; transition: transform 0.2s; box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+  }
+  .toggle-wrapper.active .toggle-switch { background-color: #4285F4; }
+  .toggle-wrapper.active .toggle-knob { transform: translateX(16px); }
+  .toggle-label { font-size: 14px; font-weight: 600; color: #1a1a1a; }
+  .summary-section { background: #fafbfb; border: 1px solid #e8eaed; border-radius: 12px; padding: 16px; margin-bottom: 16px; }
+  .summary-section-title { font-size: 14px; font-weight: 700; color: #1a1a1a; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid #dadce0; }
+  .summary-row { display: flex; margin-bottom: 8px; font-size: 13px; }
+  .summary-label { width: 120px; color: #5f6368; font-weight: 500; flex-shrink: 0; }
+  .summary-value { color: #1a1a1a; font-weight: 600; }
+  .error-text { color: #d93025; font-size: 12px; margin-top: 4px; display: none; }
+  .state-registered { display: none; text-align: center; padding: 40px 0; }
+  .check-circle {
+    width: 64px; height: 64px; background-color: #e6f4ea; color: #137333; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center; font-size: 32px; margin: 0 auto 24px;
+  }
+</style>
+
 </head>
 <body>
-
-  <!-- Navbar -->
   <header class="navbar">
-    <a href="/" class="navbar-logo-wrapper">
-      <img 
-        src="https://res.cloudinary.com/duh9wvgzu/image/upload/q_auto/f_auto/v1780501537/IMG_5442_r9v9ez.jpg"
-        alt="GrabRaw Logo"
-        class="navbar-logo-image"
-        loading="lazy"
-      />
-      <span class="navbar-logo-text">GrabRaw</span>
-    </a>
-    <nav class="nav-links">
-      <a href="/#categories" class="nav-link">Material</a>
-      <a href="/#suppliers" class="nav-link">Suppliers</a>
-      <a href="/plus.html" class="nav-link">GrabRaw +</a>
-      <a href="/#ask-ai" class="nav-link">Ask AI</a>
-      <hr class="mobile-nav-divider" style="display: none;" />
-      <a href="/signin" class="nav-link mobile-nav-signin" style="display: none;">Sign In</a>
-      <a href="/register-user" class="btn mobile-nav-getstarted" style="display: none;" aria-label="Get Started">Get Started</a>
-    </nav>
-    <div class="nav-actions">
-      <div id="unauthNav">
-        <a href="/signin.html" class="btn btn-outline" style="border-radius: 100px">Sign In</a>
-        <a href="/register-user.html" class="btn btn-primary" style="border-radius: 100px">Get Started</a>
-      </div>
-      <div id="authNav" style="display: none; position: relative;">
-        <button id="account-btn" class="btn btn-outline" style="border-radius: 100px;">My Account</button>
-        <div id="accountDropdown" style="display: none; position: absolute; right: 0; top: 100%; margin-top: 8px; background-color: #ffffff; border: 1px solid #e0e0e0; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.15); width: 220px; z-index: 10000; overflow: hidden; padding: 12px 0; text-align: left; opacity: 0; transition: opacity 150ms ease;">
-          <div class="dropdown-header" style="padding: 12px 16px;">
-            <span class="dropdown-label" style="display:block; font-size: 11px; font-weight: 500; color: #70757a; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 2px;">SIGNED IN AS</span>
-            <span id="dropdownEmail" style="display:block; font-size: 13px; font-weight: 600; color: #1a1a1a; text-overflow: ellipsis; overflow: hidden; white-space: nowrap;"></span>
-          </div>
-          <hr style="margin: 4px 0; border: none; border-top: 1px solid #e0e0e0;">
-          <a href="/profile.html" style="padding: 8px 16px; display: block; color: #3c4043; text-decoration: none;">Profile</a>
-          <a href="/location.html" style="padding: 8px 16px; display: block; color: #3c4043; text-decoration: none;">My Location</a>
-          <a href="/my-partners.html" style="padding: 8px 16px; display: block; color: #3c4043; text-decoration: none;">My Partner</a>
-          <a href="/register-company.html" style="padding: 8px 16px; display: block; color: #3c4043; text-decoration: none;">Register Company</a>
-          <hr style="margin: 4px 0; border: none; border-top: 1px solid #e0e0e0;">
-          <a id="signOutBtn" style="padding: 8px 16px; display: block; color: red; font-weight: 600; cursor: pointer; text-decoration: none;">Sign Out</a>
+      <a href="/" class="navbar-logo-wrapper">
+        <img
+          src="https://res.cloudinary.com/duh9wvgzu/image/upload/q_auto/f_auto/v1780501537/IMG_5442_r9v9ez.jpg"
+          alt="GrabRaw Logo"
+          class="navbar-logo-image"
+          loading="lazy"
+        />
+        <span class="navbar-logo-text">GrabRaw</span>
+      </a>
+      <nav class="nav-links">
+        <a href="/#categories" class="nav-link">Material</a>
+        <a href="/#suppliers" class="nav-link">Suppliers</a>
+        <a href="/plus.html" class="nav-link">GrabRaw +</a>
+        <a href="/#ask-ai" class="nav-link">Ask AI</a>
+        <hr class="mobile-nav-divider" style="display: none" />
+        <a
+          href="/signin"
+          class="nav-link mobile-nav-signin"
+          style="display: none"
+          >Sign In</a
+        >
+        <a
+          href="/register-user"
+          class="btn mobile-nav-getstarted"
+          style="display: none"
+          aria-label="Get Started"
+          >Get Started</a
+        >
+      </nav>
+      <div class="nav-actions">
+        <div id="unauthNav">
+          <a href="/signin.html" class="btn btn-outline" style="border-radius: 100px">Sign In</a>
+          <a href="/register-user.html" class="btn btn-primary" style="border-radius: 100px">Get Started</a>
         </div>
+        <div id="authNav" style="display: none; position: relative;">
+          <button id="account-btn" class="btn btn-outline" style="border-radius: 100px;">My Account</button>
+          <div id="accountDropdown" style="display: none; position: absolute; right: 0; top: 100%; margin-top: 8px; background-color: #ffffff; border: 1px solid #e0e0e0; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.15); width: 220px; z-index: 10000; overflow: hidden; padding: 12px 0; text-align: left; opacity: 0; transition: opacity 150ms ease;">
+            <div class="dropdown-header" style="padding: 12px 16px;">
+              <span class="dropdown-label" style="display:block; font-size: 11px; font-weight: 500; color: #70757a; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 2px;">SIGNED IN AS</span>
+              <span id="dropdownEmail" style="display:block; font-size: 13px; font-weight: 600; color: #1a1a1a; text-overflow: ellipsis; overflow: hidden; white-space: nowrap;"></span>
+            </div>
+            <hr style="margin: 4px 0; border: none; border-top: 1px solid #e0e0e0;">
+            <a href="/profile.html" style="padding: 8px 16px; display: block; color: #3c4043; text-decoration: none;">Profile</a>
+            <a href="/location.html" style="padding: 8px 16px; display: block; color: #3c4043; text-decoration: none;">My Location</a>
+            <a href="/my-partners.html" style="padding: 8px 16px; display: block; color: #3c4043; text-decoration: none;">My Partner</a>
+            <a href="/register-company.html" style="padding: 8px 16px; display: block; color: #3c4043; text-decoration: none;">Register Company</a>
+            <hr style="margin: 4px 0; border: none; border-top: 1px solid #e0e0e0;">
+            <a id="signOutBtn" style="padding: 8px 16px; display: block; color: red; font-weight: 600; cursor: pointer; text-decoration: none;">Sign Out</a>
+          </div>
+        </div>
+      </div>
+    </header>
+  
+  <main>
+    <div class="form-card" id="registration-flow">
+      <div class="progress-container">
+        <div class="progress-bar" id="progress-bar"></div>
+      </div>
+      <div class="step-counter" id="step-counter">Step 1 of 5</div>
+      
+  <!-- STEP 1 -->
+  <div class="form-step" id="step-1">
+    <h2 class="step-heading">Tell us about your business</h2>
+    
+    <div class="form-group" style="margin-top:24px;">
+      <label class="form-label">Company Name*</label>
+      <input type="text" id="company_name" class="form-input" required>
+      <div class="error-text" id="err_company_name">This field is required.</div>
+    </div>
+    
+    <div class="form-group">
+      <label class="form-label">Company Website</label>
+      <input type="url" id="company_website" class="form-input" placeholder="e.g. https://example.com">
+    </div>
+    
+    <div style="display:flex; gap:16px;">
+      <div class="form-group" style="flex:1;">
+        <label class="form-label">Year Established</label>
+        <input type="text" id="company_established_year" class="form-input" placeholder="e.g. 2018">
+      </div>
+      <div class="form-group" style="flex:1;">
+        <label class="form-label">Company Size</label>
+        <select id="company_size" class="form-select">
+          <option value="">Select size</option>
+          <option value="1–10 employees">1–10 employees</option>
+          <option value="11–50 employees">11–50 employees</option>
+          <option value="51–200 employees">51–200 employees</option>
+          <option value="200+ employees">200+ employees</option>
+        </select>
       </div>
     </div>
-  </header>
+    
+    <div class="form-group">
+      <label class="form-label">Short Description</label>
+      <textarea id="company_description" class="form-textarea" placeholder="What does your company do? What do you manufacture or supply?" maxlength="300"></textarea>
+    </div>
+  </div>
 
-  <!-- Register Company main content wrapper -->
-  <main>
-    <div class="profile-card">
-      <div id="company" class="section-div">
-        <h2 class="section-heading" style="font-size: 18px; margin-bottom: 8px;">Register Your Company</h2>
-        <p class="section-subtext" style="margin-bottom: 20px;">List your business as a verified supplier on GrabRaw</p>
-        
-        <div id="company-status-container" style="margin-bottom: 20px;">
-          <!-- Will inject company status badge dynamically -->
-        </div>
-
-        <div style="display: flex; flex-direction: column; gap: 16px;">
-          <div style="display: flex; flex-direction: column; gap: 8px; border-bottom: 1px solid #f1f3f4; padding-bottom: 20px;">
-            <label style="font-size: 13px; font-weight: 600; color: #3c4043; text-align: left; display: block;">Company Location</label>
-            <p style="font-size: 11.5px; color: #5f6368; margin: 0 0 8px 0; text-align: left;">Detect your current coordinate position to automatically fill the company address below.</p>
-            <button type="button" id="detect-company-location-btn" class="btn btn-primary" style="background-color: #4285F4; color: #ffffff; width: fit-content; border-radius: 999px; height: 38px; padding: 0 16px; font-size: 13px; font-weight: 600; display: inline-flex; align-items: center; justify-content: center; gap: 6px; border: none; cursor: pointer;">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="svg-icon-inline" style="display: inline-block; vertical-align: text-bottom;"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-              Detect Company Location
-            </button>
-            <button type="button" id="toggle-company-manual-btn" style="background: none; border: none; color: #4285F4; font-size: 12.5px; font-weight: 600; cursor: pointer; text-decoration: underline; font-family: inherit; margin-top: 6px; width: fit-content; display: block; text-align: left; padding: 4px 0;">
-              Can't detect location? Type manually below
-            </button>
-            <!-- Manual Search Text Input (initially hidden) -->
-            <div id="company-manual-search-container" style="position: relative; margin-top: 12px; display: none; width: 100%;">
-              <label style="font-size: 12px; font-weight: 600; color: #5f6368; display: block; margin-bottom: 6px; text-align: left;">Type Address to Search</label>
-              <div style="position: relative;">
-                <input type="text" id="company-manual-search-input" style="width: 100%; height: 38px; border: 1px solid #dadce0; border-radius: 8px; padding: 0 12px; font-size: 13px; color: #1a1a1a; outline: none; box-sizing: border-box;" placeholder="Search location... e.g., Nehru Place, New Delhi">
-                <div id="company-search-spinner" style="display: none; position: absolute; right: 12px; top: 11px;">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#4285F4" stroke-width="2.5" style="animation: spin 1s linear infinite;"><path d="M12 2v4m0 12v4M4.93 4.93l2.83 2.83m8.48 8.48l2.83 2.83M2 12h4m12 0h4M4.93 19.07l2.83-2.83m8.48-8.48l2.83-2.83"/></svg>
-                </div>
-              </div>
-              <!-- Dropdown container -->
-              <div id="company-location-suggestions" style="display: none; position: absolute; left: 0; right: 0; top: 100%; margin-top: 4px; background-color: #ffffff; border: 1px solid #dadce0; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); z-index: 1000; max-height: 185px; overflow-y: auto; text-align: left;">
-              </div>
-            </div>
-          </div>
-
-          <div style="display: flex; flex-direction: column; gap: 6px;">
-            <label style="font-size: 13px; font-weight: 600; color: #3c4043;">Company Name</label>
-            <input type="text" id="company-name-input" class="company-input" placeholder="e.g. MetroTech Electronics">
-          </div>
-
-          <div style="display: flex; flex-direction: column; gap: 6px;">
-            <label style="font-size: 13px; font-weight: 600; color: #3c4043;">Company Website (optional)</label>
-            <input type="url" id="company-web-input" class="company-input" placeholder="https://yourwebsite.com">
-          </div>
-
-          <div style="display: flex; flex-direction: column; gap: 6px;">
-            <label style="font-size: 13px; font-weight: 600; color: #3c4043;">Company Type</label>
-            <select id="company-type-input" class="company-select">
-              <option value="">Select company type</option>
-              <option value="Electronics Supplier">Electronics Supplier</option>
-              <option value="Chemical Supplier">Chemical Supplier</option>
-              <option value="Raw Materials">Raw Materials</option>
-              <option value="Packaging">Packaging</option>
-              <option value="Mechanical Parts">Mechanical Parts</option>
-              <option value="PCB Manufacturer">PCB Manufacturer</option>
-              <option value="Textile & Fabric">Textile & Fabric</option>
-              <option value="Food Ingredients">Food Ingredients</option>
-              <option value="Pharmaceutical">Pharmaceutical</option>
-              <option value="Other">Other</option>
-            </select>
-          </div>
-
-          <div style="display: flex; flex-direction: column; gap: 6px;">
-            <label style="font-size: 13px; font-weight: 600; color: #3c4043;">Company Address</label>
-            <input type="text" id="company-address-input" class="company-input" placeholder="Full address of your business">
-          </div>
-
-          <div style="display: flex; flex-direction: column; gap: 6px;">
-            <label style="font-size: 13px; font-weight: 600; color: #3c4043;">Products / Materials Supplied</label>
-            <textarea id="company-products-input" class="company-textarea" rows="3" placeholder="e.g. OLED screens, lithium batteries, copper wire..."></textarea>
-          </div>
-
-          <button id="save-company-btn" class="btn btn-primary" style="width: 100%; border-radius: 999px; height: 44px; font-size: 14px;">
-            Save Company Info
-          </button>
-        </div>
+  <!-- STEP 2 -->
+  <div class="form-step" id="step-2" style="display:none;">
+    <h2 class="step-heading">What does your company supply?</h2>
+    <p class="step-subtext">Select all that apply. GrabRaw serves ALL industries — electronics, chemicals, food, textiles, construction, automotive and more.</p>
+    
+    <div class="checkbox-card-grid">
+      <div class="checkbox-card" id="card_components" onclick="toggleCard('components')">
+        <div class="checkbox-check"></div>
+        <div class="checkbox-icon">⚙️</div>
+        <div class="checkbox-title">Components & Parts</div>
+        <div class="checkbox-desc">Circuit boards, mechanical parts, connectors, sensors</div>
       </div>
+      <div class="checkbox-card" id="card_raw_materials" onclick="toggleCard('raw_materials')">
+        <div class="checkbox-check"></div>
+        <div class="checkbox-icon">🏭</div>
+        <div class="checkbox-title">Raw Materials</div>
+        <div class="checkbox-desc">Metals, plastics, rubber, fabric, wood, glass</div>
+      </div>
+      <div class="checkbox-card" id="card_chemicals" onclick="toggleCard('chemicals')">
+        <div class="checkbox-check"></div>
+        <div class="checkbox-icon">🔬</div>
+        <div class="checkbox-title">Chemicals & Formulations</div>
+        <div class="checkbox-desc">Industrial chemicals, solvents, adhesives, coatings</div>
+      </div>
+      <div class="checkbox-card" id="card_equipment" onclick="toggleCard('equipment')">
+        <div class="checkbox-check"></div>
+        <div class="checkbox-icon">🖥️</div>
+        <div class="checkbox-title">Equipment & Machinery</div>
+        <div class="checkbox-desc">Manufacturing machines, tools, instruments, devices</div>
+      </div>
+    </div>
+    
+    <div class="form-group">
+      <label class="form-label">Products / Materials Supplied*</label>
+      <textarea id="company_products_supplied" class="form-textarea" placeholder="List specific products e.g. OLED displays, Lithium batteries, Copper wire, PVC resin, Hydraulic pumps..." required></textarea>
+      <div class="error-text" id="err_products">Please list your specific products.</div>
+    </div>
+    
+    <div class="form-group">
+      <label class="form-label">Industry Category*</label>
+      <select id="company_industry" class="form-select" required>
+        <option value="">Select an industry</option>
+        <option value="Electronics & Semiconductors">Electronics & Semiconductors</option>
+        <option value="Chemicals & Pharma">Chemicals & Pharma</option>
+        <option value="Metals & Mining">Metals & Mining</option>
+        <option value="Textiles & Apparel">Textiles & Apparel</option>
+        <option value="Food & Agriculture">Food & Agriculture</option>
+        <option value="Automotive & Transport">Automotive & Transport</option>
+        <option value="Construction & Infrastructure">Construction & Infrastructure</option>
+        <option value="Medical & Healthcare">Medical & Healthcare</option>
+        <option value="Energy & Solar">Energy & Solar</option>
+        <option value="Plastics & Polymers">Plastics & Polymers</option>
+        <option value="Printing & Packaging">Printing & Packaging</option>
+        <option value="Other">Other</option>
+      </select>
+      <div class="error-text" id="err_industry">Please select an industry.</div>
+    </div>
+  </div>
+
+  <!-- STEP 3 -->
+  <div class="form-step" id="step-3" style="display:none;">
+    <h2 class="step-heading">Where do you operate?</h2>
+    
+    <div class="form-group" style="margin-top:24px;">
+      <label class="form-label">Company Address*</label>
+      <input type="text" id="company_address" class="form-input" required>
+      <div class="error-text" id="err_address">Address is required.</div>
+      <button id="btn_detect_location" class="btn btn-outline" style="margin-top:8px; width:fit-content; height:36px; font-size:13px; padding:0 12px; gap:6px;">
+        📍 Detect My Location
+      </button>
+      <div id="loc_status" style="font-size:12px; color:#5f6368; margin-top:4px;"></div>
+    </div>
+    
+    <div class="form-group" style="margin-top:24px;">
+      <label class="form-label">Countries where you operate*</label>
+      <div class="pill-container" id="operate_countries_container"></div>
+      <div class="error-text" id="err_operate_countries">Select at least one country.</div>
+    </div>
+    
+    <div class="form-group" style="margin-top:24px;">
+      <div class="toggle-wrapper" id="export_toggle" onclick="toggleExport()">
+        <div class="toggle-switch"><div class="toggle-knob"></div></div>
+        <div class="toggle-label">Do you export?</div>
+      </div>
+    </div>
+    
+    <div class="form-group" id="export_countries_wrapper" style="display:none;">
+      <label class="form-label">Countries you export to</label>
+      <div class="pill-container" id="export_countries_container"></div>
+    </div>
+  </div>
+
+  <!-- STEP 4 -->
+  <div class="form-step" id="step-4" style="display:none;">
+    <h2 class="step-heading">A few more details</h2>
+    
+    <div class="form-group" style="margin-top:24px;">
+      <label class="form-label">Company Type*</label>
+      <select id="company_type" class="form-select" required>
+        <option value="">Select type</option>
+        <option value="Manufacturer">Manufacturer</option>
+        <option value="Distributor">Distributor</option>
+        <option value="Wholesaler">Wholesaler</option>
+        <option value="Retailer">Retailer</option>
+        <option value="Trader">Trader</option>
+        <option value="Importer/Exporter">Importer/Exporter</option>
+        <option value="Service Provider">Service Provider</option>
+      </select>
+      <div class="error-text" id="err_type">Company type is required.</div>
+    </div>
+    
+    <div class="form-group">
+      <label class="form-label">Minimum Order Quantity / Value</label>
+      <input type="text" id="company_minimum_order" class="form-input" placeholder="e.g. 100 units, ₹50,000 minimum">
+    </div>
+    
+    <div class="form-group">
+      <label class="form-label">Typical Lead Time</label>
+      <select id="company_lead_time" class="form-select">
+        <option value="">Select lead time</option>
+        <option value="Same day">Same day</option>
+        <option value="1–3 days">1–3 days</option>
+        <option value="1 week">1 week</option>
+        <option value="2–4 weeks">2–4 weeks</option>
+        <option value="1–3 months">1–3 months</option>
+        <option value="Custom">Custom</option>
+      </select>
+    </div>
+    
+    <div class="form-group">
+      <label class="form-label">Certifications</label>
+      <input type="text" id="company_certifications" class="form-input" placeholder="e.g. ISO 9001, CE, BIS, FDA, FSSAI">
+    </div>
+    
+    <div class="form-group">
+      <label class="form-label">LinkedIn / Social URL</label>
+      <input type="url" id="company_linkedin" class="form-input" placeholder="https://linkedin.com/company/...">
+    </div>
+  </div>
+
+  <!-- STEP 5 -->
+  <div class="form-step" id="step-5" style="display:none;">
+    <h2 class="step-heading">Review your company profile</h2>
+    <p class="step-subtext">Here's what will be listed on GrabRaw. You can edit anytime.</p>
+    
+    <div class="summary-section">
+      <div class="summary-section-title">Business Identity</div>
+      <div class="summary-row"><div class="summary-label">Name</div><div class="summary-value" id="sum_name"></div></div>
+      <div class="summary-row"><div class="summary-label">Website</div><div class="summary-value" id="sum_website"></div></div>
+      <div class="summary-row"><div class="summary-label">Year</div><div class="summary-value" id="sum_year"></div></div>
+      <div class="summary-row"><div class="summary-label">Size</div><div class="summary-value" id="sum_size"></div></div>
+      <div class="summary-row"><div class="summary-label">Description</div><div class="summary-value" id="sum_desc"></div></div>
+    </div>
+    
+    <div class="summary-section">
+      <div class="summary-section-title">What You Supply</div>
+      <div class="summary-row"><div class="summary-label">Categories</div><div class="summary-value" id="sum_cats"></div></div>
+      <div class="summary-row"><div class="summary-label">Products</div><div class="summary-value" id="sum_prods"></div></div>
+      <div class="summary-row"><div class="summary-label">Industry</div><div class="summary-value" id="sum_industry"></div></div>
+    </div>
+    
+    <div class="summary-section">
+      <div class="summary-section-title">Location</div>
+      <div class="summary-row"><div class="summary-label">Address</div><div class="summary-value" id="sum_address"></div></div>
+      <div class="summary-row"><div class="summary-label">Operating</div><div class="summary-value" id="sum_operate"></div></div>
+      <div class="summary-row"><div class="summary-label">Export To</div><div class="summary-value" id="sum_export"></div></div>
+    </div>
+    
+    <div class="summary-section">
+      <div class="summary-section-title">Details</div>
+      <div class="summary-row"><div class="summary-label">Type</div><div class="summary-value" id="sum_type"></div></div>
+      <div class="summary-row"><div class="summary-label">MOQ</div><div class="summary-value" id="sum_moq"></div></div>
+      <div class="summary-row"><div class="summary-label">Lead Time</div><div class="summary-value" id="sum_lead"></div></div>
+      <div class="summary-row"><div class="summary-label">Certifications</div><div class="summary-value" id="sum_certs"></div></div>
+    </div>
+  </div>
+
+  <div class="step-actions">
+    <button class="btn btn-outline btn-back" id="btn-back" style="display:none;" onclick="goBack()">← Back</button>
+    <div style="flex:1;"></div>
+    <button class="btn btn-next" id="btn-next" onclick="goNext()">Next →</button>
+    <div id="submit-wrapper" style="display:none; width:100%;">
+      <button class="btn btn-next" style="width:100%;" onclick="submitForm()" id="btn-submit">Submit & Register</button>
+      <div style="font-size:12px; color:#5f6368; text-align:center; margin-top:8px;">By registering, you agree to GrabRaw Supplier Standards</div>
+    </div>
+  </div>
+
+    </div>
+    
+    <div class="form-card state-registered" id="state-registered">
+      <div class="check-circle">✓</div>
+      <h2 class="step-heading">Your company is registered on GrabRaw!</h2>
+      <p class="step-subtext" style="margin-bottom: 32px;" id="registered-company-name"></p>
+      <a href="profile.html" class="btn btn-primary" style="border-radius:100px;">View My Profile</a>
     </div>
   </main>
 
-  <!-- Toast system wrapper -->
-  <div class="toast-container" id="toast-container"></div>
-
-  <!-- Footer -->
   <footer>
-    <div class="container footer-grid">
-      <div class="footer-col col-brand">
-        <div class="footer-logo-wrapper">
-          <img 
-            src="https://res.cloudinary.com/duh9wvgzu/image/upload/q_auto/f_auto/v1780501537/IMG_5442_r9v9ez.jpg"
-            alt="GrabRaw Logo"
-            class="footer-logo-image"
-            loading="lazy"
-          />
-          <span class="footer-logo-text">GrabRaw</span>
-        </div>
-        <p class="footer-description">
-          GrabRaw is an AI-powered search engine that breaks down any product into its complete Bill of Materials and finds local suppliers near you.
-        </p>
-      </div>
-      <div class="footer-col" style="text-align: right;">
-        <h4 class="footer-title">Supplier Standards</h4>
-        <p class="footer-description">Helping local electronics retail and logistics hubs digitize instantly.</p>
-      </div>
-    </div>
-    <div class="container footer-bottom">
-      <div class="copyright">© 2026 GrabRaw Inc. All rights reserved.</div>
-      <div class="footer-legal-links">
-        <a href="privacy-policy.html" class="footer-legal-link">Privacy Policy</a>
-        <a href="terms-of-service.html" class="footer-legal-link">Terms of Service</a>
-        <a href="supplier-standards.html" class="footer-legal-link">Supplier Standards</a>
-      </div>
-    </div>
-  </footer>
-
-  <!-- Script Logic -->
-  <script>
-    const sb = window.sb;
-
-    
-
-    
-
-    document.addEventListener('DOMContentLoaded', () => {
-      const accountBtn = document.getElementById('account-btn');
-      const accountDropdown = document.getElementById('accountDropdown');
-      const signOutBtn = document.getElementById('signOutBtn');
-
-      if (accountBtn && accountDropdown) {
-        accountBtn.addEventListener('click', (e) => {
-          e.stopPropagation();
-          if (accountDropdown.style.display === 'none') {
-            accountDropdown.style.display = 'block';
-            setTimeout(() => accountDropdown.style.opacity = '1', 10);
-          } else {
-            accountDropdown.style.opacity = '0';
-            setTimeout(() => accountDropdown.style.display = 'none', 150);
-          }
-        });
-      }
-
-      document.addEventListener('click', (e) => {
-        if (accountDropdown && accountDropdown.style.display !== 'none') {
-          if (!accountDropdown.contains(e.target) && (!accountBtn || !accountBtn.contains(e.target))) {
-            accountDropdown.style.opacity = '0';
-            setTimeout(() => accountDropdown.style.display = 'none', 150);
-          }
-        }
-      });
-
-      if (signOutBtn) {
-        signOutBtn.addEventListener('click', async (e) => {
-          e.preventDefault();
-          await sb.auth.signOut();
-          window.location.reload();
-        });
-      }
-    });
-
-    
-
-    let currentUser = null;
-    let currentProfileState = null;
-
-    // Elegant Toast Notification System
-    function showToast(message, type = 'success') {
-      const container = document.getElementById('toast-container');
-      if (!container) return;
-      
-      const toast = document.createElement('div');
-      toast.className = `toast toast-${type}`;
-      toast.textContent = message;
-      container.appendChild(toast);
-      
-      // Trigger animations
-      setTimeout(() => {
-        toast.classList.add('show');
-      }, 50);
-      
-      // Auto removal
-      setTimeout(() => {
-        toast.classList.remove('show');
-        setTimeout(() => {
-          toast.remove();
-        }, 300);
-      }, 3500);
-    }
-
-    // Render "Register Your Company" display state
-    function updateCompanyDisplay(profileData) {
-      const statusContainer = document.getElementById('company-status-container');
-      if (!statusContainer) return;
-
-      if (profileData && profileData.company_name) {
-        statusContainer.innerHTML = `
-          <div style="display: flex; flex-direction: column; gap: 8px;">
-            <div style="display: flex; align-items: center; gap: 8px;">
-              <span class="success-text" style="padding: 2px 8px; border-radius: 4px; font-size: 11px;">Company Registered</span>
-            </div>
-            <div style="font-size: 14px; color: #1a1a1a;">
-              Registered as: <strong>${profileData.company_name}</strong>
-            </div>
+      <div class="container footer-grid">
+        <div class="footer-col col-brand">
+          <div class="footer-logo-wrapper">
+            <img
+              src="https://res.cloudinary.com/duh9wvgzu/image/upload/q_auto/f_auto/v1780501537/IMG_5442_r9v9ez.jpg"
+              alt="GrabRaw Logo"
+              class="footer-logo-image"
+              loading="lazy"
+            />
+            <span class="footer-logo-text">GrabRaw</span>
           </div>
-        `;
-      } else {
-        statusContainer.innerHTML = '';
+          <p class="footer-description">
+            GrabRaw is an AI-powered search engine that breaks down any product
+            into its complete Bill of Materials and finds local suppliers near
+            you.
+          </p>
+        </div>
+
+        <div class="footer-col">
+          <h4 class="footer-title">Popular Categories</h4>
+          <div class="footer-links">
+            <a href="#categories" class="footer-link">Microcontrollers</a>
+            <a href="#categories" class="footer-link">Sensors & Dev Kits</a>
+            <a href="#categories" class="footer-link">Batteries & Power</a>
+            <a href="#categories" class="footer-link">Smartwatch Castings</a>
+            <a href="#categories" class="footer-link">PCB Fabrication</a>
+          </div>
+        </div>
+
+        <div class="footer-col">
+          <h4 class="footer-title">Top Searches</h4>
+          <div class="footer-links">
+            <a href="/info?q=iPhone+15" class="footer-link">iPhone 15 BOM</a>
+            <a href="/info?q=Smartwatch" class="footer-link"
+              >Smartwatch Sinks</a
+            >
+            <a href="/info?q=Shampoo" class="footer-link"
+              >Chemical Formula Mixtures</a
+            >
+            <a href="/info?q=Solar+Panel" class="footer-link"
+              >Grid Inverter Stations</a
+            >
+          </div>
+        </div>
+
+        <div class="footer-col">
+          <h4 class="footer-title">About Us</h4>
+          <p class="footer-description">
+            GrabRaw is committed to local, decentralized product prototyping. We
+            empower makers to find local inventory within 40km.
+          </p>
+        </div>
+      </div>
+
+      <div class="container footer-bottom">
+        <div class="copyright">© 2026 GrabRaw Inc. All rights reserved.</div>
+        <div class="footer-legal-links">
+          <a href="privacy-policy.html" class="footer-legal-link"
+            >Privacy Policy</a
+          >
+          <a href="terms-of-service.html" class="footer-legal-link"
+            >Terms of Service</a
+          >
+          <a href="supplier-standards.html" class="footer-legal-link"
+            >Supplier Standards</a
+          >
+        </div>
+      </div>
+    </footer>
+  
+<script>
+  const TOTAL_STEPS = 5;
+  let currentStep = 1;
+  let selectedCategories = { components: false, raw_materials: false, chemicals: false, equipment: false };
+  let operateCountries = new Set(['India']);
+  let exportCountries = new Set();
+  let doesExport = false;
+  let lat = null;
+  let lng = null;
+  const popularCountries = ['India', 'USA', 'Germany', 'China', 'UAE', 'UK', 'Japan', 'South Korea', 'Taiwan', 'Singapore', 'Australia', 'Canada'];
+
+  document.addEventListener('DOMContentLoaded', async () => {
+    try {
+      const { data: { session } } = await window.sb.auth.getSession();
+      if (!session) {
+        window.location.href = 'signin.html?redirect=register-company.html';
+        return;
       }
 
-      // Populate input values
-      if (profileData) {
-        const nameInput = document.getElementById('company-name-input');
-        const webInput = document.getElementById('company-web-input');
-        const typeInput = document.getElementById('company-type-input');
-        const addressInput = document.getElementById('company-address-input');
-        const productsInput = document.getElementById('company-products-input');
-
-        if (nameInput) nameInput.value = profileData.company_name || '';
-        if (webInput) webInput.value = profileData.company_website || '';
-        if (typeInput) typeInput.value = profileData.company_type || '';
-        if (addressInput) addressInput.value = profileData.company_address || '';
-        if (productsInput) productsInput.value = profileData.company_products_supplied || '';
+      const { data: profile } = await window.sb.from('profiles').select('company_name, company_registration_complete').eq('id', session.user.id).single();
+      if (profile && profile.company_registration_complete) {
+        document.getElementById('registration-flow').style.display = 'none';
+        document.getElementById('state-registered').style.display = 'block';
+        document.getElementById('registered-company-name').textContent = profile.company_name || 'Your company is live.';
+        return;
       }
+    } catch (err) { }
+    
+    renderPills('operate_countries_container', operateCountries, true);
+    renderPills('export_countries_container', exportCountries, false);
+    
+    document.getElementById('btn_detect_location').addEventListener('click', (e) => {
+      e.preventDefault();
+      const stat = document.getElementById('loc_status');
+      stat.textContent = "Detecting...";
+      if ("geolocation" in navigator) {
+        navigator.geolocation.getCurrentPosition(async (position) => {
+          lat = position.coords.latitude;
+          lng = position.coords.longitude;
+          try {
+            const res = await fetch("https://nominatim.openstreetmap.org/reverse?format=json&lat=" + lat + "&lon=" + lng);
+            const data = await res.json();
+            if (data && data.display_name) {
+              document.getElementById('company_address').value = data.display_name;
+              stat.textContent = "Location detected successfully.";
+            } else {
+              stat.textContent = "Could not resolve address.";
+            }
+          } catch(e) { stat.textContent = "Error detecting address."; }
+        }, (err) => { stat.textContent = "Geolocation permission denied or failed."; });
+      } else { stat.textContent = "Geolocation not supported."; }
+    });
+  });
+
+  function updateView() {
+    document.getElementById('step-counter').textContent = "Step " + currentStep + " of " + TOTAL_STEPS;
+    document.getElementById('progress-bar').style.width = ((currentStep / TOTAL_STEPS) * 100) + "%";
+    
+    for(let i=1; i<=TOTAL_STEPS; i++) {
+        const el = document.getElementById('step-'+i);
+        if (el) el.style.display = (i === currentStep) ? 'block' : 'none';
     }
+    
+    const btnBack = document.getElementById('btn-back');
+    const btnNext = document.getElementById('btn-next');
+    const wrapSubmit = document.getElementById('submit-wrapper');
+    
+    if (currentStep === 1) { btnBack.style.display = 'none'; } else { btnBack.style.display = 'block'; }
+    if (currentStep === TOTAL_STEPS) {
+      btnNext.style.display = 'none'; wrapSubmit.style.display = 'block'; btnBack.style.display = 'block';
+      document.querySelector('.step-actions').style.justifyContent = 'space-between';
+    } else {
+      btnNext.style.display = 'block'; wrapSubmit.style.display = 'none';
+    }
+  }
 
-    // MAIN AUTH CHECK AND MOUNT FLOW
-    document.addEventListener('DOMContentLoaded', async () => {
-      try {
-        const { data: { session } } = await sb.auth.getSession();
-        const user = session ? session.user : null;
-        
-        // If no user → redirect to signin.html
-        if (!user) {
-          window.location.href = 'signin.html';
-          return;
-        }
+  function validateStep(step) {
+    let valid = true;
+    if (step === 1) {
+      const c_name = document.getElementById('company_name');
+      if (!c_name.value.trim()) { document.getElementById('err_company_name').style.display = 'block'; valid = false; }
+      else { document.getElementById('err_company_name').style.display = 'none'; }
+    } else if (step === 2) {
+      const prods = document.getElementById('company_products_supplied');
+      const ind = document.getElementById('company_industry');
+      if (!prods.value.trim()) { document.getElementById('err_products').style.display = 'block'; valid = false; }
+      else { document.getElementById('err_products').style.display = 'none'; }
+      if (!ind.value) { document.getElementById('err_industry').style.display = 'block'; valid = false; }
+      else { document.getElementById('err_industry').style.display = 'none'; }
+    } else if (step === 3) {
+      const addr = document.getElementById('company_address');
+      if (!addr.value.trim()) { document.getElementById('err_address').style.display = 'block'; valid = false; }
+      else { document.getElementById('err_address').style.display = 'none'; }
+      if (operateCountries.size === 0) { document.getElementById('err_operate_countries').style.display = 'block'; valid = false; }
+      else { document.getElementById('err_operate_countries').style.display = 'none'; }
+    } else if (step === 4) {
+      const typ = document.getElementById('company_type');
+      if (!typ.value) { document.getElementById('err_type').style.display = 'block'; valid = false; }
+      else { document.getElementById('err_type').style.display = 'none'; }
+    }
+    return valid;
+  }
 
-        document.body.classList.add('logged-in');
-        currentUser = user;
+  window.goNext = function() {
+    if (validateStep(currentStep)) {
+      if (currentStep === 4) populateSummary();
+      if (currentStep < TOTAL_STEPS) { currentStep++; updateView(); }
+    }
+  }
 
-        // Render Navbar Account Dropdown seamlessly
-        const navActions = document.querySelector('.nav-actions');
-        if (navActions) {
-          const email = user.email || '';
-            const name = user.user_metadata?.full_name || user.user_metadata?.name || user.email || '';
-            const initial = name ? name.charAt(0).toUpperCase() : '?';
-            const avatar = user.user_metadata?.avatar_url;
-          navActions.innerHTML = `
-            <div class="user-profile-menu-container" style="position: relative;">
-               <button id="account-btn" class="btn" style="border: 1px solid #dadce0; background-color: #ffffff; color: #3c4043; border-radius: 100px; display: inline-flex; align-items: center; gap: 8px; padding: 4px 12px 4px 16px; cursor: pointer; transition: all 0.2s ease; height: 40px; box-shadow: 0 1px 2px rgba(0,0,0,0.05); text-decoration: none;">
-                <span style="font-size: 14px; font-weight: 600;">My Account</span>
-                ${avatar ? `<img src="${avatar}" style="width: 32px; height: 32px; border-radius: 50%; object-fit: cover;" alt="Avatar" />` : `${avatar ? `<img src="${avatar}" style="width: 32px; height: 32px; border-radius: 50%; object-fit: cover;" alt="Avatar" />` : `<div style="background-color: #4285F4; color: #ffffff; border-radius: 50%; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 700; text-transform: uppercase;">${initial}</div>`}`}
-              </button>
-              <div id="account-dropdown" style="display: none; position: absolute; right: 0; top: calc(100% + 8px); background-color: #ffffff; border: 1px solid #e0e0e0; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); width: 220px; min-width: 200px; z-index: 1000; overflow: hidden; padding: 12px 0; text-align: left;">
-                <div style="padding: 12px 16px; border-bottom: 1px solid #e0e0e0; margin-bottom: 4px; pointer-events: none; user-select: text;">
-                  <div style="font-size: 11px; font-weight: 500; color: #70757a; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 2px;">Signed in as</div>
-                  <div style="font-size: 13px; font-weight: 600; color: #1a1a1a; text-overflow: ellipsis; overflow: hidden; white-space: nowrap;" title="${email}">${email}</div>
-                </div>
-                <a href="profile.html" class="dropdown-item">Profile</a>
-                <a href="location.html" class="dropdown-item">My Location</a>
-                <a href="my-partners.html" class="dropdown-item">My Partner</a>
-                <a href="register-company.html" class="dropdown-item">Register Company</a>
-                <a href="#" id="signout-link" class="dropdown-item" style="color: #d93025 !important; font-weight: 600; border-top: 1px solid #e0e0e0; margin-top: 8px; padding-top: 12px;">Sign Out</a>
-              </div>
-            </div>
-          `;
+  window.goBack = function() { if (currentStep > 1) { currentStep--; updateView(); } }
 
-          const styleNode = document.createElement('style');
-          styleNode.textContent = `
-            .dropdown-item:hover {
-              background-color: #f5f5f5 !important;
-            }
-          `;
-          document.head.appendChild(styleNode);
+  window.toggleCard = function(key) {
+    selectedCategories[key] = !selectedCategories[key];
+    const el = document.getElementById('card_' + key);
+    if (selectedCategories[key]) { el.classList.add('selected'); } else { el.classList.remove('selected'); }
+  }
+  
+  window.toggleExport = function() {
+    doesExport = !doesExport;
+    const wrap = document.getElementById('export_toggle');
+    if (doesExport) {
+      wrap.classList.add('active'); document.getElementById('export_countries_wrapper').style.display = 'block';
+    } else {
+      wrap.classList.remove('active'); document.getElementById('export_countries_wrapper').style.display = 'none';
+    }
+  }
 
-          const accountBtn = document.getElementById('account-btn');
-          const dropdown = document.getElementById('account-dropdown');
-          const signOutLink = document.getElementById('signout-link');
-
-          if (accountBtn && dropdown) {
-            accountBtn.addEventListener('click', (e) => {
-              e.stopPropagation();
-              dropdown.classList.toggle('active');
-            });
-          }
-
-          if (signOutLink) {
-            signOutLink.addEventListener('click', async (e) => {
-              e.preventDefault();
-              await sb.auth.signOut();
-              window.location.href = 'index.html';
-            });
-          }
-
-          document.addEventListener('click', function(e) {
-            const dropdown = document.getElementById('account-dropdown')
-            const accountBtn = document.getElementById('account-btn')
-            if (dropdown && !dropdown.contains(e.target) && (!accountBtn || !accountBtn.contains(e.target))) {
-              dropdown.classList.remove('active');
-            }
-          })
-
-          document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') {
-              const dropdown = document.getElementById('account-dropdown')
-              if (dropdown) dropdown.classList.remove('active');
-            }
-          })
-        }
-
-        // Fetch user profile row:
-        const { data: profile, error: profileErr } = await sb.from('profiles').select('*').eq('id', user.id).maybeSingle();
-
-        // Load existing company details if present
-        if (profile) {
-          currentProfileState = profile;
-          updateCompanyDisplay(profile);
-        } else {
-          currentProfileState = {};
-          updateCompanyDisplay(null);
-        }
-
-      } catch (err) {
-        console.error('Company Mount error:', err);
-        showToast('Failed to load profile parameters.', 'error');
+  function renderPills(containerId, dataSet, isOperate=true) {
+    const container = document.getElementById(containerId);
+    if(!container) return;
+    container.innerHTML = '';
+    
+    popularCountries.forEach(c => {
+      const div = document.createElement('div');
+      div.className = 'multi-pill' + (dataSet.has(c) ? ' selected' : '');
+      div.textContent = c;
+      div.onclick = () => { if (dataSet.has(c)) { dataSet.delete(c); } else { dataSet.add(c); } renderPills(containerId, dataSet, isOperate); };
+      container.appendChild(div);
+    });
+    
+    dataSet.forEach(c => {
+      if (!popularCountries.includes(c)) {
+        const div = document.createElement('div');
+        div.className = 'multi-pill selected';
+        div.textContent = c;
+        div.onclick = () => { dataSet.delete(c); renderPills(containerId, dataSet, isOperate); };
+        container.appendChild(div);
       }
     });
+    
+    const inputWrap = document.createElement('div');
+    inputWrap.className = 'custom-pill-wrap';
+    inputWrap.innerHTML = "<span style='color:#bdc1c6'>+</span><input type='text' class='custom-pill-input' placeholder='Add country'>";
+    const input = inputWrap.querySelector('input');
+    input.addEventListener('keydown', (e) => {
+      if(e.key === 'Enter') {
+        e.preventDefault(); const val = input.value.trim();
+        if(val) { dataSet.add(val); renderPills(containerId, dataSet, isOperate); }
+      }
+    });
+    input.addEventListener('blur', () => {
+      const val = input.value.trim();
+      if(val) { dataSet.add(val); renderPills(containerId, dataSet, isOperate); }
+    });
+    container.appendChild(inputWrap);
+  }
 
-    // Save Company Details Button Click
-    const saveCompanyBtn = document.getElementById('save-company-btn');
-    if (saveCompanyBtn) {
-      saveCompanyBtn.addEventListener('click', async () => {
-        const { data: { user }, error: userError } = await window.sb.auth.getUser();
-        if (userError || !user) {
-          showToast('Please sign in first', 'error');
-          return;
-        }
+  function populateSummary() {
+    document.getElementById('sum_name').textContent = document.getElementById('company_name').value || '-';
+    document.getElementById('sum_website').textContent = document.getElementById('company_website').value || '-';
+    document.getElementById('sum_year').textContent = document.getElementById('company_established_year').value || '-';
+    document.getElementById('sum_size').textContent = document.getElementById('company_size').value || '-';
+    document.getElementById('sum_desc').textContent = document.getElementById('company_description').value || '-';
+    const activeCats = Object.keys(selectedCategories).filter(k => selectedCategories[k]).join(', ');
+    document.getElementById('sum_cats').textContent = activeCats || '-';
+    document.getElementById('sum_prods').textContent = document.getElementById('company_products_supplied').value || '-';
+    document.getElementById('sum_industry').textContent = document.getElementById('company_industry').value || '-';
+    document.getElementById('sum_address').textContent = document.getElementById('company_address').value || '-';
+    document.getElementById('sum_operate').textContent = Array.from(operateCountries).join(', ');
+    document.getElementById('sum_export').textContent = doesExport ? Array.from(exportCountries).join(', ') : 'No';
+    document.getElementById('sum_type').textContent = document.getElementById('company_type').value || '-';
+    document.getElementById('sum_moq').textContent = document.getElementById('company_minimum_order').value || '-';
+    document.getElementById('sum_lead').textContent = document.getElementById('company_lead_time').value || '-';
+    document.getElementById('sum_certs').textContent = document.getElementById('company_certifications').value || '-';
+  }
 
-        const companyName = document.getElementById('company-name-input').value.trim();
-        const companyWebsite = document.getElementById('company-web-input').value.trim();
-        const companyType = document.getElementById('company-type-input').value;
-        const companyAddress = document.getElementById('company-address-input').value.trim();
-        const productsSupplied = document.getElementById('company-products-input').value.trim();
-
-        if (!companyName) {
-          showToast('Please specify a Company Name.', 'error');
-          return;
-        }
-
-        saveCompanyBtn.textContent = 'Saving...';
-        saveCompanyBtn.disabled = true;
-
-        try {
-          const { error: updateError } = await window.sb.from('profiles').update({
-            company_name: companyName,
-            company_website: companyWebsite,
-            company_type: companyType,
-            company_address: companyAddress,
-            company_products_supplied: productsSupplied,
-            role: 'supplier'
-          }).eq('id', user.id);
-
-          if (!updateError) {
-             showToast('Company info saved!');
-             if (typeof updateCompanyDisplay === 'function') {
-                const currentProfileState = {
-                  company_name: companyName,
-                  company_website: companyWebsite,
-                  company_type: companyType,
-                  company_address: companyAddress,
-                  company_products_supplied: productsSupplied
-                };
-                updateCompanyDisplay(currentProfileState);
-             }
-          } else {
-             showToast('Failed to save company info.', 'error');
-          }
-        } catch (err) {
-          console.error('Error saving company parameters:', err);
-          showToast('Failed to save company info.', 'error');
-        } finally {
-          saveCompanyBtn.textContent = 'Save Company Info';
-          saveCompanyBtn.disabled = false;
-        }
-      });
-    }
-
-    // Geolocation trigger for Company Location
-    const detectCompanyLocBtn = document.getElementById('detect-company-location-btn');
-    if (detectCompanyLocBtn) {
-      detectCompanyLocBtn.addEventListener('click', () => {
-        const originalHTML = detectCompanyLocBtn.innerHTML;
-        detectCompanyLocBtn.textContent = 'Detecting...';
-        detectCompanyLocBtn.disabled = true;
-
-        if (!navigator.geolocation) {
-          showToast('Geolocation is not supported by your browser.', 'error');
-          detectCompanyLocBtn.innerHTML = originalHTML;
-          detectCompanyLocBtn.disabled = false;
-          return;
-        }
-
-        navigator.geolocation.getCurrentPosition(
-          async (position) => {
-            const lat = position.coords.latitude;
-            const lon = position.coords.longitude;
-
-            try {
-              const response = await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json`);
-              if (!response.ok) throw new Error('Geocoding service unavailable');
-              const data = await response.json();
-              
-              const addr = data.address || {};
-              const cityOrTown = addr.city || addr.town || addr.village || addr.city_district || '';
-              const state = addr.state || '';
-              const country = addr.country || '';
-              const road = addr.road || '';
-              const suburb = addr.suburb || addr.neighbourhood || '';
-              
-              let parts = [];
-              if (road) parts.push(road);
-              if (suburb) parts.push(suburb);
-              if (cityOrTown) parts.push(cityOrTown);
-              if (state) parts.push(state);
-              if (country) parts.push(country);
-
-              const fullAddress = parts.length > 0 ? parts.join(', ') : `${lat.toFixed(4)}, ${lon.toFixed(4)}`;
-              
-              const companyAddressInput = document.getElementById('company-address-input');
-              if (companyAddressInput) {
-                companyAddressInput.value = fullAddress;
-              }
-
-              showToast("Location detected! You can edit the address below if needed");
-            } catch (err) {
-              console.error('Error reverse geocoding:', err);
-              showToast('Geocoding service unavailable. You can type the address manually.', 'error');
-            } finally {
-              detectCompanyLocBtn.innerHTML = originalHTML;
-              detectCompanyLocBtn.disabled = false;
-            }
-          },
-          (error) => {
-            console.error('Geolocation position mismatch:', error);
-            
-            const getBrowserName = () => {
-              const ua = navigator.userAgent;
-              if (ua.indexOf('Ulaa') > -1) return 'Ulaa';
-              if (ua.indexOf('Safari') > -1 && ua.indexOf('Chrome') === -1) return 'Safari';
-              if (ua.indexOf('Chrome') > -1) return 'Chrome';
-              if (ua.indexOf('Firefox') > -1) return 'Firefox';
-              if (ua.indexOf('Edg') > -1) return 'Edge';
-              return 'Browser';
-            };
-
-            const getBrowserLocationMessage = () => {
-              const browser = getBrowserName();
-              if (browser === 'Ulaa') {
-                return "Location blocked in Ulaa Browser. To enable:\n1. Open Ulaa Settings → Privacy & Security\n2. Find Location Permissions\n3. Add GrabRaw and set to 'Allow Always'\n4. Refresh page and try again";
-              } else if (browser === 'Safari') {
-                return "Location blocked in Safari. To enable:\n1. Go to Settings → Privacy → Location Services\n2. Find GrabRaw and set to 'Allow'\n3. Try again";
-              } else if (browser === 'Chrome') {
-                return "Location permission denied. To enable:\n1. Click the lock icon in address bar\n2. Find Location → Allow\n3. Refresh and try again";
-              } else if (browser === 'Firefox') {
-                return "Location permission denied. To enable:\n1. Click the shield icon in address bar\n2. Select Location → Allow\n3. Try again";
-              } else if (browser === 'Edge') {
-                return "Location permission denied. To enable:\n1. Click the lock icon in address bar\n2. Find Location → Allow\n3. Refresh and try again";
-              } else {
-                return "Location access denied. Please check your browser privacy settings and allow location access for this site.";
-              }
-            };
-
-            showToast(getBrowserLocationMessage(), 'error');
-            detectCompanyLocBtn.innerHTML = originalHTML;
-            detectCompanyLocBtn.disabled = false;
-          }
-        );
-      });
-    }
-
-    // Toggle manual/address-search on register-company.html
-    const toggleCompanyManualBtn = document.getElementById('toggle-company-manual-btn');
-    const companyManualContainer = document.getElementById('company-manual-search-container');
-    if (toggleCompanyManualBtn && companyManualContainer) {
-      toggleCompanyManualBtn.addEventListener('click', () => {
-        if (companyManualContainer.style.display === 'none') {
-          companyManualContainer.style.display = 'block';
-          const inputEl = document.getElementById('company-manual-search-input');
-          if (inputEl) inputEl.focus();
-        } else {
-          companyManualContainer.style.display = 'none';
-        }
-      });
-    }
-
-    // Debounce helper
-    function debounce(func, wait) {
-      let timeout;
-      return function(...args) {
-        clearTimeout(timeout);
-        timeout = setTimeout(() => func.apply(this, args), wait);
+  window.submitForm = async function() {
+    const btn = document.getElementById('btn-submit');
+    const originalText = btn.textContent;
+    btn.textContent = 'Submitting...'; btn.disabled = true;
+    try {
+      const { data: { session } } = await window.sb.auth.getSession();
+      if (!session) throw new Error("Not logged in");
+      
+      const payload = {
+        company_name: document.getElementById('company_name').value.trim() || null,
+        company_website: document.getElementById('company_website').value.trim() || null,
+        company_established_year: document.getElementById('company_established_year').value.trim() || null,
+        company_size: document.getElementById('company_size').value || null,
+        company_description: document.getElementById('company_description').value.trim() || null,
+        company_sells_components: selectedCategories.components,
+        company_sells_raw_materials: selectedCategories.raw_materials,
+        company_sells_chemicals: selectedCategories.chemicals,
+        company_sells_equipment: selectedCategories.equipment,
+        company_products_supplied: document.getElementById('company_products_supplied').value.trim() || null,
+        company_industry: document.getElementById('company_industry').value || null,
+        company_address: document.getElementById('company_address').value.trim() || null,
+        latitude: lat,
+        longitude: lng,
+        company_countries_operate: Array.from(operateCountries),
+        company_countries_export: doesExport ? Array.from(exportCountries) : [],
+        company_type: document.getElementById('company_type').value || null,
+        company_minimum_order: document.getElementById('company_minimum_order').value.trim() || null,
+        company_lead_time: document.getElementById('company_lead_time').value || null,
+        company_certifications: document.getElementById('company_certifications').value.trim() || null,
+        company_linkedin: document.getElementById('company_linkedin').value.trim() || null,
+        company_registration_complete: true
       };
+      
+      const { error } = await window.sb.from('profiles').update(payload).eq('id', session.user.id);
+      if (error) throw error;
+      
+      document.getElementById('registration-flow').style.display = 'none';
+      document.getElementById('state-registered').style.display = 'block';
+      document.getElementById('registered-company-name').textContent = payload.company_name;
+      window.scrollTo(0, 0);
+    } catch (err) {
+      alert("Failed to submit. " + (err.message || ''));
+      btn.textContent = originalText; btn.disabled = false;
     }
+  }
+</script>
 
-    // Company Manual location autocomplete search
-    const companySearchInput = document.getElementById('company-manual-search-input');
-    const companySuggestionsDropdown = document.getElementById('company-location-suggestions');
-    const companySpinner = document.getElementById('company-search-spinner');
-
-    if (companySearchInput) {
-      const handleCompanyInput = debounce(async (e) => {
-        const query = e.target.value.trim();
-        if (query.length < 3) {
-          companySuggestionsDropdown.innerHTML = '';
-          companySuggestionsDropdown.style.display = 'none';
-          return;
-        }
-
-        if (companySpinner) companySpinner.style.display = 'block';
-
-        try {
-          const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&limit=5`);
-          if (!res.ok) throw new Error('Search request failed');
-          const data = await res.json();
-
-          companySuggestionsDropdown.innerHTML = '';
-          if (data && data.length > 0) {
-            data.forEach(item => {
-              const div = document.createElement('div');
-              div.className = 'suggestion-item';
-              div.textContent = item.display_name;
-              div.addEventListener('click', () => {
-                const display_name = item.display_name;
-
-                // Set manual input value
-                companySearchInput.value = display_name;
-                companySuggestionsDropdown.innerHTML = '';
-                companySuggestionsDropdown.style.display = 'none';
-
-                // Set main Company Address field value
-                const companyAddressField = document.getElementById('company-address-input');
-                if (companyAddressField) {
-                  companyAddressField.value = display_name;
-                  companyAddressField.dispatchEvent(new Event('input', { bubbles: true }));
-                }
-                
-                showToast("Address populated from search selection.");
-              });
-              companySuggestionsDropdown.appendChild(div);
-            });
-            companySuggestionsDropdown.style.display = 'block';
-          } else {
-            const emptyDiv = document.createElement('div');
-            emptyDiv.className = 'suggestion-item';
-            emptyDiv.style.color = '#70757a';
-            emptyDiv.style.fontStyle = 'italic';
-            emptyDiv.textContent = 'No suggestions found';
-            companySuggestionsDropdown.appendChild(emptyDiv);
-            companySuggestionsDropdown.style.display = 'block';
-          }
-        } catch (err) {
-          console.error('Error fetching company location suggestions:', err);
-        } finally {
-          if (companySpinner) companySpinner.style.display = 'none';
-        }
-      }, 400);
-
-      companySearchInput.addEventListener('input', handleCompanyInput);
-
-      // Hide dropdown when clicking outside
-      document.addEventListener('click', (e) => {
-        if (companySearchInput && companySuggestionsDropdown && !companySearchInput.contains(e.target) && !companySuggestionsDropdown.contains(e.target)) {
-          companySuggestionsDropdown.style.display = 'none';
-        }
-      });
-    }
-
-  </script>
 </body>
 </html>
