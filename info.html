@@ -480,7 +480,7 @@
     }
 
     // ── Main search ─────────────────────────────────────────────────────────
-    async function performSearch(query) {
+        async function performSearch(query) {
       if (!query || !window.sb) return;
 
       const materialList = document.getElementById('material-list');
@@ -495,8 +495,13 @@
       loadMoreCon.style.display = 'none';
 
       try {
-        // 1. Find product
-        const { data: products } = await window.sb.from('products').select('id,name').ilike('name','%'+query+'%').limit(1);
+        // Find product
+        const { data: products, error } = await window.sb
+          .from('products')
+          .select('id, name, category, bom_data')
+          .ilike('name', '%' + query + '%')
+          .limit(1);
+
         if (!products || products.length === 0) {
           materialList.innerHTML = `<div style="text-align:center; padding: 60px 24px;">
   <div style="font-size: 48px; margin-bottom: 16px;">🔍</div>
@@ -513,56 +518,42 @@
           statsSummary.textContent = '0 materials found';
           return;
         }
-        const productId = products[0].id;
 
-        // 2. Get component IDs
-        const { data: pcRows } = await window.sb.from('product_components').select('component_id').eq('product_id', productId);
-        if (!pcRows || pcRows.length === 0) {
+        const product = products[0];
+
+        if (!product.bom_data || !product.bom_data.components || product.bom_data.components.length === 0) {
           materialList.innerHTML = '<div style="text-align:center;padding:40px;color:#5f6368;">No components found for this product.</div>';
           return;
         }
-        const componentIds = pcRows.map(r => r.component_id);
 
-        // 3. Get component details
-        const { data: components } = await window.sb.from('components').select('id,component_name,component_category').in('id', componentIds);
-        if (!components || components.length === 0) {
-          materialList.innerHTML = '<div style="text-align:center;padding:40px;color:#5f6368;">No components found.</div>';
-          return;
-        }
+        const formatAddress = (s) => [s.city, s.state, s.country].filter(Boolean).join(', ') || 'N/A';
 
-        // 4. Get all suppliers for each component
-        const results = await Promise.all(components.map(async (comp) => {
-          const { data: csRows } = await window.sb
-            .from('component_suppliers')
-            .select('supplier_id,distance_km,stock_status,google_maps_link,supplier_product_link,suppliers(supplier_name,city)')
-            .eq('component_id', comp.id);
-
-          const sorted = (csRows||[]).sort((a,b) => (parseFloat(a.distance_km)||0) - (parseFloat(b.distance_km)||0));
+        const results = product.bom_data.components.map(comp => {
+          const sorted = (comp.suppliers || []).sort((a, b) => (parseFloat(a.distance_km) || 0) - (parseFloat(b.distance_km) || 0));
           const primary = sorted[0] || null;
           const alternatives = sorted.slice(1);
 
-          const sup = primary?.suppliers || {};
           return {
-            name:         comp.component_name,
-            category:     comp.component_category,
-            supplierName: sup.supplier_name || 'N/A',
-            city:         sup.city          || 'N/A',
-            distanceKm:   primary?.distance_km ? '~'+primary.distance_km+' km away' : 'N/A',
-            stockStatus:  primary?.stock_status || 'N/A',
-            mapsLink:     primary?.google_maps_link     || null,
-            websiteLink:  primary?.supplier_product_link || null,
+            name: comp.name,
+            category: comp.category,
+            supplierName: primary?.name || 'N/A',
+            city: primary ? formatAddress(primary) : 'N/A',
+            distanceKm: primary?.distance_km ? '~' + primary.distance_km + ' km away' : 'N/A',
+            stockStatus: primary?.stock_status || 'N/A',
+            mapsLink: primary?.google_maps_link || null,
+            websiteLink: primary?.product_link || null,
             altData: alternatives.map(alt => ({
-              supplierName: alt.suppliers?.supplier_name || 'N/A',
-              city:         alt.suppliers?.city          || 'N/A',
-              distance:     alt.distance_km ? '~'+alt.distance_km+' km away' : 'N/A',
-              stockStatus:  alt.stock_status || 'N/A',
-              mapsLink:     alt.google_maps_link     || null,
-              websiteLink:  alt.supplier_product_link || null,
+              supplierName: alt.name || 'N/A',
+              city: formatAddress(alt),
+              distance: alt.distance_km ? '~' + alt.distance_km + ' km away' : 'N/A',
+              stockStatus: alt.stock_status || 'N/A',
+              mapsLink: alt.google_maps_link || null,
+              websiteLink: alt.product_link || null,
             }))
           };
-        }));
+        });
 
-        // 5. Render all cards, hide beyond first 10
+        // Render all cards, hide beyond first 10
         materialList.innerHTML = '';
         const allCards = [];
         results.forEach((mat, i) => {
@@ -572,7 +563,7 @@
           allCards.push(card);
         });
 
-        // 6. Load more button
+        // Load more button
         let visible = Math.min(10, results.length);
         if (results.length > 10) {
           loadMoreBtn.textContent = `Load More Components (showing ${visible} of ${results.length})`;
@@ -591,7 +582,7 @@
 
         statsSummary.textContent = `Sourced ${results.length} of ${results.length} materials • Click 📍 to open supplier location in Google Maps`;
 
-        // 7. Mini filter
+        // Mini filter
         const miniFilter = document.getElementById('bom-mini-filter');
         const filterStats = document.getElementById('bom-filter-stats');
         if (miniFilter) {
