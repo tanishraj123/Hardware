@@ -1,95 +1,3 @@
-const { createClient } = window.supabase;
-window.sb = createClient(
-  'https://luumbrsddwupxxujnxlc.supabase.co',
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx1dW1icnNkZHd1cHh4dWpueGxjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA1Mzc2MzYsImV4cCI6MjA5NjExMzYzNn0.n0fL8SIdrFJGQcIAu5RA9HfaoK9DY9z1xm_1gP_6kG8'
-);
-
-window.userSession = null;
-
-async function updateNavbarGlobal(user) {
-  window.userSession = user;
-  
-  const unauthNav = document.getElementById('unauthNav');
-  const authNav = document.getElementById('authNav');
-  const signinBtn = document.getElementById('signin-btn');
-  const accountBtn = document.getElementById('account-btn');
-  
-  if (unauthNav) unauthNav.style.display = 'none';
-  if (authNav) authNav.style.display = 'block';
-  if (signinBtn) signinBtn.style.display = 'none';
-  if (accountBtn) accountBtn.style.display = 'inline-flex';
-  
-  const dropdownEmail = document.getElementById('dropdownEmail');
-  if (dropdownEmail) dropdownEmail.textContent = user.email;
-
-  let avatarUrl = '';
-  try {
-      const { data } = await window.sb.from('profiles').select('avatar_url').eq('id', user.id).single();
-      if (data && data.avatar_url) avatarUrl = data.avatar_url;
-  } catch(e) {}
-
-  if (accountBtn) {
-      let avatarEl = document.getElementById('nav-avatar');
-      if (!avatarEl) {
-          avatarEl = document.createElement('span');
-          avatarEl.id = 'nav-avatar';
-          avatarEl.style.cssText = 'display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:50%;background:#4285F4;color:white;font-size:13px;font-weight:600;margin-left:8px;overflow:hidden;';
-          accountBtn.appendChild(avatarEl);
-          accountBtn.style.cssText = accountBtn.style.cssText + 'display:inline-flex;align-items:center;';
-      }
-      
-      if (avatarUrl) {
-          avatarEl.innerHTML = `<img src="${avatarUrl}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">`;
-      } else {
-          avatarEl.textContent = user.email ? user.email.charAt(0).toUpperCase() : '?';
-      }
-  }
-
-  window.dispatchEvent(new CustomEvent('auth-changed', { detail: { session: { user } } }));
-}
-
-function showLoggedOutNavbarGlobal() {
-  window.userSession = null;
-  const unauthNav = document.getElementById('unauthNav');
-  const authNav = document.getElementById('authNav');
-  const signinBtn = document.getElementById('signin-btn');
-  const accountBtn = document.getElementById('account-btn');
-
-  if (unauthNav) unauthNav.style.display = 'block';
-  if (authNav) authNav.style.display = 'none';
-  if (signinBtn) signinBtn.style.display = 'flex';
-  if (accountBtn) accountBtn.style.display = 'none';
-
-  window.dispatchEvent(new CustomEvent('auth-changed', { detail: { session: null } }));
-}
-
-document.addEventListener('DOMContentLoaded', async () => {
-  const { data: { session } } = await window.sb.auth.getSession();
-  if (session) {
-    await updateNavbarGlobal(session.user);
-  } else {
-    showLoggedOutNavbarGlobal();
-  }
-
-  window.sb.auth.onAuthStateChange(async (event, session) => {
-    if (session) {
-      await updateNavbarGlobal(session.user);
-    } else {
-      showLoggedOutNavbarGlobal();
-    }
-  });
-
-  const signOutBtnWrapper = document.getElementById('signOutBtn');
-  // Some pages have id="signOutBtn", some have id="signout-link"
-  document.querySelectorAll('#signOutBtn, #signout-link').forEach(btn => {
-      btn.addEventListener('click', async (e) => {
-        e.preventDefault();
-        await window.sb.auth.signOut();
-        window.location.reload(); 
-      });
-  });
-});
-
 
 function initSubscriptionModal() {
   const modalHTML = `
@@ -132,7 +40,7 @@ function initSubscriptionModal() {
             <li style="display: flex; align-items: center; gap: 8px;"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#4285F4" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg> Export to PDF</li>
           </ul>
 
-          <a href="/plus.html" style="display: block; width: 100%; background-color: #4285F4; color: #ffffff; text-align: center; padding: 12px; border-radius: 100px; font-weight: 600; text-decoration: none; transition: background-color 0.2s;">Upgrade to GrabRaw+ — ₹199/month</a>
+          <a href="/plus.html" style="display: block; width: 100%; background-color: #4285F4; color: #ffffff; text-align: center; padding: 12px; border-radius: 100px; font-weight: 600; text-decoration: none; transition: background-color 0.2s;">Upgrade to GrabRaw+</a>
         </div>
       </div>
     </div>
@@ -141,12 +49,12 @@ function initSubscriptionModal() {
   document.body.insertAdjacentHTML('beforeend', modalHTML);
 
   const style = document.createElement('style');
-  style.textContent = `
+  style.textContent = \`
     @keyframes spin { 100% { transform: rotate(360deg); } }
     @media (max-width: 480px) {
       .sub-modal-content { max-width: 90vw !important; padding: 24px !important; }
     }
-  `;
+  \`;
   document.head.appendChild(style);
 
   const overlay = document.getElementById('subModalOverlay');
