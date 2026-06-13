@@ -93,61 +93,77 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 function initSubscriptionModal() {
   const modalHTML = `
-    <div id="subModalOverlay" class="sub-modal-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.5); align-items: center; justify-content: center; z-index: 100000; opacity: 0; transition: opacity 0.2s ease;">
-      <div class="sub-modal-content" style="background: #ffffff; width: 100%; max-width: 400px; border-radius: 16px; padding: 32px; box-shadow: 0 10px 40px rgba(0,0,0,0.2); transform: translateY(20px); transition: transform 0.2s ease; position: relative;">
-        <button id="closeSubModalBtn" style="position: absolute; top: 16px; right: 16px; background: none; border: none; cursor: pointer; color: #5f6368;" aria-label="Close">
-          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+    <div id="subModalOverlay" class="sub-modal-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.5); align-items: center; justify-content: center; z-index: 100000; opacity: 0; transition: opacity 0.3s ease;">
+      <div class="sub-modal-content" style="background: #ffffff; width: 100%; max-width: 500px; border-radius: 16px; padding: 32px; box-shadow: 0 10px 40px rgba(0,0,0,0.2); transform: translateY(20px); transition: transform 0.3s ease; position: relative;">
+        <button id="closeSubModalBtn" class="close-btn" style="position: absolute; top: 16px; right: 16px; background: none; border: none; cursor: pointer; color: #5f6368;" aria-label="Close">
+          <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
         </button>
-        <h2 style="color: #1a1a1a; font-size: 20px; font-weight: 700; margin-bottom: 24px; text-align: center;">Your GrabRaw+ Subscription</h2>
+        
+        <div style="text-align: center; margin-bottom: 24px;">
+          <h2 style="color: #1a1a1a; font-size: 22px; font-weight: 700; margin: 0; display: inline-flex; align-items: center; gap: 8px;">
+            <svg id="subModalTitleIcon" viewBox="0 0 24 24" width="24" height="24" fill="var(--icon-color, #fbbc04)" stroke="var(--icon-color, #fbbc04)" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            Your GrabRaw+ Subscription
+          </h2>
+        </div>
         
         <div id="subModalLoading" style="text-align: center; color: #5f6368; padding: 20px 0;">
-          <div style="width:24px;height:24px;border:3px solid #e0e0e0;border-top-color:#4285F4;border-radius:50%;animation:spin 1s linear infinite; margin: 0 auto 12px auto;"></div>
+          <div style="width:24px;height:24px;border:3px solid #e0e0e0;border-top-color:#4285F4;border-radius:50%;animation:sub-spin 1s linear infinite; margin: 0 auto 12px auto;"></div>
           Checking status...
         </div>
 
         <div id="subModalActive" style="display: none; text-align: center;">
-          <div style="display:inline-flex; align-items:center; justify-content:center; background:#e6f4ea; color:#137333; padding: 6px 12px; border-radius: 100px; font-size: 14px; font-weight: 600; margin-bottom: 16px; gap: 6px;">
-            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>
-            Active Member
+          <div class="status-badge active-badge" style="display:inline-flex; align-items:center; justify-content:center; background:#d4edda; color:#155724; padding: 6px 24px; border-radius: 8px; font-size: 12px; font-weight: 700; margin-bottom: 24px; gap: 6px; transform: translateY(10px); opacity: 0; transition: all 0.2s ease-out;">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            ACTIVE MEMBER
           </div>
-          <div style="font-size: 14px; color: #5f6368; margin-bottom: 8px;">Your subscription expires in</div>
-          <div id="subDaysRemaining" style="font-size: 48px; font-weight: 800; color: #4285F4; margin-bottom: 8px; line-height: 1;">X</div>
-          <div style="font-size: 14px; font-weight: 600; color: #1a1a1a; margin-bottom: 24px;">Days</div>
-          <div id="subExpiryDate" style="font-size: 13px; color: #70757a; margin-bottom: 24px;">Expires on: ...</div>
           
-          <a href="/plus.html" style="display: block; width: 100%; background-color: #4285F4; color: #ffffff; text-align: center; padding: 12px; border-radius: 100px; font-weight: 600; text-decoration: none; margin-bottom: 12px; transition: background-color 0.2s;">Renew Now</a>
-          <a href="#" style="display: block; width: 100%; border: 1px solid #dadce0; background-color: #ffffff; color: #3c4043; text-align: center; padding: 12px; border-radius: 100px; font-weight: 600; text-decoration: none; transition: background-color 0.2s;" onclick="alert('Billing portal integration pending.'); return false;">Manage Billing</a>
+          <div id="subDaysRemaining" style="font-size: 36px; font-weight: 800; color: #4285F4; margin-bottom: 8px; line-height: 1;">X</div>
+          <div style="font-size: 16px; color: #1a1a1a; margin-bottom: 4px;">Your subscription expires in <span id="subDaysInline"></span> days</div>
+          <div id="subExpiryDate" style="font-size: 14px; color: #5f6368; margin-bottom: 32px;">Expires on: ...</div>
+          
+          <div style="display: flex; flex-direction: column; gap: 12px;">
+            <a href="/plus.html" class="sub-btn primary-btn" style="display: block; width: 100%; background-color: #4285F4; color: #ffffff; text-align: center; padding: 12px; border-radius: 100px; font-size: 16px; font-weight: 600; text-decoration: none; transition: all 0.2s ease;">Renew Now</a>
+            <a href="#" class="sub-btn secondary-btn" style="display: block; width: 100%; border: 1px solid #dadce0; background-color: #ffffff; color: #3c4043; text-align: center; padding: 12px; border-radius: 100px; font-size: 16px; font-weight: 600; text-decoration: none; transition: all 0.2s ease;" onclick="alert('Manage Billing integration pending.'); return false;">Manage Billing</a>
+          </div>
         </div>
 
         <div id="subModalInactive" style="display: none; text-align: center;">
-          <div style="display:inline-flex; align-items:center; justify-content:center; background:#f1f3f4; color:#5f6368; padding: 6px 12px; border-radius: 100px; font-size: 14px; font-weight: 600; margin-bottom: 16px; gap: 6px;">
-            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M15 9l-6 6M9 9l6 6"/></svg>
-            Not a Member
+          <div class="status-badge inactive-badge" style="display:inline-flex; align-items:center; justify-content:center; background:#f5f5f5; color:#424242; padding: 6px 24px; border-radius: 8px; font-size: 12px; font-weight: 700; margin-bottom: 24px; gap: 6px; transform: translateY(10px); opacity: 0; transition: all 0.2s ease-out;">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            NOT A MEMBER
           </div>
-          <div style="font-size: 16px; font-weight: 600; color: #1a1a1a; margin-bottom: 16px;">Join GrabRaw+ for unlimited sourcing</div>
           
-          <ul style="text-align: left; font-size: 14px; color: #5f6368; margin-bottom: 24px; padding: 0; list-style: none;">
-            <li style="margin-bottom: 8px; display: flex; align-items: center; gap: 8px;"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#4285F4" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg> Priority support</li>
-            <li style="margin-bottom: 8px; display: flex; align-items: center; gap: 8px;"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#4285F4" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg> Unlimited searches</li>
-            <li style="display: flex; align-items: center; gap: 8px;"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#4285F4" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg> Export to PDF</li>
+          <div style="font-size: 20px; font-weight: 700; color: #1a1a1a; margin-bottom: 8px;">Upgrade to GrabRaw+ Today</div>
+          <div style="font-size: 15px; color: #5f6368; margin-bottom: 24px;">Unlock unlimited sourcing, priority support, and export features</div>
+          
+          <ul style="text-align: left; font-size: 15px; color: #3c4043; margin: 0 auto 32px auto; padding: 0; list-style: none; max-width: 250px;">
+            <li style="margin-bottom: 12px; display: flex; align-items: center; gap: 12px;"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#4285F4" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg> Unlimited searches</li>
+            <li style="margin-bottom: 12px; display: flex; align-items: center; gap: 12px;"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#4285F4" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg> Priority support</li>
+            <li style="display: flex; align-items: center; gap: 12px;"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#4285F4" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg> Export to PDF</li>
           </ul>
 
-          <a href="/plus.html" style="display: block; width: 100%; background-color: #4285F4; color: #ffffff; text-align: center; padding: 12px; border-radius: 100px; font-weight: 600; text-decoration: none; transition: background-color 0.2s;">Upgrade to GrabRaw+ — ₹199/month</a>
+          <a href="/plus.html" class="sub-btn primary-btn" style="display: block; width: 100%; background-color: #4285F4; color: #ffffff; text-align: center; padding: 12px; border-radius: 100px; font-size: 16px; font-weight: 600; text-decoration: none; transition: all 0.2s ease;">Upgrade to GrabRaw+ — ₹199/month</a>
         </div>
       </div>
     </div>
   `;
 
-  document.body.insertAdjacentHTML('beforeend', modalHTML);
+  if (!document.getElementById('subModalOverlay')) {
+    document.body.insertAdjacentHTML('beforeend', modalHTML);
 
-  const style = document.createElement('style');
-  style.textContent = `
-    @keyframes spin { 100% { transform: rotate(360deg); } }
-    @media (max-width: 480px) {
-      .sub-modal-content { max-width: 90vw !important; padding: 24px !important; }
-    }
-  `;
-  document.head.appendChild(style);
+    const style = document.createElement('style');
+    style.textContent = `
+      @keyframes sub-spin { 100% { transform: rotate(360deg); } }
+      .sub-btn:hover { transform: scale(1.02); }
+      .primary-btn:hover { background-color: #3b77db !important; box-shadow: 0 4px 12px rgba(66,133,244,0.25); }
+      .secondary-btn:hover { background-color: #f8f9fa !important; }
+      .status-badge.show { transform: translateY(0) !important; opacity: 1 !important; }
+      @media (max-width: 480px) {
+        .sub-modal-content { max-width: 90vw !important; padding: 24px !important; }
+      }
+    `;
+    document.head.appendChild(style);
+  }
 
   const overlay = document.getElementById('subModalOverlay');
   const closeBtn = document.getElementById('closeSubModalBtn');
@@ -155,16 +171,24 @@ function initSubscriptionModal() {
   const activeView = document.getElementById('subModalActive');
   const inactiveView = document.getElementById('subModalInactive');
   const card = overlay.querySelector('.sub-modal-content');
+  const titleIcon = document.getElementById('subModalTitleIcon');
 
   function closeModal() {
     overlay.style.opacity = '0';
     card.style.transform = 'translateY(20px)';
-    setTimeout(() => { overlay.style.display = 'none'; }, 200);
+    
+    // reset slide-in
+    document.querySelectorAll('.status-badge').forEach(b => b.classList.remove('show'));
+    
+    setTimeout(() => { overlay.style.display = 'none'; }, 300);
   }
 
   function openModal() {
     overlay.style.display = 'flex';
-    // Small delay to allow display flex to apply before opacity transition
+    // reset icon color
+    titleIcon.style.setProperty('--icon-color', '#fbbc04');
+    titleIcon.setAttribute('fill', 'var(--icon-color, #fbbc04)');
+    
     setTimeout(() => {
       overlay.style.opacity = '1';
       card.style.transform = 'translateY(0)';
@@ -180,8 +204,7 @@ function initSubscriptionModal() {
     try {
       const { data: { session } } = await window.sb.auth.getSession();
       if (!session) {
-        inactiveView.style.display = 'block';
-        loading.style.display = 'none';
+        showInactive();
         return;
       }
       
@@ -195,30 +218,55 @@ function initSubscriptionModal() {
         
         if (days > 0) {
           document.getElementById('subDaysRemaining').textContent = days;
+          document.getElementById('subDaysInline').textContent = days;
           
           const options = { year: 'numeric', month: 'long', day: 'numeric' };
           document.getElementById('subExpiryDate').textContent = "Expires on: " + expiryDate.toLocaleDateString(undefined, options);
           
-          activeView.style.display = 'block';
+          showActive();
         } else {
           // expired
-          inactiveView.style.display = 'block';
+          showInactive();
         }
       } else {
-        inactiveView.style.display = 'block';
+        showInactive();
       }
     } catch(e) {
       console.error(e);
-      inactiveView.style.display = 'block'; // fallback
+      showInactive(); // fallback
     } finally {
       loading.style.display = 'none';
     }
   }
+  
+  function showActive() {
+    activeView.style.display = 'block';
+    // Keep star icon colored
+    titleIcon.style.setProperty('--icon-color', '#fbbc04'); // gold/yellow inside
+    titleIcon.setAttribute('fill', 'var(--icon-color, #fbbc04)');
+    setTimeout(() => {
+      const badge = activeView.querySelector('.status-badge');
+      if (badge) badge.classList.add('show');
+    }, 50); // slight delay for slide-in effect
+  }
+  
+  function showInactive() {
+    inactiveView.style.display = 'block';
+    // Grey out title icon
+    titleIcon.style.setProperty('--icon-color', '#dadce0');
+    titleIcon.setAttribute('fill', 'none'); // not filled if inactive, or filled with light grey
+    setTimeout(() => {
+      const badge = inactiveView.querySelector('.status-badge');
+      if (badge) badge.classList.add('show');
+    }, 50); // slight delay for slide-in effect
+  }
 
-  closeBtn.addEventListener('click', closeModal);
-  overlay.addEventListener('click', (e) => {
-    if (e.target === overlay) closeModal();
-  });
+  if (closeBtn) closeBtn.addEventListener('click', closeModal);
+  if (overlay) {
+    overlay.addEventListener('click', (e) => {
+      if (e.target === overlay) closeModal();
+    });
+  }
 
   document.addEventListener('click', (e) => {
     if (e.target.closest('.open-subscription-modal')) {
