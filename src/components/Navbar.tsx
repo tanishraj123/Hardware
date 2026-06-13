@@ -44,7 +44,7 @@ export default function Navbar({
           }}
         >
           <img 
-            src="https://res.cloudinary.com/duh9wvgzu/image/upload/q_auto/f_auto/v1780501537/IMG_5442_r9v9ez.jpg" 
+            src="https://res.cloudinary.com/duh9wvgzu/image/upload/q_auto/f_auto/v1781335895/seedream-4.0_A_flat_2D_app_icon_of_a_cardboard_box_front-facing_view_warm_kraft_brown_color_b-0_1_ikduxs.jpg" 
             alt="GrabRaw Logo" 
             className="h-[40px] md:h-[45px] lg:h-[50px] w-auto object-contain" 
             referrerPolicy="no-referrer" 
