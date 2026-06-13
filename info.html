@@ -1,647 +1,1282 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Bill of Materials — iPhone 15 | GrabRaw Sourcing</title>
-  <meta name="description" content="GrabRaw is an AI-powered search engine that breaks down any product into its complete Bill of Materials and finds local suppliers near you.">
-  <meta name="robots" content="index, follow">
-  <link rel="canonical" href="https://grabraw.com/info">
-  <meta property="og:title" content="Bill of Materials — iPhone 15 | GrabRaw">
-  <meta property="og:description" content="Complete list of raw materials and components required to build iPhone 15, with local supplier sourcing within 40km.">
-  <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      let isScrolling = false;
-      window.addEventListener('scroll', function() {
-        if (!isScrolling) { isScrolling = true; requestAnimationFrame(() => { isScrolling = false; }); }
-      }, { passive: true });
-    });
-  </script>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"ItemList","name":"Bill of Materials — iPhone 15","description":"Complete list of raw materials and components required to build iPhone 15, with local supplier sourcing within 40km","url":"https://grabraw.com/info"}</script>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="/auth-global.js"></script>
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: 'Inter', system-ui, -apple-system, sans-serif; background-color: #FFFFFF; color: #1a1a1a; line-height: 1.5; -webkit-font-smoothing: antialiased; }
-    a { text-decoration: none; color: inherit; }
-    .container { width: 100%; max-width: 1200px; margin: 0 auto; padding: 0 24px; }
-    .container-slim { width: 100%; max-width: 900px; margin: 0 auto; padding: 0 20px; }
-
-    .navbar { height: 64px; padding: 12px 24px; display: flex; align-items: center; justify-content: space-between; background: rgba(255,255,255,0.75); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-bottom: 1px solid rgba(0,0,0,0.1); box-shadow: 0 2px 8px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 100; font-family: Inter, system-ui, sans-serif; box-sizing: border-box; width: 100%; }
-    .nav-links { display: none; gap: 24px; align-items: center; flex: 1; margin-left: 40px; }
-    @media (min-width: 768px) { .nav-links { display: flex; } }
-    .nav-link { font-size: 14px; color: #1a1a1a; text-decoration: none; font-weight: 500; padding: 8px 12px; border-radius: 8px; transition: background-color 0.2s ease, color 0.2s ease; }
-    .nav-link:hover { background-color: #f0f0f0; color: #4285f4; }
-    .nav-actions { display: flex; gap: 16px; align-items: center; margin-left: auto; }
-    @media (max-width: 768px) { .navbar { height: 56px; padding: 8px 16px; } }
-    .btn { display: inline-flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 600; padding: 10px 20px; border-radius: 8px; transition: all 0.2s ease; cursor: pointer; border: none; text-align: center; }
-    .btn-outline { background-color: transparent; border: 1px solid #dadce0; color: #3c4043; }
-    .btn-outline:hover { background-color: #f8f9fa; border-color: #bdc1c6; }
-    .btn-primary { background-color: #4285f4; color: #ffffff; }
-    .btn-primary:hover { background-color: #2b72eb; }
-
-    .search-row-section { background-color: #FFFFFF; border-bottom: 1px solid #f1f3f4; padding: 32px 0 24px; }
-    .search-box-container { display: flex; align-items: center; width: 100%; border: 1px solid #dadce0; border-radius: 100px; padding: 6px 6px 6px 20px; margin-bottom: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.04); transition: all 0.2s ease; }
-    .search-box-container:focus-within { border-color: #4285F4; box-shadow: 0 2px 8px rgba(66,133,244,0.15); }
-    .search-icon { color: #9aa0a6; margin-right: 12px; display: flex; align-items: center; }
-    .search-input { flex: 1; border: none; outline: none; font-size: 15px; color: #202124; background: transparent; width: 100%; }
-    .btn-search { background-color: #4285F4; color: white; border-radius: 100px; padding: 10px 24px; font-weight: 600; font-size: 14px; }
-    .btn-search:hover { background-color: #2b72eb; }
-    .search-stats-text { font-size: 12px; color: #5f6368; display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
-    .sparkle-accent { color: #4285F4; font-weight: bold; }
-
-    main { padding: 40px 0 80px; background-color: #FFFFFF; }
-
-    .bom-header { margin-bottom: 24px; display: flex; flex-direction: column; gap: 8px; }
-    @media (min-width: 640px) { .bom-header { flex-direction: row; align-items: flex-start; justify-content: space-between; } }
-    .bom-title-group { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
-    .bom-title { font-size: 26px; font-weight: 800; color: #1a1a1a; letter-spacing: -0.5px; }
-    .live-badge { display: inline-flex; align-items: center; gap: 6px; background-color: #E6F4EA; color: #137333; font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 100px; text-transform: uppercase; letter-spacing: 0.5px; }
-    .live-badge .dot { width: 6px; height: 6px; background-color: #137333; border-radius: 50%; }
-    .bom-subtext { font-size: 14px; color: #5f6368; }
-
-    /* ── Material card: column layout so alt-section always below ── */
-    .material-list { display: flex; flex-direction: column; gap: 20px; margin-top: 24px; }
-
-    .material-card {
-      background-color: #FFFFFF;
-      border: 1px solid #e1e3e5;
-      border-radius: 12px;
-      padding: 20px 24px;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.02);
-      transition: box-shadow 0.2s ease, border-color 0.2s ease;
-      display: flex;
-      flex-direction: column;  /* always column so alt section stacks below */
-      gap: 0;
-    }
-    .material-card:hover { border-color: #dadce0; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
-
-    /* top row inside card = info + actions side by side */
-    .card-main-row {
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-    }
-    @media (min-width: 640px) {
-      .card-main-row { flex-direction: row; align-items: center; justify-content: space-between; }
-    }
-
-    .material-info { display: flex; flex-direction: column; gap: 10px; flex: 1; }
-    .material-meta-row { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
-    .material-name { font-size: 18px; font-weight: 700; color: #1a1a1a; }
-    .pill-tag { font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 100px; }
-    .distance-badge { font-size: 11px; font-weight: 600; background-color: #E8F0FE; color: #1A73E8; padding: 3px 8px; border-radius: 100px; }
-    .stock-indicator { display: inline-flex; align-items: center; gap: 5px; font-size: 12px; font-weight: 600; }
-    .stock-indicator.in-stock { color: #137333; }
-    .stock-indicator.low-stock { color: #D93025; }
-    .stock-indicator .stock-dot { width: 6px; height: 6px; border-radius: 50%; }
-    .stock-indicator.in-stock .stock-dot { background-color: #137333; }
-    .stock-indicator.low-stock .stock-dot { background-color: #D93025; }
-    .supplier-details { display: flex; flex-direction: column; gap: 2px; }
-    .supplier-name { font-size: 14px; font-weight: 700; color: #202124; }
-    .supplier-address { font-size: 12px; color: #5f6368; }
-
-    .row-actions { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
-    @media (min-width: 640px) { .row-actions { justify-content: flex-end; } }
-
-    .btn-row-action { font-size: 12px; font-weight: 600; padding: 8px 14px; border-radius: 8px; text-align: center; white-space: nowrap; display: inline-flex; align-items: center; gap: 4px; }
-    .btn-supplier-web { background-color: #FFFFFF; border: 1px solid #dadce0; color: #3c4043; }
-    .btn-supplier-web:hover { background-color: #f8f9fa; }
-    .btn-supplier-maps { background-color: #4285F4; color: #FFFFFF; }
-    .btn-supplier-maps:hover { background-color: #2b72eb; }
-
-    /* save + chevron icon buttons */
-    .btn-icon-round {
-      width: 36px; height: 36px; border-radius: 50%;
-      border: 1px solid #dadce0; background: #fff;
-      cursor: pointer; display: inline-flex; align-items: center; justify-content: center;
-      padding: 0; flex-shrink: 0; transition: all 0.2s ease;
-    }
-    .btn-icon-round.saved { background: #16a34a; border-color: #16a34a; color: #fff; font-weight: bold; font-size: 14px; }
-    .btn-icon-round:not(.saved) { color: #5f6368; font-size: 18px; }
-
-    /* alt suppliers dropdown */
-    .alt-suppliers-section {
-      display: none;
-      border-top: 1px solid #e5e7eb;
-      margin-top: 16px;
-      padding-top: 14px;
-    }
-    .alt-section-label { font-size: 11px; color: #5f6368; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px; }
-    .alt-supplier-row { display: flex; flex-direction: column; gap: 8px; padding-bottom: 14px; margin-bottom: 14px; border-bottom: 1px dashed #e5e7eb; }
-    .alt-supplier-row:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
-    .alt-supplier-top { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 8px; }
-    .alt-supplier-info .alt-name { font-weight: 600; font-size: 14px; color: #202124; }
-    .alt-supplier-info .alt-city { font-size: 12px; color: #5f6368; margin-top: 2px; }
-    .alt-badges { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; }
-    .alt-actions { display: flex; gap: 8px; justify-content: flex-end; flex-wrap: wrap; }
-
-    .chevron-icon { display: inline-block; transition: transform 0.25s ease; font-size: 16px; line-height: 1; }
-
-    .download-bom-container { margin-top: 32px; }
-    .btn-download-bom { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; background-color: #4285F4; color: #FFFFFF; font-size: 15px; font-weight: 700; padding: 16px 24px; border-radius: 12px; box-shadow: 0 4px 10px rgba(66,133,244,0.15); cursor: pointer; border: none; }
-    .btn-download-bom:hover { background-color: #2b72eb; }
-
-    footer { background-color: #f8f9fa; border-top: 1px solid #e1e3e5; padding: 80px 0 0; }
-    .footer-grid { display: grid; grid-template-columns: 1fr; gap: 40px; margin-bottom: 40px; }
-    @media (min-width: 576px) { .footer-grid { grid-template-columns: repeat(2, 1fr); } }
-    @media (min-width: 992px) { .footer-grid { grid-template-columns: repeat(4, 1fr); } }
-    .footer-col { display: flex; flex-direction: column; gap: 16px; }
-    .footer-title { font-size: 12px; font-weight: 700; color: #5f6368; text-transform: uppercase; letter-spacing: 0.5px; }
-    .footer-links { display: flex; flex-direction: column; gap: 10px; }
-    .footer-link { font-size: 13px; color: #3c4043; transition: color 0.15s ease; }
-    .footer-link:hover { color: #4285F4; }
-    .footer-description { font-size: 13px; color: #5f6368; line-height: 1.6; }
-    .footer-bottom { background-color: #FFFFFF; border-top: 1px solid #e8eaed; padding: 24px; margin-top: 40px; width: 100vw; margin-left: calc(-50vw + 50%); display: flex; flex-direction: column; align-items: center; justify-content: space-between; gap: 16px; box-sizing: border-box; }
-    @media (min-width: 768px) { .footer-bottom { flex-direction: row; } }
-    .copyright { font-size: 12px; color: #5f6368; }
-    .footer-legal-links { display: flex; gap: 20px; }
-    .footer-legal-link { font-size: 12px; color: #3c4043; transition: color 0.15s ease; }
-    .footer-legal-link:hover { color: #4285F4; }
-
-    .navbar-logo-wrapper { display: inline-flex; align-items: center; gap: 12px; text-decoration: none; cursor: pointer; transition: opacity 0.3s ease; padding: 8px; }
-    .navbar-logo-wrapper:hover { opacity: 0.85; }
-    .navbar-logo-image { height: 50px; width: auto; object-fit: contain; display: block; }
-    .navbar-logo-text { font-size: 24px; font-weight: 700; color: #1a1a1a; font-family: Inter, system-ui, sans-serif; letter-spacing: -0.5px; }
-    .footer-logo-wrapper { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; }
-    .footer-logo-image { height: 40px; width: auto; object-fit: contain; display: block; }
-    .footer-logo-text { font-size: 18px; font-weight: 700; color: #1a1a1a; font-family: Inter, system-ui, sans-serif; }
-
-    html { scroll-behavior: smooth; overflow-y: scroll; }
-    body { transform: translate3d(0,0,0); will-change: scroll-position; }
-    button, a, input, select, textarea { transition: all 0.2s cubic-bezier(0.4,0,0.2,1) !important; }
-
-    @keyframes spin { to { transform: rotate(360deg); } }
-
-    /* load more button */
-    #load-more-btn { padding: 12px 32px; border-radius: 100px; border: 1px solid #dadce0; background: #fff; color: #3c4043; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s; }
-    #load-more-btn:hover { background: #f8f9fa; border-color: #4285F4; color: #4285F4; }
-  </style>
-</head>
-<body>
-
-  <header class="navbar">
-    <a href="/" class="navbar-logo-wrapper">
-      <img src="https://res.cloudinary.com/duh9wvgzu/image/upload/q_auto/f_auto/v1781335895/seedream-4.0_A_flat_2D_app_icon_of_a_cardboard_box_front-facing_view_warm_kraft_brown_color_b-0_1_ikduxs.jpg" alt="GrabRaw Logo" class="navbar-logo-image" loading="lazy"/>
-      <span class="navbar-logo-text">GrabRaw</span>
-    </a>
-    <nav class="nav-links">
-      <a href="/#categories" class="nav-link">Material</a>
-      <a href="/#suppliers" class="nav-link">Suppliers</a>
-      <a href="/plus.html" class="nav-link">GrabRaw +</a>
-      <a href="/#ask-ai" class="nav-link">Ask AI</a>
-    </nav>
-    <div class="nav-actions">
-      <a href="/signin.html" id="signin-btn" class="btn btn-outline" style="border-radius:100px;">Sign In</a>
-    </div>
-  </header>
-
-  <!-- Plan banner -->
-  <div id="plan-banner-container"></div>
-
-  <!-- Search Bar -->
-  <section class="search-row-section">
-    <div class="container-slim">
-      <form action="/info" method="GET" class="search-box-container">
-        <div class="search-icon">
-          <svg viewBox="0 0 24 24" width="18" height="18" fill="#9aa0a6"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
-        </div>
-        <input type="text" name="q" value="" class="search-input" placeholder="Search for components, blueprints, or suppliers...">
-        <button type="submit" class="btn btn-search">Search</button>
-      </form>
-      <div class="search-stats-text">
-        <span class="sparkle-accent">✦</span>
-        <span id="stats-summary">Loading...</span>
-      </div>
-    </div>
-  </section>
-
-  <!-- Main Content -->
-  <main>
-    <div class="container-slim">
-
-      <div class="bom-header">
-        <div>
-          <div class="bom-title-group">
-            <h1 class="bom-title">Bill of Materials</h1>
-            <span class="live-badge"><span class="dot"></span>Live Inventory</span>
-          </div>
-        </div>
-        <div style="display:flex;flex-direction:column;gap:10px;flex:0 1 400px;min-width:250px;">
-          <p class="bom-subtext">AI-generated component breakdown. Click any supplier link to visit their website or open their location in Google Maps.</p>
-          <div style="position:relative;">
-            <svg style="position:absolute;left:12px;top:50%;transform:translateY(-50%);pointer-events:none;" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-            <input type="text" id="bom-mini-filter" placeholder="Filter components... e.g. Battery, Camera" style="width:100%;border:1px solid #d1d5db;border-radius:9999px;padding:8px 14px 8px 34px;font-size:13px;outline:none;background:#fdfdfd;" onfocus="this.style.borderColor='#4285F4'" onblur="this.style.borderColor='#d1d5db'">
-          </div>
-          <div id="bom-filter-stats" style="font-size:12px;color:#5f6368;display:none;"></div>
-        </div>
-      </div>
-
-      <div class="material-list" id="material-list"></div>
-
-      <div id="load-more-container" style="text-align:center;margin-top:24px;display:none;">
-        <button id="load-more-btn">Load More</button>
-      </div>
-
-      <div class="download-bom-container">
-        <button class="btn btn-download-bom" onclick="alert('Downloading BOM as PDF...')">⬇ Download Full BOM as PDF</button>
-      </div>
-    </div>
-  </main>
-
-  <footer>
-    <div class="container footer-grid">
-      <div class="footer-col">
-        <div class="footer-logo-wrapper">
-          <img src="https://res.cloudinary.com/duh9wvgzu/image/upload/q_auto/f_auto/v1781335895/seedream-4.0_A_flat_2D_app_icon_of_a_cardboard_box_front-facing_view_warm_kraft_brown_color_b-0_1_ikduxs.jpg" alt="GrabRaw Logo" class="footer-logo-image" loading="lazy"/>
-          <span class="footer-logo-text">GrabRaw</span>
-        </div>
-        <p class="footer-description">GrabRaw is an AI-powered search engine that breaks down any product into its complete Bill of Materials and finds local suppliers near you.</p>
-      </div>
-      <div class="footer-col">
-        <h4 class="footer-title">Popular Categories</h4>
-        <div class="footer-links">
-          <a href="/#categories" class="footer-link">Microcontrollers</a>
-          <a href="/#categories" class="footer-link">Sensors & Dev Kits</a>
-          <a href="/#categories" class="footer-link">Batteries & Power</a>
-        </div>
-      </div>
-      <div class="footer-col">
-        <h4 class="footer-title">Top Searches</h4>
-        <div class="footer-links">
-          <a href="/info?q=Smartphone" class="footer-link">Smartphone BOM</a>
-          <a href="/info?q=Smartwatch" class="footer-link">Smartwatch</a>
-        </div>
-      </div>
-      <div class="footer-col">
-        <h4 class="footer-title">About Us</h4>
-        <p class="footer-description">GrabRaw is committed to local, decentralized product prototyping.</p>
-      </div>
-    </div>
-    <div class="container footer-bottom">
-      <div class="copyright">© 2026 GrabRaw Inc. All rights reserved.</div>
-      <div class="footer-legal-links">
-        <a href="privacy-policy.html" class="footer-legal-link">Privacy Policy</a>
-        <a href="terms-of-service.html" class="footer-legal-link">Terms of Service</a>
-      </div>
-    </div>
-  </footer>
-
-  <script>
-    // ── Plan banner ─────────────────────────────────────────────────────────
-    window.addEventListener('auth-changed', async (e) => {
-      const user = e.detail.session?.user;
-      let plan = 'free';
-      if (user) {
-        try {
-          const { data } = await window.sb.from('profiles').select('plan').eq('id', user.id).single();
-          if (data && data.plan) plan = data.plan;
-        } catch(err) {}
-      }
-      const bc = document.getElementById('plan-banner-container');
-      if (!bc) return;
-      if (plan === 'plus' || plan === 'GrabRaw+') {
-        bc.innerHTML = `<div style="background:#f0fdf4;color:#16a34a;padding:10px;font-size:13px;font-weight:600;text-align:center;width:100%;border-left:4px solid #16a34a;box-sizing:border-box;">✦ GrabRaw+ Active — All suppliers unlocked</div>`;
-      } else {
-        bc.innerHTML = `<div style="background:#eff6ff;color:#1d4ed8;padding:10px;font-size:13px;text-align:center;width:100%;display:flex;justify-content:center;align-items:center;position:relative;box-sizing:border-box;"><span>✦ You're on the Free plan — some suppliers are hidden. <a href="/plus.html" style="color:#1d4ed8;text-decoration:underline;font-weight:600;">Upgrade to GrabRaw+</a></span><button style="position:absolute;right:16px;background:none;border:none;color:#1d4ed8;font-size:16px;cursor:pointer;" onclick="this.parentElement.style.display='none'">✕</button></div>`;
-      }
-    });
-
-    // ── Category color map ──────────────────────────────────────────────────
-    const getCategoryColor = (cat) => {
-      const map = {
-        'semiconductor': [139,92,246],
-        'display':       [59,130,246],
-        'battery':       [16,185,129],
-        'sensor':        [245,158,11],
-        'memory':        [99,102,241],
-        'storage':       [6,182,212],
-        'connector':     [236,72,153],
-        'electronic':    [239,68,68],
-        'assembly':      [20,184,166],
-        'metal':         [107,114,128],
-        'glass':         [103,232,249],
-        'chemical':      [234,179,8],
-        'motor':         [5,150,105],
-        'plastic':       [124,58,237],
-        'power':         [244,63,94],
-      };
-      const key = Object.keys(map).find(k => (cat||'').toLowerCase().includes(k));
-      return key ? map[key] : [66,133,244];
-    };
-
-    // ── Saved suppliers helpers ─────────────────────────────────────────────
-    function getSaved() {
-      try { return JSON.parse(localStorage.getItem('savedSuppliers') || '[]'); } catch(e) { return []; }
-    }
-    function setSaved(arr) { localStorage.setItem('savedSuppliers', JSON.stringify(arr)); }
-    function isSaved(componentName, supplierName) {
-      return getSaved().some(s => s.component === componentName && s.supplier_name === supplierName);
-    }
-
-    // ── Build one card DOM element ──────────────────────────────────────────
-    function buildCard(mat, index) {
-      const [r,g,b] = getCategoryColor(mat.category);
-      const colorRGB = `${r},${g},${b}`;
-      const stockClass = (mat.stockStatus||'').toLowerCase().includes('low') ? 'low-stock' : 'in-stock';
-      const saved = isSaved(mat.name, mat.supplierName);
-
-      const card = document.createElement('article');
-      card.className = 'material-card';
-      card.style.borderLeft = `4px solid rgb(${colorRGB})`;
-
-      // ── card-main-row: info + actions ──
-      const mainRow = document.createElement('div');
-      mainRow.className = 'card-main-row';
-
-      // info column
-      const infoDiv = document.createElement('div');
-      infoDiv.className = 'material-info';
-      infoDiv.innerHTML = `
-        <div class="material-meta-row">
-          <h2 class="material-name">${index+1}. ${mat.name}</h2>
-          <span class="pill-tag" style="background:rgba(${colorRGB},0.12);color:rgb(${colorRGB});">${mat.category||'Component'}</span>
-          <span class="distance-badge">${mat.distanceKm}</span>
-          <span class="stock-indicator ${stockClass}"><span class="stock-dot"></span>${mat.stockStatus}</span>
-        </div>
-        <div class="supplier-details">
-          <span class="supplier-name">${mat.supplierName}</span>
-          <span class="supplier-address">${mat.city}</span>
-        </div>`;
-
-      // actions column
-      const actionsDiv = document.createElement('div');
-      actionsDiv.className = 'row-actions';
-
-      // save (+) button
-      const saveBtn = document.createElement('button');
-      saveBtn.className = 'btn-icon-round' + (saved ? ' saved' : '');
-      saveBtn.innerHTML = saved ? '✓' : '+';
-      saveBtn.title = saved ? 'Saved to My Partners' : 'Save to My Partners';
-      saveBtn.addEventListener('click', () => {
-        const info = {
-          id: `${mat.name}-${mat.supplierName}`.replace(/\s+/g, '-').toLowerCase(),
-          supplier_name: mat.supplierName,
-          address: mat.city,
-          component: mat.name,
-          distance: mat.distanceKm,
-          stock: mat.stockStatus,
-          maps_link: mat.mapsLink,
-          website: mat.websiteLink,
-          saved_date: new Date().toISOString()
-        };
-        const arr = getSaved();
-        const idx = arr.findIndex(s => s.component === info.component && s.supplier_name === info.supplier_name);
-        if (idx > -1) {
-          arr.splice(idx, 1);
-          saveBtn.classList.remove('saved');
-          saveBtn.innerHTML = '+';
-          saveBtn.title = 'Save to My Partners';
-        } else {
-          arr.push(info);
-          saveBtn.classList.add('saved');
-          saveBtn.innerHTML = '✓';
-          saveBtn.title = 'Saved to My Partners';
-        }
-        setSaved(arr);
-      });
-      actionsDiv.appendChild(saveBtn);
-
-      // website button
-      if (mat.websiteLink) {
-        const wb = document.createElement('a');
-        wb.href = mat.websiteLink; wb.target = '_blank';
-        wb.className = 'btn btn-row-action btn-supplier-web';
-        wb.innerHTML = '🌐 Supplier Website';
-        actionsDiv.appendChild(wb);
-      }
-
-      // maps button
-      if (mat.mapsLink) {
-        const mb = document.createElement('a');
-        mb.href = mat.mapsLink; mb.target = '_blank';
-        mb.className = 'btn btn-row-action btn-supplier-maps';
-        mb.innerHTML = '📍 Open in Google Maps';
-        actionsDiv.appendChild(mb);
-      }
-
-      // chevron button — only if alternatives exist
-      let altSection = null;
-      if (mat.altData && mat.altData.length > 0) {
-        const chevBtn = document.createElement('button');
-        chevBtn.className = 'btn-icon-round';
-        chevBtn.title = 'Show alternative suppliers';
-        chevBtn.innerHTML = '<span class="chevron-icon">⌄</span>';
-
-        altSection = document.createElement('div');
-        altSection.className = 'alt-suppliers-section';
-
-        let altHtml = '<div class="alt-section-label">Alternative Suppliers</div>';
-        mat.altData.forEach(alt => {
-          const altStock = (alt.stockStatus||'').toLowerCase().includes('low') ? 'low-stock' : 'in-stock';
-          altHtml += `
-            <div class="alt-supplier-row">
-              <div class="alt-supplier-top">
-                <div class="alt-supplier-info">
-                  <div class="alt-name">${alt.supplierName}</div>
-                  <div class="alt-city">${alt.city}</div>
-                </div>
-                <div class="alt-badges">
-                  <span class="distance-badge">${alt.distance}</span>
-                  <span class="stock-indicator ${altStock}"><span class="stock-dot"></span>${alt.stockStatus}</span>
-                </div>
-              </div>
-              <div class="alt-actions">
-                ${alt.websiteLink ? `<a href="${alt.websiteLink}" target="_blank" class="btn btn-row-action btn-supplier-web" style="padding:6px 12px;font-size:12px;">🌐 Website</a>` : ''}
-                ${alt.mapsLink ? `<a href="${alt.mapsLink}" target="_blank" class="btn btn-row-action btn-supplier-maps" style="padding:6px 12px;font-size:12px;">📍 Maps</a>` : ''}
-              </div>
-            </div>`;
-        });
-        altSection.innerHTML = altHtml;
-
-        let open = false;
-        chevBtn.addEventListener('click', () => {
-          open = !open;
-          altSection.style.display = open ? 'block' : 'none';
-          chevBtn.querySelector('.chevron-icon').style.transform = open ? 'rotate(180deg)' : 'rotate(0deg)';
-        });
-        actionsDiv.appendChild(chevBtn);
-      }
-
-      mainRow.appendChild(infoDiv);
-      mainRow.appendChild(actionsDiv);
-      card.appendChild(mainRow);
-      if (altSection) card.appendChild(altSection);
-
-      return card;
-    }
-
-    // ── Main search ─────────────────────────────────────────────────────────
-        async function performSearch(query) {
-      if (!query || !window.sb) return;
-
-      const materialList = document.getElementById('material-list');
-      const statsSummary = document.getElementById('stats-summary');
-      const bomTitle    = document.querySelector('.bom-title');
-      const loadMoreCon = document.getElementById('load-more-container');
-      const loadMoreBtn = document.getElementById('load-more-btn');
-
-      materialList.innerHTML = `<div style="text-align:center;padding:60px;color:#5f6368;">Finding materials...<br><br><div style="border:4px solid #e0e0e0;border-left-color:#4285F4;border-radius:50%;width:36px;height:36px;animation:spin 1s linear infinite;margin:16px auto;"></div></div>`;
-      statsSummary.textContent = 'Querying database...';
-      if (bomTitle) bomTitle.textContent = 'Bill of Materials — ' + query;
-      loadMoreCon.style.display = 'none';
-
-      try {
-        // Find product
-        const { data: products, error } = await window.sb
-          .from('products')
-          .select('id, name, category, bom_data')
-          .ilike('name', '%' + query + '%')
-          .limit(1);
-
-        if (!products || products.length === 0) {
-          materialList.innerHTML = `<div style="text-align:center; padding: 60px 24px;">
-  <div style="font-size: 48px; margin-bottom: 16px;">🔍</div>
-  <h3 style="font-size: 20px; font-weight: 700; color: #1a1a1a; margin-bottom: 8px;">No components found for "<span id="empty-search-term"></span>"</h3>
-  <p style="color: #5f6368; font-size: 15px; margin-bottom: 24px;">We don't have this product in our database yet. Try searching for a related product.</p>
-  <div style="display:flex; gap:12px; justify-content:center; flex-wrap:wrap;">
-    <a href="/info.html?q=Smartphone" style="background:#4285F4;color:#fff;padding:10px 20px;border-radius:100px;font-weight:600;font-size:14px;text-decoration:none;">Try Smartphone</a>
-    <a href="/info.html?q=Laptop" style="background:#4285F4;color:#fff;padding:10px 20px;border-radius:100px;font-weight:600;font-size:14px;text-decoration:none;">Try Laptop</a>
-    <a href="/" style="border:1px solid #dadce0;color:#3c4043;padding:10px 20px;border-radius:100px;font-weight:600;font-size:14px;text-decoration:none;">Back to Home</a>
-  </div>
-</div>`;
-          const emptyTerm = document.getElementById('empty-search-term');
-          if (emptyTerm) emptyTerm.textContent = new URLSearchParams(window.location.search).get('q') || '';
-          statsSummary.textContent = '0 materials found';
-          return;
-        }
-
-        const product = products[0];
-
-        if (!product.bom_data || !product.bom_data.components || product.bom_data.components.length === 0) {
-          materialList.innerHTML = '<div style="text-align:center;padding:40px;color:#5f6368;">No components found for this product.</div>';
-          return;
-        }
-
-        const formatAddress = (s) => [s.city, s.state, s.country].filter(Boolean).join(', ') || 'N/A';
-
-        const results = product.bom_data.components.map(comp => {
-          const sorted = (comp.suppliers || []).sort((a, b) => (parseFloat(a.distance_km) || 0) - (parseFloat(b.distance_km) || 0));
-          const primary = sorted[0] || null;
-          const alternatives = sorted.slice(1);
-
-          return {
-            name: comp.name,
-            category: comp.category,
-            supplierName: primary?.name || 'N/A',
-            city: primary ? formatAddress(primary) : 'N/A',
-            distanceKm: primary?.distance_km ? '~' + primary.distance_km + ' km away' : 'N/A',
-            stockStatus: primary?.stock_status || 'N/A',
-            mapsLink: primary?.google_maps_link || null,
-            websiteLink: primary?.product_link || null,
-            altData: alternatives.map(alt => ({
-              supplierName: alt.name || 'N/A',
-              city: formatAddress(alt),
-              distance: alt.distance_km ? '~' + alt.distance_km + ' km away' : 'N/A',
-              stockStatus: alt.stock_status || 'N/A',
-              mapsLink: alt.google_maps_link || null,
-              websiteLink: alt.product_link || null,
-            }))
-          };
-        });
-
-        // Render all cards, hide beyond first 10
-        materialList.innerHTML = '';
-        const allCards = [];
-        results.forEach((mat, i) => {
-          const card = buildCard(mat, i);
-          card.style.display = i < 10 ? '' : 'none';
-          materialList.appendChild(card);
-          allCards.push(card);
-        });
-
-        // Load more button
-        let visible = Math.min(10, results.length);
-        if (results.length > 10) {
-          loadMoreBtn.textContent = `Load More Components (showing ${visible} of ${results.length})`;
-          loadMoreCon.style.display = 'block';
-          loadMoreBtn.onclick = () => {
-            const next = Math.min(visible + 10, results.length);
-            for (let i = visible; i < next; i++) allCards[i].style.display = '';
-            visible = next;
-            if (visible >= results.length) {
-              loadMoreCon.innerHTML = `<span style="color:#5f6368;font-size:14px;font-weight:500;">All ${results.length} components loaded ✓</span>`;
-            } else {
-              loadMoreBtn.textContent = `Load More Components (showing ${visible} of ${results.length})`;
-            }
-          };
-        }
-
-        statsSummary.textContent = `Sourced ${results.length} of ${results.length} materials • Click 📍 to open supplier location in Google Maps`;
-
-        // Mini filter
-        const miniFilter = document.getElementById('bom-mini-filter');
-        const filterStats = document.getElementById('bom-filter-stats');
-        if (miniFilter) {
-          const fresh = miniFilter.cloneNode(true);
-          miniFilter.parentNode.replaceChild(fresh, miniFilter);
-          fresh.value = '';
-          fresh.addEventListener('input', (e) => {
-            const q = e.target.value.toLowerCase().trim();
-            let count = 0;
-            if (q === '') {
-              filterStats.style.display = 'none';
-              loadMoreCon.style.display = results.length > 10 && visible < results.length ? 'block' : (results.length > 10 ? 'block' : 'none');
-              allCards.forEach((c,i) => { c.style.display = i < visible ? '' : 'none'; });
-              document.getElementById('bom-no-results')?.remove();
-            } else {
-              loadMoreCon.style.display = 'none';
-              allCards.forEach(c => {
-                const name = c.querySelector('.material-name')?.textContent.toLowerCase()||'';
-                const cat  = c.querySelector('.pill-tag')?.textContent.toLowerCase()||'';
-                const show = name.includes(q) || cat.includes(q);
-                c.style.display = show ? '' : 'none';
-                if (show) count++;
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Bill of Materials — iPhone 15 | GrabRaw Sourcing</title>
+    <meta
+      name="description"
+      content="GrabRaw is an AI-powered search engine that breaks down any product into its complete Bill of Materials and finds local suppliers near you."
+    />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="https://grabraw.com/info" />
+    <meta
+      property="og:title"
+      content="Bill of Materials — iPhone 15 | GrabRaw"
+    />
+    <meta
+      property="og:description"
+      content="Complete list of raw materials and components required to build iPhone 15, with local supplier sourcing within 40km."
+    />
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        let isScrolling = false;
+        window.addEventListener(
+          "scroll",
+          function () {
+            if (!isScrolling) {
+              isScrolling = true;
+              requestAnimationFrame(() => {
+                isScrolling = false;
               });
-              filterStats.style.display = 'block';
-              filterStats.textContent = `Showing ${count} of ${results.length} components`;
-              let noRes = document.getElementById('bom-no-results');
-              if (count === 0) {
-                if (!noRes) { noRes = document.createElement('div'); noRes.id='bom-no-results'; noRes.style.cssText='text-align:center;padding:40px;color:#5f6368;'; materialList.appendChild(noRes); }
-                noRes.innerHTML = `No components found for '<b>${e.target.value}</b>'`;
-              } else { noRes?.remove(); }
+            }
+          },
+          { passive: true },
+        );
+      });
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "ItemList",
+        "name": "Bill of Materials — iPhone 15",
+        "description": "Complete list of raw materials and components required to build iPhone 15, with local supplier sourcing within 40km",
+        "url": "https://grabraw.com/info"
+      }
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="/auth-global.js"></script>
+    <style>
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        font-family:
+          "Inter",
+          system-ui,
+          -apple-system,
+          sans-serif;
+        background-color: #ffffff;
+        color: #1a1a1a;
+        line-height: 1.5;
+        -webkit-font-smoothing: antialiased;
+      }
+      a {
+        text-decoration: none;
+        color: inherit;
+      }
+      .container {
+        width: 100%;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 24px;
+      }
+      .container-slim {
+        width: 100%;
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 0 20px;
+      }
+
+      .navbar {
+        height: 64px;
+        padding: 12px 24px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background: rgba(255, 255, 255, 0.75);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        font-family: Inter, system-ui, sans-serif;
+        box-sizing: border-box;
+        width: 100%;
+      }
+      .nav-links {
+        display: none;
+        gap: 24px;
+        align-items: center;
+        flex: 1;
+        margin-left: 40px;
+      }
+      @media (min-width: 768px) {
+        .nav-links {
+          display: flex;
+        }
+      }
+      .nav-link {
+        font-size: 14px;
+        color: #1a1a1a;
+        text-decoration: none;
+        font-weight: 500;
+        padding: 8px 12px;
+        border-radius: 8px;
+        transition:
+          background-color 0.2s ease,
+          color 0.2s ease;
+      }
+      .nav-link:hover {
+        background-color: #f0f0f0;
+        color: #4285f4;
+      }
+      .nav-actions {
+        display: flex;
+        gap: 16px;
+        align-items: center;
+        margin-left: auto;
+      }
+      @media (max-width: 768px) {
+        .navbar {
+          height: 56px;
+          padding: 8px 16px;
+        }
+      }
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 14px;
+        font-weight: 600;
+        padding: 10px 20px;
+        border-radius: 8px;
+        transition: all 0.2s ease;
+        cursor: pointer;
+        border: none;
+        text-align: center;
+      }
+      .btn-outline {
+        background-color: transparent;
+        border: 1px solid #dadce0;
+        color: #3c4043;
+      }
+      .btn-outline:hover {
+        background-color: #f8f9fa;
+        border-color: #bdc1c6;
+      }
+      .btn-primary {
+        background-color: #4285f4;
+        color: #ffffff;
+      }
+      .btn-primary:hover {
+        background-color: #2b72eb;
+      }
+
+      .search-row-section {
+        background-color: #ffffff;
+        border-bottom: 1px solid #f1f3f4;
+        padding: 32px 0 24px;
+      }
+      .search-box-container {
+        display: flex;
+        align-items: center;
+        width: 100%;
+        border: 1px solid #dadce0;
+        border-radius: 100px;
+        padding: 6px 6px 6px 20px;
+        margin-bottom: 12px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+        transition: all 0.2s ease;
+      }
+      .search-box-container:focus-within {
+        border-color: #4285f4;
+        box-shadow: 0 2px 8px rgba(66, 133, 244, 0.15);
+      }
+      .search-icon {
+        color: #9aa0a6;
+        margin-right: 12px;
+        display: flex;
+        align-items: center;
+      }
+      .search-input {
+        flex: 1;
+        border: none;
+        outline: none;
+        font-size: 15px;
+        color: #202124;
+        background: transparent;
+        width: 100%;
+      }
+      .btn-search {
+        background-color: #4285f4;
+        color: white;
+        border-radius: 100px;
+        padding: 10px 24px;
+        font-weight: 600;
+        font-size: 14px;
+      }
+      .btn-search:hover {
+        background-color: #2b72eb;
+      }
+      .search-stats-text {
+        font-size: 12px;
+        color: #5f6368;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        flex-wrap: wrap;
+      }
+      .sparkle-accent {
+        color: #4285f4;
+        font-weight: bold;
+      }
+
+      main {
+        padding: 40px 0 80px;
+        background-color: #ffffff;
+      }
+
+      .bom-header {
+        margin-bottom: 24px;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+      @media (min-width: 640px) {
+        .bom-header {
+          flex-direction: row;
+          align-items: flex-start;
+          justify-content: space-between;
+        }
+      }
+      .bom-title-group {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        flex-wrap: wrap;
+      }
+      .bom-title {
+        font-size: 26px;
+        font-weight: 800;
+        color: #1a1a1a;
+        letter-spacing: -0.5px;
+      }
+      .live-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background-color: #e6f4ea;
+        color: #137333;
+        font-size: 11px;
+        font-weight: 700;
+        padding: 4px 10px;
+        border-radius: 100px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+      .live-badge .dot {
+        width: 6px;
+        height: 6px;
+        background-color: #137333;
+        border-radius: 50%;
+      }
+      .bom-subtext {
+        font-size: 14px;
+        color: #5f6368;
+      }
+
+      /* ── Material card: column layout so alt-section always below ── */
+      .material-list {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        margin-top: 24px;
+      }
+
+      .material-card {
+        background-color: #ffffff;
+        border: 1px solid #e1e3e5;
+        border-radius: 12px;
+        padding: 20px 24px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+        transition:
+          box-shadow 0.2s ease,
+          border-color 0.2s ease;
+        display: flex;
+        flex-direction: column; /* always column so alt section stacks below */
+        gap: 0;
+      }
+      .material-card:hover {
+        border-color: #dadce0;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      }
+
+      /* top row inside card = info + actions side by side */
+      .card-main-row {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+      }
+      @media (min-width: 640px) {
+        .card-main-row {
+          flex-direction: row;
+          align-items: center;
+          justify-content: space-between;
+        }
+      }
+
+      .material-info {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        flex: 1;
+      }
+      .material-meta-row {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 10px;
+      }
+      .material-name {
+        font-size: 18px;
+        font-weight: 700;
+        color: #1a1a1a;
+      }
+      .pill-tag {
+        font-size: 11px;
+        font-weight: 700;
+        padding: 3px 10px;
+        border-radius: 100px;
+      }
+      .distance-badge {
+        font-size: 11px;
+        font-weight: 600;
+        background-color: #e8f0fe;
+        color: #1a73e8;
+        padding: 3px 8px;
+        border-radius: 100px;
+      }
+      .stock-indicator {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        font-size: 12px;
+        font-weight: 600;
+      }
+      .stock-indicator.in-stock {
+        color: #137333;
+      }
+      .stock-indicator.low-stock {
+        color: #d93025;
+      }
+      .stock-indicator .stock-dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+      }
+      .stock-indicator.in-stock .stock-dot {
+        background-color: #137333;
+      }
+      .stock-indicator.low-stock .stock-dot {
+        background-color: #d93025;
+      }
+      .supplier-details {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+      }
+      .supplier-name {
+        font-size: 14px;
+        font-weight: 700;
+        color: #202124;
+      }
+      .supplier-address {
+        font-size: 12px;
+        color: #5f6368;
+      }
+
+      .row-actions {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+      @media (min-width: 640px) {
+        .row-actions {
+          justify-content: flex-end;
+        }
+      }
+
+      .btn-row-action {
+        font-size: 12px;
+        font-weight: 600;
+        padding: 8px 14px;
+        border-radius: 8px;
+        text-align: center;
+        white-space: nowrap;
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+      }
+      .btn-supplier-web {
+        background-color: #ffffff;
+        border: 1px solid #dadce0;
+        color: #3c4043;
+      }
+      .btn-supplier-web:hover {
+        background-color: #f8f9fa;
+      }
+      .btn-supplier-maps {
+        background-color: #4285f4;
+        color: #ffffff;
+      }
+      .btn-supplier-maps:hover {
+        background-color: #2b72eb;
+      }
+
+      /* save + chevron icon buttons */
+      .btn-icon-round {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        border: 1px solid #dadce0;
+        background: #fff;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0;
+        flex-shrink: 0;
+        transition: all 0.2s ease;
+      }
+      .btn-icon-round.saved {
+        background: #16a34a;
+        border-color: #16a34a;
+        color: #fff;
+        font-weight: bold;
+        font-size: 14px;
+      }
+      .btn-icon-round:not(.saved) {
+        color: #5f6368;
+        font-size: 18px;
+      }
+
+      /* alt suppliers dropdown */
+      .alt-suppliers-section {
+        display: none;
+        border-top: 1px solid #e5e7eb;
+        margin-top: 16px;
+        padding-top: 14px;
+      }
+      .alt-section-label {
+        font-size: 11px;
+        color: #5f6368;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 12px;
+      }
+      .alt-supplier-row {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        padding-bottom: 14px;
+        margin-bottom: 14px;
+        border-bottom: 1px dashed #e5e7eb;
+      }
+      .alt-supplier-row:last-child {
+        border-bottom: none;
+        margin-bottom: 0;
+        padding-bottom: 0;
+      }
+      .alt-supplier-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+      .alt-supplier-info .alt-name {
+        font-weight: 600;
+        font-size: 14px;
+        color: #202124;
+      }
+      .alt-supplier-info .alt-city {
+        font-size: 12px;
+        color: #5f6368;
+        margin-top: 2px;
+      }
+      .alt-badges {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 4px;
+      }
+      .alt-actions {
+        display: flex;
+        gap: 8px;
+        justify-content: flex-end;
+        flex-wrap: wrap;
+      }
+
+      .chevron-icon {
+        display: inline-block;
+        transition: transform 0.25s ease;
+        font-size: 16px;
+        line-height: 1;
+      }
+
+      .download-bom-container {
+        margin-top: 32px;
+      }
+      .btn-download-bom {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        width: 100%;
+        background-color: #4285f4;
+        color: #ffffff;
+        font-size: 15px;
+        font-weight: 700;
+        padding: 16px 24px;
+        border-radius: 12px;
+        box-shadow: 0 4px 10px rgba(66, 133, 244, 0.15);
+        cursor: pointer;
+        border: none;
+      }
+      .btn-download-bom:hover {
+        background-color: #2b72eb;
+      }
+
+      footer {
+        background-color: #f8f9fa;
+        border-top: 1px solid #e1e3e5;
+        padding: 80px 0 0;
+      }
+      .footer-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 40px;
+        margin-bottom: 40px;
+      }
+      @media (min-width: 576px) {
+        .footer-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+      @media (min-width: 992px) {
+        .footer-grid {
+          grid-template-columns: repeat(4, 1fr);
+        }
+      }
+      .footer-col {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+      }
+      .footer-title {
+        font-size: 12px;
+        font-weight: 700;
+        color: #5f6368;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+      .footer-links {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+      .footer-link {
+        font-size: 13px;
+        color: #3c4043;
+        transition: color 0.15s ease;
+      }
+      .footer-link:hover {
+        color: #4285f4;
+      }
+      .footer-description {
+        font-size: 13px;
+        color: #5f6368;
+        line-height: 1.6;
+      }
+      .footer-bottom {
+        background-color: #ffffff;
+        border-top: 1px solid #e8eaed;
+        padding: 24px;
+        margin-top: 40px;
+        width: 100vw;
+        margin-left: calc(-50vw + 50%);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        box-sizing: border-box;
+      }
+      @media (min-width: 768px) {
+        .footer-bottom {
+          flex-direction: row;
+        }
+      }
+      .copyright {
+        font-size: 12px;
+        color: #5f6368;
+      }
+      .footer-legal-links {
+        display: flex;
+        gap: 20px;
+      }
+      .footer-legal-link {
+        font-size: 12px;
+        color: #3c4043;
+        transition: color 0.15s ease;
+      }
+      .footer-legal-link:hover {
+        color: #4285f4;
+      }
+
+      .navbar-logo-wrapper {
+        display: inline-flex;
+        align-items: center;
+        gap: 12px;
+        text-decoration: none;
+        cursor: pointer;
+        transition: opacity 0.3s ease;
+        padding: 8px;
+      }
+      .navbar-logo-wrapper:hover {
+        opacity: 0.85;
+      }
+      .navbar-logo-image {
+        height: 50px;
+        width: auto;
+        object-fit: contain;
+        display: block;
+      }
+      .navbar-logo-text {
+        font-size: 24px;
+        font-weight: 700;
+        color: #1a1a1a;
+        font-family: Inter, system-ui, sans-serif;
+        letter-spacing: -0.5px;
+      }
+      .footer-logo-wrapper {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 16px;
+      }
+      .footer-logo-image {
+        height: 40px;
+        width: auto;
+        object-fit: contain;
+        display: block;
+      }
+      .footer-logo-text {
+        font-size: 18px;
+        font-weight: 700;
+        color: #1a1a1a;
+        font-family: Inter, system-ui, sans-serif;
+      }
+
+      html {
+        scroll-behavior: smooth;
+        overflow-y: scroll;
+      }
+      body {
+        transform: translate3d(0, 0, 0);
+        will-change: scroll-position;
+      }
+      button,
+      a,
+      input,
+      select,
+      textarea {
+        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+      }
+
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      /* load more button */
+      #load-more-btn {
+        padding: 12px 32px;
+        border-radius: 100px;
+        border: 1px solid #dadce0;
+        background: #fff;
+        color: #3c4043;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+      #load-more-btn:hover {
+        background: #f8f9fa;
+        border-color: #4285f4;
+        color: #4285f4;
+      }
+    </style>
+  </head>
+  <body>
+    <header class="navbar">
+      <a href="/" class="navbar-logo-wrapper">
+        <img
+          src="https://res.cloudinary.com/duh9wvgzu/image/upload/q_auto/f_auto/v1781335895/seedream-4.0_A_flat_2D_app_icon_of_a_cardboard_box_front-facing_view_warm_kraft_brown_color_b-0_1_ikduxs.jpg"
+          alt="GrabRaw Logo"
+          class="navbar-logo-image"
+          loading="lazy"
+        />
+        <span class="navbar-logo-text">GrabRaw</span>
+      </a>
+      <nav class="nav-links">
+        <a href="/#categories" class="nav-link">Material</a>
+        <a href="/#suppliers" class="nav-link">Suppliers</a>
+        <a href="/plus.html" class="nav-link">GrabRaw +</a>
+        <a href="/#ask-ai" class="nav-link">Ask AI</a>
+      </nav>
+      <div class="nav-actions">
+        <a
+          href="/signin.html"
+          id="signin-btn"
+          class="btn btn-outline"
+          style="border-radius: 100px"
+          >Sign In</a
+        >
+      </div>
+    </header>
+
+    <!-- Plan banner -->
+    <div id="plan-banner-container"></div>
+
+    <!-- Search Bar -->
+    <section class="search-row-section">
+      <div class="container-slim">
+        <form action="/info" method="GET" class="search-box-container">
+          <div class="search-icon">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="#9aa0a6">
+              <path
+                d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"
+              />
+            </svg>
+          </div>
+          <input
+            type="text"
+            name="q"
+            value=""
+            class="search-input"
+            placeholder="Search for components, blueprints, or suppliers..."
+          />
+          <button type="submit" class="btn btn-search">Search</button>
+        </form>
+        <div class="search-stats-text">
+          <span class="sparkle-accent">✦</span>
+          <span id="stats-summary">Loading...</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Main Content -->
+    <main>
+      <div class="container-slim">
+        <div class="bom-header">
+          <div>
+            <div class="bom-title-group">
+              <h1 class="bom-title">Bill of Materials</h1>
+              <span class="live-badge"
+                ><span class="dot"></span>Live Inventory</span
+              >
+            </div>
+          </div>
+          <div
+            style="
+              display: flex;
+              flex-direction: column;
+              gap: 10px;
+              flex: 0 1 400px;
+              min-width: 250px;
+            "
+          >
+            <p class="bom-subtext">
+              AI-generated component breakdown. Click any supplier link to visit
+              their website or open their location in Google Maps.
+            </p>
+            <div style="position: relative">
+              <svg
+                style="
+                  position: absolute;
+                  left: 12px;
+                  top: 50%;
+                  transform: translateY(-50%);
+                  pointer-events: none;
+                "
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="#9ca3af"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <circle cx="11" cy="11" r="8" />
+                <line x1="21" y1="21" x2="16.65" y2="16.65" />
+              </svg>
+              <input
+                type="text"
+                id="bom-mini-filter"
+                placeholder="Filter components... e.g. Battery, Camera"
+                style="
+                  width: 100%;
+                  border: 1px solid #d1d5db;
+                  border-radius: 9999px;
+                  padding: 8px 14px 8px 34px;
+                  font-size: 13px;
+                  outline: none;
+                  background: #fdfdfd;
+                "
+                onfocus="this.style.borderColor = '#4285F4'"
+                onblur="this.style.borderColor = '#d1d5db'"
+              />
+            </div>
+            <div
+              id="bom-filter-stats"
+              style="font-size: 12px; color: #5f6368; display: none"
+            ></div>
+          </div>
+        </div>
+
+        <div class="material-list" id="material-list"></div>
+
+        <div
+          id="load-more-container"
+          style="text-align: center; margin-top: 24px; display: none"
+        >
+          <button id="load-more-btn">Load More</button>
+        </div>
+
+        <div class="download-bom-container">
+          <button
+            class="btn btn-download-bom"
+            onclick="alert('Downloading BOM as PDF...')"
+          >
+            ⬇ Download Full BOM as PDF
+          </button>
+        </div>
+      </div>
+    </main>
+
+    <footer>
+      <div class="container footer-grid">
+        <div class="footer-col">
+          <div class="footer-logo-wrapper">
+            <img
+              src="https://res.cloudinary.com/duh9wvgzu/image/upload/q_auto/f_auto/v1781335895/seedream-4.0_A_flat_2D_app_icon_of_a_cardboard_box_front-facing_view_warm_kraft_brown_color_b-0_1_ikduxs.jpg"
+              alt="GrabRaw Logo"
+              class="footer-logo-image"
+              loading="lazy"
+            />
+            <span class="footer-logo-text">GrabRaw</span>
+          </div>
+          <p class="footer-description">
+            GrabRaw is an AI-powered search engine that breaks down any product
+            into its complete Bill of Materials and finds local suppliers near
+            you.
+          </p>
+        </div>
+        <div class="footer-col">
+          <h4 class="footer-title">Popular Categories</h4>
+          <div class="footer-links">
+            <a href="/#categories" class="footer-link">Microcontrollers</a>
+            <a href="/#categories" class="footer-link">Sensors & Dev Kits</a>
+            <a href="/#categories" class="footer-link">Batteries & Power</a>
+          </div>
+        </div>
+        <div class="footer-col">
+          <h4 class="footer-title">Top Searches</h4>
+          <div class="footer-links">
+            <a href="/info?q=Smartphone" class="footer-link">Smartphone BOM</a>
+            <a href="/info?q=Smartwatch" class="footer-link">Smartwatch</a>
+          </div>
+        </div>
+        <div class="footer-col">
+          <h4 class="footer-title">About Us</h4>
+          <p class="footer-description">
+            GrabRaw is committed to local, decentralized product prototyping.
+          </p>
+        </div>
+      </div>
+      <div class="container footer-bottom">
+        <div class="copyright">© 2026 GrabRaw Inc. All rights reserved.</div>
+        <div class="footer-legal-links">
+          <a href="privacy-policy.html" class="footer-legal-link"
+            >Privacy Policy</a
+          >
+          <a href="terms-of-service.html" class="footer-legal-link"
+            >Terms of Service</a
+          >
+        </div>
+      </div>
+    </footer>
+
+    <script>
+          // ── Plan banner ─────────────────────────────────────────────────────────
+          window.addEventListener('auth-changed', async (e) => {
+            const user = e.detail.session?.user;
+            let plan = 'free';
+            if (user) {
+              try {
+                const { data } = await window.sb.from('profiles').select('plan').eq('id', user.id).single();
+                if (data && data.plan) plan = data.plan;
+              } catch(err) {}
+            }
+            const bc = document.getElementById('plan-banner-container');
+            if (!bc) return;
+            if (plan === 'plus' || plan === 'GrabRaw+') {
+              bc.innerHTML = `<div style="background:#f0fdf4;color:#16a34a;padding:10px;font-size:13px;font-weight:600;text-align:center;width:100%;border-left:4px solid #16a34a;box-sizing:border-box;">✦ GrabRaw+ Active — All suppliers unlocked</div>`;
+            } else {
+              bc.innerHTML = `<div style="background:#eff6ff;color:#1d4ed8;padding:10px;font-size:13px;text-align:center;width:100%;display:flex;justify-content:center;align-items:center;position:relative;box-sizing:border-box;"><span>✦ You're on the Free plan — some suppliers are hidden. <a href="/plus.html" style="color:#1d4ed8;text-decoration:underline;font-weight:600;">Upgrade to GrabRaw+</a></span><button style="position:absolute;right:16px;background:none;border:none;color:#1d4ed8;font-size:16px;cursor:pointer;" onclick="this.parentElement.style.display='none'">✕</button></div>`;
             }
           });
-        }
 
-      } catch (err) {
-        materialList.innerHTML = '<div style="text-align:center;padding:40px;color:#c5221f;">Error: '+err.message+'</div>';
-        console.error(err);
-      }
-    }
+          // ── Category color map ──────────────────────────────────────────────────
+          const getCategoryColor = (cat) => {
+            const map = {
+              'semiconductor': [139,92,246],
+              'display':       [59,130,246],
+              'battery':       [16,185,129],
+              'sensor':        [245,158,11],
+              'memory':        [99,102,241],
+              'storage':       [6,182,212],
+              'connector':     [236,72,153],
+              'electronic':    [239,68,68],
+              'assembly':      [20,184,166],
+              'metal':         [107,114,128],
+              'glass':         [103,232,249],
+              'chemical':      [234,179,8],
+              'motor':         [5,150,105],
+              'plastic':       [124,58,237],
+              'power':         [244,63,94],
+            };
+            const key = Object.keys(map).find(k => (cat||'').toLowerCase().includes(k));
+            return key ? map[key] : [66,133,244];
+          };
 
-    // ── Boot ────────────────────────────────────────────────────────────────
-    function waitForSb(cb) { if (window.sb) cb(); else setTimeout(() => waitForSb(cb), 100); }
+          // ── Saved suppliers helpers ─────────────────────────────────────────────
+          function getSaved() {
+            try { return JSON.parse(localStorage.getItem('savedSuppliers') || '[]'); } catch(e) { return []; }
+          }
+          function setSaved(arr) { localStorage.setItem('savedSuppliers', JSON.stringify(arr)); }
+          function isSaved(componentName, supplierName) {
+            return getSaved().some(s => s.component === componentName && s.supplier_name === supplierName);
+          }
 
-    document.addEventListener('DOMContentLoaded', () => {
-      const form   = document.querySelector('.search-box-container');
-      const input  = document.querySelector('.search-input');
-      if (form) {
-        form.addEventListener('submit', (e) => {
-          e.preventDefault();
-          const q = input.value.trim();
-          if (q) { window.history.pushState({}, '', '?q='+encodeURIComponent(q)); waitForSb(() => performSearch(q)); }
-        });
-      }
-      const initialQ = new URLSearchParams(window.location.search).get('q');
-      if (initialQ && initialQ.trim()) {
-        if (input) input.value = initialQ;
-        waitForSb(() => performSearch(initialQ.trim()));
-      }
-    });
-  </script>
-</body>
+          // ── Build one card DOM element ──────────────────────────────────────────
+          function buildCard(mat, index) {
+            const [r,g,b] = getCategoryColor(mat.category);
+            const colorRGB = `${r},${g},${b}`;
+            const stockClass = (mat.stockStatus||'').toLowerCase().includes('low') ? 'low-stock' : 'in-stock';
+            const saved = isSaved(mat.name, mat.supplierName);
+
+            const card = document.createElement('article');
+            card.className = 'material-card';
+            card.style.borderLeft = `4px solid rgb(${colorRGB})`;
+
+            // ── card-main-row: info + actions ──
+            const mainRow = document.createElement('div');
+            mainRow.className = 'card-main-row';
+
+            // info column
+            const infoDiv = document.createElement('div');
+            infoDiv.className = 'material-info';
+            infoDiv.innerHTML = `
+              <div class="material-meta-row">
+                <h2 class="material-name">${index+1}. ${mat.name}</h2>
+                <span class="pill-tag" style="background:rgba(${colorRGB},0.12);color:rgb(${colorRGB});">${mat.category||'Component'}</span>
+                <span class="distance-badge">${mat.distanceKm}</span>
+                <span class="stock-indicator ${stockClass}"><span class="stock-dot"></span>${mat.stockStatus}</span>
+              </div>
+              <div class="supplier-details">
+                <span class="supplier-name">${mat.supplierName}</span>
+                <span class="supplier-address">${mat.city}</span>
+              </div>`;
+
+            // actions column
+            const actionsDiv = document.createElement('div');
+            actionsDiv.className = 'row-actions';
+
+            // save (+) button
+            const saveBtn = document.createElement('button');
+            saveBtn.className = 'btn-icon-round' + (saved ? ' saved' : '');
+            saveBtn.innerHTML = saved ? '✓' : '+';
+            saveBtn.title = saved ? 'Saved to My Partners' : 'Save to My Partners';
+            saveBtn.addEventListener('click', () => {
+              const info = {
+                id: `${mat.name}-${mat.supplierName}`.replace(/\s+/g, '-').toLowerCase(),
+                supplier_name: mat.supplierName,
+                address: mat.city,
+                component: mat.name,
+                distance: mat.distanceKm,
+                stock: mat.stockStatus,
+                maps_link: mat.mapsLink,
+                website: mat.websiteLink,
+                saved_date: new Date().toISOString()
+              };
+              const arr = getSaved();
+              const idx = arr.findIndex(s => s.component === info.component && s.supplier_name === info.supplier_name);
+              if (idx > -1) {
+                arr.splice(idx, 1);
+                saveBtn.classList.remove('saved');
+                saveBtn.innerHTML = '+';
+                saveBtn.title = 'Save to My Partners';
+              } else {
+                arr.push(info);
+                saveBtn.classList.add('saved');
+                saveBtn.innerHTML = '✓';
+                saveBtn.title = 'Saved to My Partners';
+              }
+              setSaved(arr);
+            });
+            actionsDiv.appendChild(saveBtn);
+
+            // website button
+            if (mat.websiteLink) {
+              const wb = document.createElement('a');
+              wb.href = mat.websiteLink; wb.target = '_blank';
+              wb.className = 'btn btn-row-action btn-supplier-web';
+              wb.innerHTML = '🌐 Supplier Website';
+              actionsDiv.appendChild(wb);
+            }
+
+            // maps button
+            if (mat.mapsLink) {
+              const mb = document.createElement('a');
+              mb.href = mat.mapsLink; mb.target = '_blank';
+              mb.className = 'btn btn-row-action btn-supplier-maps';
+              mb.innerHTML = '📍 Open in Google Maps';
+              actionsDiv.appendChild(mb);
+            }
+
+            // chevron button — only if alternatives exist
+            let altSection = null;
+            if (mat.altData && mat.altData.length > 0) {
+              const chevBtn = document.createElement('button');
+              chevBtn.className = 'btn-icon-round';
+              chevBtn.title = 'Show alternative suppliers';
+              chevBtn.innerHTML = '<span class="chevron-icon">⌄</span>';
+
+              altSection = document.createElement('div');
+              altSection.className = 'alt-suppliers-section';
+
+              let altHtml = '<div class="alt-section-label">Alternative Suppliers</div>';
+              mat.altData.forEach(alt => {
+                const altStock = (alt.stockStatus||'').toLowerCase().includes('low') ? 'low-stock' : 'in-stock';
+                altHtml += `
+                  <div class="alt-supplier-row">
+                    <div class="alt-supplier-top">
+                      <div class="alt-supplier-info">
+                        <div class="alt-name">${alt.supplierName}</div>
+                        <div class="alt-city">${alt.city}</div>
+                      </div>
+                      <div class="alt-badges">
+                        <span class="distance-badge">${alt.distance}</span>
+                        <span class="stock-indicator ${altStock}"><span class="stock-dot"></span>${alt.stockStatus}</span>
+                      </div>
+                    </div>
+                    <div class="alt-actions">
+                      ${alt.websiteLink ? `<a href="${alt.websiteLink}" target="_blank" class="btn btn-row-action btn-supplier-web" style="padding:6px 12px;font-size:12px;">🌐 Website</a>` : ''}
+                      ${alt.mapsLink ? `<a href="${alt.mapsLink}" target="_blank" class="btn btn-row-action btn-supplier-maps" style="padding:6px 12px;font-size:12px;">📍 Maps</a>` : ''}
+                    </div>
+                  </div>`;
+              });
+              altSection.innerHTML = altHtml;
+
+              let open = false;
+              chevBtn.addEventListener('click', () => {
+                open = !open;
+                altSection.style.display = open ? 'block' : 'none';
+                chevBtn.querySelector('.chevron-icon').style.transform = open ? 'rotate(180deg)' : 'rotate(0deg)';
+              });
+              actionsDiv.appendChild(chevBtn);
+            }
+
+            mainRow.appendChild(infoDiv);
+            mainRow.appendChild(actionsDiv);
+            card.appendChild(mainRow);
+            if (altSection) card.appendChild(altSection);
+
+            return card;
+          }
+
+          // ── Main search ─────────────────────────────────────────────────────────
+              async function performSearch(query) {
+            if (!query || !window.sb) return;
+
+            const materialList = document.getElementById('material-list');
+            const statsSummary = document.getElementById('stats-summary');
+            const bomTitle    = document.querySelector('.bom-title');
+            const loadMoreCon = document.getElementById('load-more-container');
+            const loadMoreBtn = document.getElementById('load-more-btn');
+
+            materialList.innerHTML = `<div style="text-align:center;padding:60px;color:#5f6368;">Finding materials...<br><br><div style="border:4px solid #e0e0e0;border-left-color:#4285F4;border-radius:50%;width:36px;height:36px;animation:spin 1s linear infinite;margin:16px auto;"></div></div>`;
+            statsSummary.textContent = 'Querying database...';
+            if (bomTitle) bomTitle.textContent = 'Bill of Materials — ' + query;
+            loadMoreCon.style.display = 'none';
+
+            try {
+              // Find product
+                      const { data: products, error } = await window.sb
+                .from('products')
+                .select('id, name, category, product_details')
+                .ilike('name', '%' + query + '%')
+                .limit(1);
+
+              if (!products || products.length === 0) {
+                materialList.innerHTML = \`<div style="text-align:center; padding: 60px 24px;">
+        <div style="font-size: 48px; margin-bottom: 16px;">🔍</div>
+        <h3 style="font-size: 20px; font-weight: 700; color: #1a1a1a; margin-bottom: 8px;">No components found for "<span id="empty-search-term"></span>"</h3>
+        <p style="color: #5f6368; font-size: 15px; margin-bottom: 24px;">We don't have this product in our database yet. Try searching for a related product.</p>
+        <div style="display:flex; gap:12px; justify-content:center; flex-wrap:wrap;">
+          <a href="/info.html?q=Smartphone" style="background:#4285F4;color:#fff;padding:10px 20px;border-radius:100px;font-weight:600;font-size:14px;text-decoration:none;">Try Smartphone</a>
+          <a href="/info.html?q=Laptop" style="background:#4285F4;color:#fff;padding:10px 20px;border-radius:100px;font-weight:600;font-size:14px;text-decoration:none;">Try Laptop</a>
+          <a href="/" style="border:1px solid #dadce0;color:#3c4043;padding:10px 20px;border-radius:100px;font-weight:600;font-size:14px;text-decoration:none;">Back to Home</a>
+        </div>
+      </div>\`;
+                const emptyTerm = document.getElementById('empty-search-term');
+                if (emptyTerm) emptyTerm.textContent = new URLSearchParams(window.location.search).get('q') || '';
+                statsSummary.textContent = '0 materials found';
+                return;
+              }
+
+              const product = products[0];
+
+              if (!product.product_details || !product.product_details.components || product.product_details.components.length === 0) {
+                materialList.innerHTML = '<div style="text-align:center;padding:40px;color:#5f6368;">No components found for this product.</div>';
+                return;
+              }
+
+              const formatAddress = (s) => [s.supplier_city, s.supplier_state, s.supplier_country].filter(Boolean).join(', ') || 'N/A';
+
+              const results = product.product_details.components.map(comp => {
+                const sorted = (comp.suppliers || []).sort((a, b) => (parseFloat(a.distance_km) || 0) - (parseFloat(b.distance_km) || 0));
+                const primary = sorted[0] || null;
+                const alternatives = sorted.slice(1);
+
+                return {
+                  name: comp.component_name,
+                  category: comp.component_category,
+                  supplierName: primary?.supplier_name || 'N/A',
+                  city: primary ? formatAddress(primary) : 'N/A',
+                  distanceKm: primary?.distance_km ? '~' + primary.distance_km + ' km away' : 'N/A',
+                  stockStatus: primary?.stock_status || 'N/A',
+                  mapsLink: primary?.google_maps_link || null,
+                  websiteLink: primary?.supplier_website || primary?.supplier_product_link || null,
+                  altData: alternatives.map(alt => ({
+                    supplierName: alt.supplier_name || 'N/A',
+                    city: formatAddress(alt),
+                    distance: alt.distance_km ? '~' + alt.distance_km + ' km away' : 'N/A',
+                    stockStatus: alt.stock_status || 'N/A',
+                    mapsLink: alt.google_maps_link || null,
+                    websiteLink: alt.supplier_website || alt.supplier_product_link || null,
+                  }))
+                };
+              });
+
+              // Render all cards, hide beyond first 10
+              materialList.innerHTML = '';
+              const allCards = [];
+              results.forEach((mat, i) => {
+                const card = buildCard(mat, i);
+                card.style.display = i < 10 ? '' : 'none';
+                materialList.appendChild(card);
+                allCards.push(card);
+              });
+
+              // Load more button
+              let visible = Math.min(10, results.length);
+              if (results.length > 10) {
+                loadMoreBtn.textContent = `Load More Components (showing ${visible} of ${results.length})`;
+                loadMoreCon.style.display = 'block';
+                loadMoreBtn.onclick = () => {
+                  const next = Math.min(visible + 10, results.length);
+                  for (let i = visible; i < next; i++) allCards[i].style.display = '';
+                  visible = next;
+                  if (visible >= results.length) {
+                    loadMoreCon.innerHTML = `<span style="color:#5f6368;font-size:14px;font-weight:500;">All ${results.length} components loaded ✓</span>`;
+                  } else {
+                    loadMoreBtn.textContent = `Load More Components (showing ${visible} of ${results.length})`;
+                  }
+                };
+              }
+
+              statsSummary.textContent = `Sourced ${results.length} of ${results.length} materials • Click 📍 to open supplier location in Google Maps`;
+
+              // Mini filter
+              const miniFilter = document.getElementById('bom-mini-filter');
+              const filterStats = document.getElementById('bom-filter-stats');
+              if (miniFilter) {
+                const fresh = miniFilter.cloneNode(true);
+                miniFilter.parentNode.replaceChild(fresh, miniFilter);
+                fresh.value = '';
+                fresh.addEventListener('input', (e) => {
+                  const q = e.target.value.toLowerCase().trim();
+                  let count = 0;
+                  if (q === '') {
+                    filterStats.style.display = 'none';
+                    loadMoreCon.style.display = results.length > 10 && visible < results.length ? 'block' : (results.length > 10 ? 'block' : 'none');
+                    allCards.forEach((c,i) => { c.style.display = i < visible ? '' : 'none'; });
+                    document.getElementById('bom-no-results')?.remove();
+                  } else {
+                    loadMoreCon.style.display = 'none';
+                    allCards.forEach(c => {
+                      const name = c.querySelector('.material-name')?.textContent.toLowerCase()||'';
+                      const cat  = c.querySelector('.pill-tag')?.textContent.toLowerCase()||'';
+                      const show = name.includes(q) || cat.includes(q);
+                      c.style.display = show ? '' : 'none';
+                      if (show) count++;
+                    });
+                    filterStats.style.display = 'block';
+                    filterStats.textContent = `Showing ${count} of ${results.length} components`;
+                    let noRes = document.getElementById('bom-no-results');
+                    if (count === 0) {
+                      if (!noRes) { noRes = document.createElement('div'); noRes.id='bom-no-results'; noRes.style.cssText='text-align:center;padding:40px;color:#5f6368;'; materialList.appendChild(noRes); }
+                      noRes.innerHTML = `No components found for '<b>${e.target.value}</b>'`;
+                    } else { noRes?.remove(); }
+                  }
+                });
+              }
+
+            } catch (err) {
+              materialList.innerHTML = '<div style="text-align:center;padding:40px;color:#c5221f;">Error: '+err.message+'</div>';
+              console.error(err);
+            }
+          }
+
+          // ── Boot ────────────────────────────────────────────────────────────────
+          function waitForSb(cb) { if (window.sb) cb(); else setTimeout(() => waitForSb(cb), 100); }
+
+          document.addEventListener('DOMContentLoaded', () => {
+            const form   = document.querySelector('.search-box-container');
+            const input  = document.querySelector('.search-input');
+            if (form) {
+              form.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const q = input.value.trim();
+                if (q) { window.history.pushState({}, '', '?q='+encodeURIComponent(q)); waitForSb(() => performSearch(q)); }
+              });
+            }
+            const initialQ = new URLSearchParams(window.location.search).get('q');
+            if (initialQ && initialQ.trim()) {
+              if (input) input.value = initialQ;
+              waitForSb(() => performSearch(initialQ.trim()));
+            }
+          });
+    </script>
+  </body>
 </html>
