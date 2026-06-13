@@ -1,8 +1,12 @@
-const { createClient } = window.supabase;
-window.sb = createClient(
-  'https://luumbrsddwupxxujnxlc.supabase.co',
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx1dW1icnNkZHd1cHh4dWpueGxjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA1Mzc2MzYsImV4cCI6MjA5NjExMzYzNn0.n0fL8SIdrFJGQcIAu5RA9HfaoK9DY9z1xm_1gP_6kG8'
-);
+if (window.supabase) {
+  const { createClient } = window.supabase;
+  window.sb = createClient(
+    'https://luumbrsddwupxxujnxlc.supabase.co',
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx1dW1icnNkZHd1cHh4dWpueGxjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA1Mzc2MzYsImV4cCI6MjA5NjExMzYzNn0.n0fL8SIdrFJGQcIAu5RA9HfaoK9DY9z1xm_1gP_6kG8'
+  );
+} else {
+  console.warn('Supabase not loaded, running in offline mode');
+}
 
 window.userSession = null;
 
@@ -64,6 +68,7 @@ function showLoggedOutNavbarGlobal() {
 }
 
 document.addEventListener('DOMContentLoaded', async () => {
+  if (!window.sb) return;
   const { data: { session } } = await window.sb.auth.getSession();
   if (session) {
     await updateNavbarGlobal(session.user);
