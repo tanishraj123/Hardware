@@ -1131,11 +1131,32 @@
 
             try {
               // Find product
-                      const { data: products, error } = await window.sb
+              // Step 1: exact match
+              let { data: products, error } = await window.sb
                 .from('products')
                 .select('id, name, category, product_details')
-                .ilike('name', '%' + query + '%')
-                .limit(20);
+                .ilike('name', query)
+                .not('product_details', 'is', null)
+                .limit(1);
+
+              // Step 2: fallback to partial match with data
+              if (!products || products.length === 0) {
+                ({ data: products, error } = await window.sb
+                  .from('products')
+                  .select('id, name, category, product_details')
+                  .ilike('name', '%' + query + '%')
+                  .not('product_details', 'is', null)
+                  .limit(1));
+              }
+
+              // Step 3: fallback to any match
+              if (!products || products.length === 0) {
+                ({ data: products, error } = await window.sb
+                  .from('products')
+                  .select('id, name, category, product_details')
+                  .ilike('name', '%' + query + '%')
+                  .limit(1));
+              }
 
               if (!products || products.length === 0) {
                 materialList.innerHTML = `<div style="text-align:center; padding: 60px 24px;">
@@ -1154,10 +1175,7 @@
                 return;
               }
 
-              // Prefer exact name match with data, then any match with data, then first match
-              let product = products.find(p => p.name && query && p.name.toLowerCase() === query.toLowerCase() && p.product_details?.components?.length) 
-                || products.find(p => p.product_details?.components?.length) 
-                || products[0];
+              let product = products[0];
 
               if (!product.product_details || !product.product_details.components || product.product_details.components.length === 0) {
                 materialList.innerHTML = '<div style="text-align:center;padding:40px;color:#5f6368;">No components found for this product.</div>';
